@@ -1,12 +1,11 @@
 collection Ticket {
+  owned true
   icon "ticket"
   indexes {
     title
-    target
   }
   properties {
     title str
-    target enum @values(["Logistic", "Support", "Production"])
     priority enum @values(["Low", "Moderate", "Urgent"])
     status enum @values(["Open", "In Progress", "Closed"])
     description str

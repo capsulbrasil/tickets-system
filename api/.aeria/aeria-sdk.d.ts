@@ -15,8 +15,7 @@ declare type MirrorDescriptions = {
       "ticket": {
         "$ref": "ticket",
         "indexes": [
-          "title",
-          "target"
+          "title"
         ]
       },
       "description": {
@@ -192,13 +191,6 @@ declare type MirrorDescriptions = {
       "title": {
         "type": "string"
       },
-      "target": {
-        "enum": [
-          "Logistic",
-          "Support",
-          "Production"
-        ]
-      },
       "priority": {
         "enum": [
           "Low",
@@ -227,6 +219,13 @@ declare type MirrorDescriptions = {
           "type"
         ]
       },
+      "owner": {
+        "$ref": "user",
+        "noForm": true,
+        "indexes": [
+          "name"
+        ]
+      },
       "created_at": {
         "type": "string",
         "format": "date-time",
@@ -243,12 +242,12 @@ declare type MirrorDescriptions = {
       }
     },
     "icon": "ticket",
+    "owned": true,
     "presets": [
       "crud"
     ],
     "indexes": [
-      "title",
-      "target"
+      "title"
     ],
     "actions": {
       "ui:spawnAdd": {
