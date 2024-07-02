@@ -1,0 +1,5 @@
+.env
+production.env
+dist
+node_modules
+**/.aeria/out

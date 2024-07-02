@@ -1,0 +1,44 @@
+collection Ticket {
+  icon "ticket"
+  indexes {
+    title
+    target
+  }
+  properties {
+    title str
+    target enum @values(["Logistic", "Support", "Production"])
+    priority enum @values(["Low", "Moderate", "Urgent"])
+    status enum @values(["Open", "In Progress", "Closed"])
+    description str
+    attached File @accept(["image/*"])
+  }
+  functions {
+    get @expose
+    getAll @expose
+    insert @expose
+    upload @expose
+    remove @expose
+  }
+  presets {
+    crud
+  }
+}
+
+collection Comment {
+  icon "chat-text"
+  properties {
+    ticket Ticket
+    description str   
+  }
+  functions {
+    get @expose
+    getAll @expose
+    insert @expose
+  }
+  presets {
+    crud
+  }
+}
+
+
+

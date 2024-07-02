@@ -1,0 +1,16 @@
+@import '@aeria-ui/ui/themes/light.less';
+@import '@aeria-ui/ui/themes/dark.less';
+@import '@aeria-ui/ui/themes/animate.less';
+@import './reset.less';
+
+@brand-color: #00197e;
+
+main {
+  .animate();
+  .light-theme(@brand-color, #F9F9F9);
+}
+
+main.main--dark {
+  .dark-theme(darken(@brand-color, 10%), #121212);
+}
+
