@@ -650,9 +650,6 @@ declare type MirrorRouter = {
         "root"
       ]
     }
-  },
-  "/test": {
-    "GET": null
   }
 }
 
