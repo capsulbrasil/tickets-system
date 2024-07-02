@@ -313,7 +313,12 @@ declare type MirrorDescriptions = {
       "roles": {
         "type": "array",
         "items": {
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "root",
+            "logistic",
+            "support"
+          ]
         },
         "uniqueItems": true
       },
