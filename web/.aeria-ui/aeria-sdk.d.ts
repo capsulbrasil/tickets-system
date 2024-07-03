@@ -316,7 +316,10 @@ declare type MirrorDescriptions = {
           "enum": [
             "root",
             "logistic",
-            "support"
+            "support",
+            "commerce",
+            "producer",
+            "callcenter"
           ]
         },
         "uniqueItems": true
@@ -476,6 +479,14 @@ declare type MirrorRouter = {
     }
   },
   "/comment/insert": {
+    "POST": {
+      "roles": [
+        "root"
+      ],
+      "builtin": true
+    }
+  },
+  "/comment/remove": {
     "POST": {
       "roles": [
         "root"
@@ -653,6 +664,18 @@ declare type MirrorRouter = {
       "roles": [
         "root"
       ]
+    }
+  },
+  "/ticket/filter": {
+    "GET": {
+      "query": {
+        "type": "object",
+        "properties": {
+          "document": {
+            "type": "string"
+          }
+        }
+      }
     }
   }
 }

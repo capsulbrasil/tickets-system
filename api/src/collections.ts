@@ -11,6 +11,9 @@ export const user = extendCollection(originalUser, {
             'root',
             'logistic',
             'support',
+            'commerce',
+            'producer',
+            'callcenter'
           ]
         }
       }

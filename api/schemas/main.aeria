@@ -33,6 +33,7 @@ collection Comment {
     get @expose
     getAll @expose
     insert @expose
+    remove @expose
   }
   presets {
     crud
