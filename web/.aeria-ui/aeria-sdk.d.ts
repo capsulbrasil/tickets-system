@@ -669,10 +669,19 @@ declare type MirrorRouter = {
   "/ticket/filter": {
     "GET": {
       "query": {
+        "variable": true,
         "type": "object",
         "properties": {
           "document": {
             "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "Open",
+              "In Progress",
+              "Closed"
+            ]
           }
         }
       }
