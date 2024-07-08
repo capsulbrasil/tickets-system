@@ -40,6 +40,9 @@ declare type MirrorDescriptions = {
     "presets": [
       "crud"
     ],
+    "indexes": [
+      "description"
+    ],
     "actions": {
       "ui:spawnAdd": {
         "label": "action.add",
@@ -54,7 +57,7 @@ declare type MirrorDescriptions = {
         "icon": "pencil-simple",
         "translate": true
       },
-      "route:/dashboard/crud/:id": {
+      "route:/dashboard/:collection/:id": {
         "label": "action.view",
         "icon": "eye",
         "translate": true,
@@ -219,6 +222,15 @@ declare type MirrorDescriptions = {
           "type"
         ]
       },
+      "comments": {
+        "type": "array",
+        "items": {
+          "$ref": "comment",
+          "indexes": [
+            "description"
+          ]
+        }
+      },
       "owner": {
         "$ref": "user",
         "noForm": true,
@@ -243,12 +255,29 @@ declare type MirrorDescriptions = {
     },
     "icon": "ticket",
     "owned": true,
+    "required": [
+      "title",
+      "priority",
+      "status",
+      "description",
+      "attached"
+    ],
     "presets": [
       "crud"
     ],
     "indexes": [
       "title"
     ],
+    "formLayout": {
+      "fields": {
+        "comments": {
+          "if": {
+            "operator": "truthy",
+            "term1": "_id"
+          }
+        }
+      }
+    },
     "actions": {
       "ui:spawnAdd": {
         "label": "action.add",
@@ -263,7 +292,7 @@ declare type MirrorDescriptions = {
         "icon": "pencil-simple",
         "translate": true
       },
-      "route:/dashboard/crud/:id": {
+      "route:/dashboard/:collection/:id": {
         "label": "action.view",
         "icon": "eye",
         "translate": true,
@@ -314,6 +343,14 @@ declare type MirrorDescriptions = {
         "items": {
           "type": "string",
           "enum": [
+            "root",
+            "logistic",
+            "support",
+            "commerce",
+            "producer",
+            "callcenter"
+          ],
+          "values": [
             "root",
             "logistic",
             "support",
@@ -405,7 +442,7 @@ declare type MirrorDescriptions = {
         "icon": "link",
         "translate": true
       },
-      "route:/dashboard/crud/:id": {
+      "route:/dashboard/:collection/:id": {
         "label": "action.view",
         "icon": "eye",
         "translate": true,
@@ -675,7 +712,10 @@ declare type MirrorRouter = {
             "type": "string"
           }
         }
-      }
+      },
+      "roles": [
+        "logistic"
+      ]
     }
   }
 }

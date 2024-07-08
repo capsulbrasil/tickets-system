@@ -23,6 +23,9 @@ router.GET('/ticket/filter', async (context) => {
                 type: "string"
             }
         }
-    }
+    },
+    roles: [
+      'logistic'
+    ]
 });
 
