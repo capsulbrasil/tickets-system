@@ -1,6 +1,6 @@
 export * from '../.aeria/out/collections/index.mjs'
 import { extendTicketCollection, Ticket } from '../.aeria/out/index.mjs'
-import { get, getAll, Result } from 'aeria'
+import { get, getAll, Result, throwIfError } from 'aeria'
 
 export const ticket = extendTicketCollection({
   description: {
@@ -22,17 +22,12 @@ export const ticket = extendTicketCollection({
         return Result.error(error)
       }
 
-      const { error: commentError, result: comments } = await context.collections.comment.functions.getAll({
+      ticket.comments = throwIfError(await context.collections.comment.functions.getAll({
         filters: {
           ticket: ticket._id,
         }
-      })
+      }))
 
-      if( commentError ) {
-        return Result.error(commentError)
-      }
-
-      ticket.comments = comments
       return Result.result(ticket)
     },
     getAll: async (payload, context) => {
@@ -43,19 +38,13 @@ export const ticket = extendTicketCollection({
 
       const tickets: Ticket[] = []
       for( const ticket of result as Ticket[] ) {
-        const { error, result: comments } = await context.collections.comment.functions.getAll({
-          filters: {
-            ticket: ticket._id,
-          }
-        })
-
-        if( error ) {
-          return Result.error(error)
-        }
-
         tickets.push({
           ...ticket,
-          comments,
+          comments: throwIfError(await context.collections.comment.functions.getAll({
+            filters: {
+              ticket: ticket._id,
+            }
+          }))
         })
       }
 
