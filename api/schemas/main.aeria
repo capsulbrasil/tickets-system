@@ -1,30 +1,25 @@
-collection Ticket {
-  owned true
-  icon "ticket"
-  indexes {
-    title
-  }
+collection File extends aeria.file {}
+collection TempFile extends aeria.tempFile {}
+collection User extends aeria.user {
   properties {
-    title str
-    priority enum @values(["Low", "Moderate", "Urgent"])
-    status enum @values(["Open", "In Progress", "Closed"])
-    description str
-    attached File @accept(["image/*"])
-  }
-  functions {
-    get @expose
-    getAll @expose
-    insert @expose
-    upload @expose
-    remove @expose
-  }
-  presets {
-    crud
+    roles []enum @values([
+      "root",
+      "logistic",
+      "support",
+      "commerce",
+      "producer",
+      "callcenter"
+    ])
   }
 }
 
+collection Ticket {}
+
 collection Comment {
   icon "chat-text"
+  indexes {
+    description
+  }
   properties {
     ticket Ticket
     description str   
@@ -40,5 +35,45 @@ collection Comment {
   }
 }
 
+collection Ticket {
+  owned true
+  icon "ticket"
+  indexes {
+    title
+  }
+  required {
+    title
+    priority
+    status
+    description
+    attached
+  }
+  properties {
+    title str
+    priority enum @values([
+      "Low",
+      "Moderate",
+      "Urgent"
+    ])
+    status enum @values([
+      "Open",
+      "In Progress",
+      "Closed"
+    ])
+    description str
+    attached File @accept(["image/*"])
+    comments []Comment 
+  }
+  functions {
+    get @expose
+    getAll @expose
+    insert @expose
+    upload @expose
+    remove @expose
+  }
+  presets {
+    crud
+  }
+}
 
 

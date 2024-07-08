@@ -1,4 +1,4 @@
-import { createRouter, log, Result } from 'aeria'
+import { createRouter, Result } from 'aeria'
 
 export const router = createRouter()
 

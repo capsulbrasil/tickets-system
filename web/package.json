@@ -16,8 +16,8 @@
   "license": "ISC",
   "dependencies": {
     "@aeria-ui/i18n-en": "^0.0.3",
-    "aeria-app-layout": "^0.0.40",
-    "aeria-ui": "^0.0.73"
+    "aeria-app-layout": "^0.0.41",
+    "aeria-ui": "^0.0.86"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.19",
