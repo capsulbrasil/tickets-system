@@ -38,6 +38,9 @@ collection Comment {
 collection Ticket {
   owned true
   icon "ticket"
+  filters{
+    title
+  }
   indexes {
     title
   }

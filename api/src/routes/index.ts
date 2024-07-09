@@ -1,53 +1,50 @@
-import { createRouter, Result } from 'aeria'
+import { createRouter, log, Result } from "aeria";
 
-export const router = createRouter()
+export const router = createRouter();
 
-router.GET('/ticket/filter', async (context) => {
+router.GET(
+  "/ticket/filter",
+  async (context) => {
     const document = context.request.query.document;
     const status = context.request.query.status;
     const priority = context.request.query.priority;
-
-    const filtros: any = {};
+    const filters: any = {};
     if (document) {
-        filtros.title = { $regex: `^${document}`, $options: 'i' };
+      filters.title = { $regex: `^${document}`, $options: "i" };
     }
     if (status) {
-        filtros.status = status;
+      filters.status = status;
     }
     if (priority) {
-        filtros.priority = priority;
-    }   
-    
-    console.log('Filtros aplicados:', filtros);
-
-    const { error, result: tickets } = await context.collections.ticket.functions.getAll({
-        filters: filtros
-    });
-    console.log('Resultado da consulta:', tickets);
-
-
+      filters.priority = priority;
+    }
+    const { error, result: tickets } =
+      await context.collections.ticket.functions.getAll({
+        filters: filters,
+      });
     if (error) {
-        return Result.error(error);
+      return Result.error(error);
     }
-
     return Result.result(tickets);
-}, {
+  },
+  {
     query: {
-        required: [],
-        variable: true,
-        type: "object", 
-        properties: {
-            document: {
-                type: "string"
-            },
-            status: {
-                type: "string",
-                enum: ["Open", "In Progress", "Closed"]
-            },
-            priority: {
-                type: "string",
-                enum: ["Low", "Moderate", "Urgent"]
-            }
-        }
-    }
-});
+      required: [],
+      variable: true,
+      type: "object",
+      properties: {
+        document: {
+          type: "string",
+        },
+        status: {
+          type: "string",
+          enum: ["Open", "In Progress", "Closed"],
+        },
+        priority: {
+          type: "string",
+          enum: ["Low", "Moderate", "Urgent"],
+        },
+      },
+    },
+  }
+);

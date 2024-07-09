@@ -1,11 +1,11 @@
-import { init } from 'aeria'
-import { router } from './routes/index.js'
-export * as collections from './collections.js'
+import { init } from "aeria";
+import { router } from "./routes/index.js";
+export * as collections from "./collections.js";
 
 export default init({
   router,
   config: {
-    baseUrl: '/api',
+    baseUrl: "/api",
     publicUrl: process.env.API_URL,
     secret: process.env.APPLICATION_SECRET,
     database: {
@@ -20,5 +20,4 @@ export default init({
       tempFs: process.env.STORAGE_TEMP_PATH,
     },
   },
-})
-
+});

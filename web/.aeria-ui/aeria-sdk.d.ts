@@ -262,6 +262,9 @@ declare type MirrorDescriptions = {
       "description",
       "attached"
     ],
+    "filters": [
+      "title"
+    ],
     "presets": [
       "crud"
     ],
@@ -730,10 +733,7 @@ declare type MirrorRouter = {
             ]
           }
         }
-      },
-      "roles": [
-        "logistic"
-      ]
+      }
     }
   }
 }
