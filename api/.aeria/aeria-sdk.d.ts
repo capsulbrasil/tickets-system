@@ -204,8 +204,8 @@ declare type MirrorDescriptions = {
       "status": {
         "enum": [
           "Open",
-          "In Progress",
-          "Closed"
+          "Repairing",
+          "Completed"
         ]
       },
       "description": {
@@ -720,8 +720,8 @@ declare type MirrorRouter = {
             "type": "string",
             "enum": [
               "Open",
-              "In Progress",
-              "Closed"
+              "Repairing",
+              "Completed"
             ]
           },
           "priority": {

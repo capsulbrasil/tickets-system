@@ -60,8 +60,8 @@ collection Ticket {
     ])
     status enum @values([
       "Open",
-      "In Progress",
-      "Closed"
+      "Repairing",
+      "Completed"
     ])
     description str
     attached File @accept(["image/*"])

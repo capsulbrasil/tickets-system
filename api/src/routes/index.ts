@@ -38,7 +38,7 @@ router.GET(
         },
         status: {
           type: "string",
-          enum: ["Open", "In Progress", "Closed"],
+          enum: ["Open", "Repairing", "Completed"],
         },
         priority: {
           type: "string",

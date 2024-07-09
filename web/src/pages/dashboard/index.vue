@@ -55,8 +55,8 @@ const filterTickets = async () => {
     <aeria-select class="tw-w-96" v-model="status" :multiple="1" :property="{
       enum: [
         'Open',
-        'In Progress',
-        'Closed',
+        'Repairing',
+        'Completed',
       ]
     }">
     </aeria-select>
