@@ -27,19 +27,24 @@ definePage({
         </template>
         <template #row-priority="{ row, column }">
             <div v-if="row[column] === 'Low'" class="tw-flex tw-items-center tw-gap-2">
-                <aeria-icon icon="warning-octagon" style="--icon-color: #22c55e;">
+                <aeria-icon icon="warning-octagon" style="--icon-color: #22c55e; --icon-size: 20px">
                     {{ row[column] }}
                 </aeria-icon>
             </div>
             <div v-else-if="row[column] === 'Moderate'" class="tw-flex tw-items-center tw-gap-2">
-                <aeria-icon icon="warning" style="--icon-color: #f97316;">
+                <aeria-icon icon="warning" style="--icon-color: #f97316; --icon-size: 20px">
                     {{ row[column] }}
                 </aeria-icon>
             </div>
             <div v-else class="tw-flex tw-items-center tw-gap-2">
-                <aeria-icon icon="warning-circle" style="--icon-color: #ef4444;">
+                <aeria-icon icon="warning-circle" style="--icon-color: #ef4444; --icon-size: 20px">
                     {{ row[column] }}
                 </aeria-icon>
+            </div>
+        </template>
+        <template #row-title="{ row, column }">
+            <div class="tw-font-semibold">
+                {{ row[column] }}
             </div>
         </template>
     </aeria-crud>

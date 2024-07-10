@@ -231,13 +231,6 @@ declare type MirrorDescriptions = {
           ]
         }
       },
-      "owner": {
-        "$ref": "user",
-        "noForm": true,
-        "indexes": [
-          "name"
-        ]
-      },
       "created_at": {
         "type": "string",
         "format": "date-time",
@@ -251,10 +244,26 @@ declare type MirrorDescriptions = {
         "noForm": true,
         "readOnly": true,
         "isTimestamp": true
+      },
+      "owner": {
+        "$ref": "user",
+        "noForm": true,
+        "indexes": [
+          "name"
+        ]
       }
     },
     "icon": "ticket",
     "owned": true,
+    "table": [
+      "title",
+      "priority",
+      "status",
+      "description",
+      "attached",
+      "created_at",
+      "updated_at"
+    ],
     "required": [
       "title",
       "priority",

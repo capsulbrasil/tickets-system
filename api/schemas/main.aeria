@@ -51,6 +51,15 @@ collection Ticket {
     description
     attached
   }
+  table {
+    title
+    priority
+    status
+    description
+    attached
+    created_at
+    updated_at
+  }
   properties {
     title str
     priority enum @values([
@@ -66,6 +75,8 @@ collection Ticket {
     description str
     attached File @accept(["image/*"])
     comments []Comment 
+    created_at str @format("date-time")
+    updated_at str @format("date-time")
   }
   functions {
     get @expose

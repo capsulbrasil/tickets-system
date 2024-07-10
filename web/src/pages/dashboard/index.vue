@@ -8,12 +8,13 @@ definePage({
 
 import type { CollectionItemWithId, Result, EndpointError } from '@aeriajs/types'
 
-type Tickets = [CollectionItemWithId<'ticket'>]
+type Ticket = CollectionItemWithId<'ticket'>
+type Tickets = Ticket[]
 
-const tickets = ref<Tickets>()
-const priority = ref()
-const document = ref()
-const status = ref()
+const tickets = ref<Tickets>([])
+const priority = ref<string | null>(null)
+const document = ref<string | null>(null)
+const status = ref<string | null>(null)
 
 const filterTickets = async () => {
   const query: any = {}
@@ -36,22 +37,24 @@ const filterTickets = async () => {
     tickets.value = result
   }
 }
+
+const fetchTickets = async () => {
+  const { error, result }: Result.Either<EndpointError, Tickets> = await aeria.ticket.filter.GET({})
+
+  if (error) {
+    return error
+  }
+  if (result) {
+    tickets.value = result
+  }
+}
+
+fetchTickets()
 </script>
 
 <template>
-  <aeria-input v-model="document"></aeria-input>
+  <aeria-input v-model="document" placeholder="Document"></aeria-input>
   <div class="tw-flex tw-space-x-4">
-    <aeria-select class="tw-w-96" :multiple="1" :property="{
-      enum: [
-        'Programing',
-        'Support',
-        'Logistic',
-        'Commerce',
-        'Producer',
-        'Call Center',
-      ]
-    }">
-    </aeria-select>
     <aeria-select class="tw-w-96" v-model="status" :multiple="1" :property="{
       enum: [
         'Open',
@@ -68,29 +71,190 @@ const filterTickets = async () => {
       ]
     }">
     </aeria-select>
-    <aeria-button @click="filterTickets" class="tw-w-96">Filtrar</aeria-button>
+    <aeria-button @click="filterTickets" class="tw-w-96">Filter</aeria-button>
   </div>
-  <aeria-grid>
-    <aeria-card v-for="ticket in tickets" :key="ticket._id" class="">
-      <aeria-picture v-if="ticket.attached?.link" :url="ticket.attached?.link">
-      </aeria-picture>
-      <template #footer>
-        <aeria-context-menu :actions="[
-          {
-            label: 'View',
-            icon: 'eye',
-            click: () => null
-          },
-          {
-            label: 'Completed',
-            icon: 'eye-closed',
-            click: () => null
-          },
-        ]">
-          <h3 class="tw-mr-20">{{ ticket.title }}</h3>
-          <aeria-button class="tw-w-100 tw-m-1">To manage</aeria-button>
-        </aeria-context-menu>
-      </template>
-    </aeria-card>
-  </aeria-grid>
+
+  <template v-if="tickets.filter(ticket => ticket.status === 'Open').length">
+    <template class="tw-flex tw-items-center tw-gap-2 tw-mt-4">
+      <div class="tw-w-4 tw-h-4 tw-rounded-full tw-bg-green-500"></div>
+      <h3>Open Demands</h3>
+    </template>
+    <aeria-grid>
+      <aeria-card v-for="ticket in tickets.filter(ticket => ticket.status === 'Open')" :key="ticket._id"
+        class="tw-relative">
+        <aeria-picture v-if="ticket.attached?.link" :url="ticket.attached?.link"></aeria-picture>
+        <template #footer>
+          <aeria-context-menu :actions="[
+            {
+              label: 'View',
+              icon: 'eye',
+              click: () => null
+            },
+            {
+              label: 'Completed',
+              icon: 'eye-closed',
+              click: () => null
+            },
+          ]">
+            <div>
+              <h3>{{ ticket.title }}</h3>
+              <div class="tw-flex tw-items-center tw-gap-2">
+                <aeria-button style="border-radius: 99%;">
+                  <aeria-icon icon="plus" style="--icon-color: #FFFFFF;"></aeria-icon>
+                </aeria-button>
+                <div v-if="ticket.priority === 'Low'">
+                  <aeria-info where="top">
+                    <template #text>
+                      Low
+                    </template>
+                    <aeria-icon icon="warning-octagon" style="--icon-color: #22c55e; --icon-size: 25px;"></aeria-icon>
+                  </aeria-info>
+                </div>
+                <div v-else-if="ticket.priority === 'Moderate'">
+                  <aeria-info where="top">
+                    <template #text>
+                      Moderate
+                    </template>
+                    <aeria-icon icon="warning" style="--icon-color: #f97316; --icon-size: 25px;"></aeria-icon>
+                  </aeria-info>
+                </div>
+                <div v-if="ticket.priority === 'Urgent'">
+                  <aeria-info where="top">
+                    <template #text>
+                      Urgent
+                    </template>
+                    <aeria-icon icon="warning-circle"
+                      style="--icon-color: #ef4444; --icon-size: 25px; duotone "></aeria-icon>
+                  </aeria-info>
+                </div>
+              </div>
+            </div>
+          </aeria-context-menu>
+        </template>
+      </aeria-card>
+    </aeria-grid>
+  </template>
+
+  <template v-if="tickets.filter(ticket => ticket.status === 'Repairing').length">
+    <template class="tw-flex tw-items-center tw-gap-2 tw-mt-4">
+      <div class="tw-w-4 tw-h-4 tw-rounded-full tw-bg-yellow-500"></div>
+      <h3>Demands in Repair</h3>
+    </template>
+    <aeria-grid>
+      <aeria-card v-for="ticket in tickets.filter(ticket => ticket.status === 'Repairing')" :key="ticket._id"
+        class="tw-relative">
+        <aeria-picture v-if="ticket.attached?.link" :url="ticket.attached?.link"></aeria-picture>
+        <template #footer>
+          <aeria-context-menu :actions="[
+            {
+              label: 'View',
+              icon: 'eye',
+              click: () => null
+            },
+            {
+              label: 'Completed',
+              icon: 'eye-closed',
+              click: () => null
+            },
+          ]">
+            <div>
+              <h3>{{ ticket.title }}</h3>
+              <div class="tw-flex tw-items-center tw-gap-2">
+                <aeria-button style="border-radius: 99%;">
+                  <aeria-icon icon="plus" style="--icon-color: #FFFFFF;"></aeria-icon>
+                </aeria-button>
+                <div v-if="ticket.priority === 'Low'">
+                  <aeria-info where="top">
+                    <template #text>
+                      Low
+                    </template>
+                    <aeria-icon icon="warning-octagon" style="--icon-color: #22c55e; --icon-size: 25px;"></aeria-icon>
+                  </aeria-info>
+                </div>
+                <div v-else-if="ticket.priority === 'Moderate'">
+                  <aeria-info where="top">
+                    <template #text>
+                      Moderate
+                    </template>
+                    <aeria-icon icon="warning" style="--icon-color: #f97316; --icon-size: 25px;"></aeria-icon>
+                  </aeria-info>
+                </div>
+                <div v-if="ticket.priority === 'Urgent'">
+                  <aeria-info where="top">
+                    <template #text>
+                      Urgent
+                    </template>
+                    <aeria-icon icon="warning-circle"
+                      style="--icon-color: #ef4444; --icon-size: 25px; duotone "></aeria-icon>
+                  </aeria-info>
+                </div>
+              </div>
+            </div>
+          </aeria-context-menu>
+        </template>
+      </aeria-card>
+    </aeria-grid>
+  </template>
+
+  <template v-if="tickets.filter(ticket => ticket.status === 'Completed').length">
+    <template class="tw-flex tw-items-center tw-gap-2 tw-mt-4">
+      <div class="tw-w-4 tw-h-4 tw-rounded-full tw-bg-gray-500"></div>
+      <h3>Completed Demands</h3>
+    </template>
+    <aeria-grid>
+      <aeria-card v-for="ticket in tickets.filter(ticket => ticket.status === 'Completed')" :key="ticket._id"
+        class="tw-relative">
+        <aeria-picture v-if="ticket.attached?.link" :url="ticket.attached?.link"></aeria-picture>
+        <template #footer>
+          <aeria-context-menu :actions="[
+            {
+              label: 'View',
+              icon: 'eye',
+              click: () => null
+            },
+            {
+              label: 'Completed',
+              icon: 'eye-closed',
+              click: () => null
+            },
+          ]">
+            <div>
+              <h3>{{ ticket.title }}</h3>
+              <div class="tw-flex tw-items-center tw-gap-2">
+                <aeria-button style="border-radius: 99%;">
+                  <aeria-icon icon="plus" style="--icon-color: #FFFFFF;"></aeria-icon>
+                </aeria-button>
+                <div v-if="ticket.priority === 'Low'">
+                  <aeria-info where="top">
+                    <template #text>
+                      Low
+                    </template>
+                    <aeria-icon icon="warning-octagon" style="--icon-color: #22c55e; --icon-size: 40px;"></aeria-icon>
+                  </aeria-info>
+                </div>
+                <div v-else-if="ticket.priority === 'Moderate'">
+                  <aeria-info where="top">
+                    <template #text>
+                      Moderate
+                    </template>
+                    <aeria-icon icon="warning" style="--icon-color: #f97316; --icon-size: 40px;"></aeria-icon>
+                  </aeria-info>
+                </div>
+                <div v-if="ticket.priority === 'Urgent'">
+                  <aeria-info where="top">
+                    <template #text>
+                      Urgent
+                    </template>
+                    <aeria-icon icon="warning-circle"
+                      style="--icon-color: #ef4444; --icon-size: 40px; duotone "></aeria-icon>
+                  </aeria-info>
+                </div>
+              </div>
+            </div>
+          </aeria-context-menu>
+        </template>
+      </aeria-card>
+    </aeria-grid>
+  </template>
+
 </template>
