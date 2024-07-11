@@ -9,6 +9,7 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AeriaBadge: typeof import('@aeria-ui/ui')['AeriaBadge']
     AeriaButton: typeof import('@aeria-ui/ui')['AeriaButton']
     AeriaCard: typeof import('@aeria-ui/ui')['AeriaCard']
     AeriaContextMenu: typeof import('@aeria-ui/ui')['AeriaContextMenu']
@@ -24,5 +25,6 @@ declare module '@vue/runtime-core' {
     NoResults: typeof import('./../src/components/no-results.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TicketDescription: typeof import('./../src/components/ticketDescription.vue')['default']
   }
 }
