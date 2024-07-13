@@ -18,11 +18,11 @@ collection Ticket {}
 collection Comment {
   icon "chat-text"
   indexes {
-    description
+    described
   }
   properties {
     ticket Ticket
-    description str   
+    described str   
   }
   functions {
     get @expose
@@ -54,9 +54,9 @@ collection Ticket {
   table {
     title
     priority
-    status
     description
     attached
+    status
     created_at
     updated_at
   }

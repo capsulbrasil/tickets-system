@@ -10,38 +10,36 @@ definePage({
 <template>
     <aeria-crud collection="ticket">
         <template #row-status="{ row, column }">
-
             <div v-if="row[column] === 'Open'" class="tw-flex tw-items-center tw-gap-2">
-                <div class="tw-size-3 tw-rounded-full tw-bg-green-500 tw-font-bold"></div>
+                <div class="tw-w-3 tw-h-3 tw-rounded-full tw-shadow-sm" style="background-color: #22c55e  ;"></div>
                 {{ row[column] }}
             </div>
             <div v-else-if="row[column] === 'Repairing'" class="tw-flex tw-items-center tw-gap-2">
-                <div class="tw-size-3 tw-rounded-full tw-bg-yellow-500 tw-font-bold"></div>
+                <div class="tw-w-3 tw-h-3 tw-rounded-full tw-shadow-sm" style="background-color: #ffd500 ;"></div>
                 {{ row[column] }}
             </div>
             <div v-else class="tw-flex tw-items-center tw-gap-2">
-                <div class="tw-size-3 tw-rounded-full tw-bg-gray-500 tw-font-bold"></div>
+                <div class="tw-w-3 tw-h-3 tw-rounded-full tw-shadow-sm tw-opacity-50"
+                    style="background-color: #000F4B;"></div>
                 {{ row[column] }}
             </div>
-
         </template>
+
         <template #row-priority="{ row, column }">
             <div v-if="row[column] === 'Low'" class="tw-flex tw-items-center tw-gap-2">
-                <aeria-icon icon="warning-octagon" style="--icon-color: #22c55e; --icon-size: 20px">
-                    {{ row[column] }}
-                </aeria-icon>
+                <div class="tw-w-3 tw-h-3 tw-rounded-full tw-shadow-sm" style="background-color: #537804 ;"></div>
+                {{ row[column] }}
             </div>
             <div v-else-if="row[column] === 'Moderate'" class="tw-flex tw-items-center tw-gap-2">
-                <aeria-icon icon="warning" style="--icon-color: #f97316; --icon-size: 20px">
-                    {{ row[column] }}
-                </aeria-icon>
+                <div class="tw-w-3 tw-h-3 tw-rounded-full tw-shadow-sm" style="background-color: #FF5100;"></div>
+                {{ row[column] }}
             </div>
             <div v-else class="tw-flex tw-items-center tw-gap-2">
-                <aeria-icon icon="warning-circle" style="--icon-color: #ef4444; --icon-size: 20px">
-                    {{ row[column] }}
-                </aeria-icon>
+                <div class="tw-w-3 tw-h-3 tw-rounded-full tw-shadow-sm" style="background-color: #ff2200 ;"></div>
+                {{ row[column] }}
             </div>
         </template>
+
         <template #row-title="{ row, column }">
             <div class="tw-font-semibold">
                 {{ row[column] }}
