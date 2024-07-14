@@ -194,18 +194,18 @@ declare type MirrorDescriptions = {
       "title": {
         "type": "string"
       },
-      "priority": {
-        "enum": [
-          "Low",
-          "Moderate",
-          "Urgent"
-        ]
-      },
       "status": {
         "enum": [
           "Open",
           "Repairing",
           "Completed"
+        ]
+      },
+      "priority": {
+        "enum": [
+          "Low",
+          "Moderate",
+          "Urgent"
         ]
       },
       "description": {
@@ -280,6 +280,9 @@ declare type MirrorDescriptions = {
     "indexes": [
       "title"
     ],
+    "freshItem": {
+      "status": "Open"
+    },
     "formLayout": {
       "fields": {
         "comments": {

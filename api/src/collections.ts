@@ -4,6 +4,9 @@ import { get, getAll, Result, throwIfError } from "aeria";
 
 export const ticket = extendTicketCollection({
   description: {
+    freshItem: {
+      status: "Open",
+    },
     formLayout: {
       fields: {
         comments: {

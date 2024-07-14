@@ -62,15 +62,15 @@ collection Ticket {
   }
   properties {
     title str
-    priority enum @values([
-      "Low",
-      "Moderate",
-      "Urgent"
-    ])
     status enum @values([
       "Open",
       "Repairing",
       "Completed"
+    ] ) 
+    priority enum @values([
+      "Low",
+      "Moderate",
+      "Urgent"
     ])
     description str
     attached File @accept(["image/*"])
