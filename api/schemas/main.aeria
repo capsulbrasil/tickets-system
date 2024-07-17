@@ -17,12 +17,13 @@ collection Ticket {}
 
 collection Comment {
   icon "chat-text"
+  owned true
   indexes {
     described
   }
   properties {
     ticket Ticket
-    described str   
+    described str
   }
   functions {
     get @expose
@@ -61,7 +62,7 @@ collection Ticket {
     updated_at
   }
   properties {
-    title str
+    title str @maxLength(40)
     status enum @values([
       "Open",
       "Repairing",

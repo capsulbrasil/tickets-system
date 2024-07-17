@@ -48,3 +48,12 @@ router.GET(
     },
   }
 );
+
+router.POST("/ticket/status", async (context) => {
+  return context.collections.ticket.functions.insert({
+    what: {
+      _id: context.request.payload.id,
+      status: context.request.payload.status,
+    },
+  });
+});

@@ -21,6 +21,13 @@ declare type MirrorDescriptions = {
       "described": {
         "type": "string"
       },
+      "owner": {
+        "$ref": "user",
+        "noForm": true,
+        "indexes": [
+          "name"
+        ]
+      },
       "created_at": {
         "type": "string",
         "format": "date-time",
@@ -37,6 +44,7 @@ declare type MirrorDescriptions = {
       }
     },
     "icon": "chat-text",
+    "owned": true,
     "presets": [
       "crud"
     ],
@@ -192,7 +200,8 @@ declare type MirrorDescriptions = {
     "$id": "ticket",
     "properties": {
       "title": {
-        "type": "string"
+        "type": "string",
+        "maxLength": 40
       },
       "status": {
         "enum": [
@@ -747,6 +756,9 @@ declare type MirrorRouter = {
         }
       }
     }
+  },
+  "/ticket/status": {
+    "POST": null
   }
 }
 

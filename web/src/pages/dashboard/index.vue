@@ -56,12 +56,17 @@ const fetchTickets = async () => {
     return error
   }
   if (result) {
-    allTickets.value = result
+    allTickets.value = sortTicketsByPriority(result)
   }
 }
 
 const reloadPage = () => {
   window.location.reload()
+}
+
+function sortTicketsByPriority(tickets: Tickets): Tickets {
+  const priorityOrder = { 'Urgent': 1, 'Moderate': 2, 'Low': 3 };
+  return tickets.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
 }
 
 function capitalize(characters: string) {
