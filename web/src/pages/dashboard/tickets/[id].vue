@@ -88,14 +88,15 @@ onMounted(async () => {
                 <h1 class="tw-text-3xl tw-font-bold tw-mb-2">{{ capitalize(ticket.title) }}</h1>
                 <div class="tw-flex tw-justify-center tw-items-center tw-space-x-4">
                     <h3 class="tw-text-lg tw-font-medium tw-text-gray-700">{{ ticket.owner?.name }}</h3>
-                    <h3 class="tw-text-sm tw-font-light tw-text-gray-500">{{ ticket.owner?._id }}</h3>
+                    <h3 class="tw-text-sm tw-font-light tw-text-gray-500">{{ ticket.owner?.email }}</h3>
                 </div>
             </div>
             <!-- priority -->
             <div class="tw-flex tw-justify-evenly tw-items-center tw-mb-4 tw-border tw-p-4">
                 <div class="tw-flex">
                     <span class="tw-mr-2 tw-font-medium">Priority</span>
-                    <aeria-info>
+                    <aeria-info where="bottom">
+                        <template #text>{{ ticket.priority }}</template>
                         <div :class="priorityStyle(ticket.priority)"></div>
                     </aeria-info>
                 </div>
@@ -122,37 +123,35 @@ onMounted(async () => {
                         <div :class="visualStatus(ticket.status)"></div>
                     </aeria-info>
                 </div>
-
             </div>
             <div class="tw-flex tw-border tw-p-4 tw-mt-4">
                 <!-- attached -->
-                <aeria-picture v-if="ticket.attached?.link" :url="ticket.attached?.link" class="tw-w-96"
+                <aeria-picture v-if="ticket.attached?.link" :url="ticket.attached.link" class="tw-w-96"
                     expandable></aeria-picture>
                 <p class="tw-m-5"><b>Description</b> <br> {{ ticket.description }}</p>
             </div>
 
             <div class="tw-border tw-p-4 tw-mt-4">
                 <h2>Comments</h2>
-                <div v-for="comments in ticket.comments">
+                <div v-for="comment in ticket.comments">
                     <hr class="tw-border-none
                tw-h-0.5
                tw-bg-gray-800
                tw-my-5">
                     <div class="tw-flex
                tw-flex-col
-               tw-space-y-1" v-if="comments.described">
+               tw-space-y-1" v-if="comment.described">
                         <div class="tw-flex tw-justify-between">
-                            <span><b>Comment made by</b> {{ ticket.comments?.[0]?.owner.name }}</span>
+                            <span><b>Comment made by</b> {{ comment.owner.name }}</span>
                             <aeria-info where="left">
                                 <template #text>
-                                    {{ comments.created_at }}
+                                    {{ comment.created_at }}
                                 </template>
-
                                 <aeria-icon style="--icon-size: 25px" icon="calendar">
                                 </aeria-icon>
                             </aeria-info>
                         </div>
-                        <span>{{ comments.described }}</span>
+                        <span>{{ comment.described }}</span>
                     </div>
                 </div>
             </div>

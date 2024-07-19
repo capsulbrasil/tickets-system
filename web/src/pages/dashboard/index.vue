@@ -1,76 +1,84 @@
 <script setup lang="ts">
-import type { CollectionItemWithId, Result, EndpointError } from '@aeriajs/types'
+import type { CollectionItemWithId, Result, EndpointError } from '@aeriajs/types';
+import { onMounted, ref, reactive } from 'vue';
+import { useRouter } from 'vue-router';
 
 definePage({
   meta: {
     title: 'Demands',
     icon: 'grid-nine',
   },
-})
+});
 
-type Ticket = CollectionItemWithId<'ticket'>
-type Tickets = Ticket[]
+type Ticket = CollectionItemWithId<'ticket'>;
+type Tickets = Ticket[];
 
-const router = useRouter()
-const allTickets = ref<Tickets>([])
+const metaStore = useStore('meta')
+const router = useRouter();
 
-const document = ref<string | null>(null)
-const status = ref<string | null>(null)
-const priority = ref<string | null>(null)
+const openTickets = ref<Tickets>([]);
+const repairingTickets = ref<Tickets>([]);
+const completedTickets = ref<Tickets>([]);
 
-async function navigateTicket(id: string) {
-  router.push({
-    name: "/dashboard/tickets/[id]",
-    params: {
-      id
-    }
-  })
-}
+const document = ref<string | null>(null);
+const status = ref<string | null>(null);
+const priority = ref<string | null>(null);
+
+console.log(typeof status)
+
+const displayedCounts = reactive<{ [key: string]: number }>({
+  Open: 7,
+  Repairing: 7,
+  Completed: 7,
+});
 
 const filterTickets = async () => {
-  const query: any = {}
+  if (!document.value && !status.value && !priority.value) {
+    return;
+  }
+
+  const query: any = {};
   if (document.value) {
-    query.document = document.value
+    query.document = document.value;
   }
   if (status.value) {
-    query.status = status.value
+    query.status = status.value;
   }
   if (priority.value) {
-    query.priority = priority.value
+    query.priority = priority.value;
   }
 
-  const { error, result }: Result.Either<EndpointError, Tickets> = await aeria.ticket.filter.GET(query)
+  const { error, result }: Result.Either<EndpointError, Tickets> = await aeria.ticket.filter.GET(query);
 
   if (error) {
-    return error
+    return metaStore.$actions.spawnToast({
+      text: query(error.message),
+      icon: 'warning',
+    })
   }
+
   if (result) {
-    allTickets.value = result
+    openTickets.value = result.filter((ticket) => ticket.status === 'Open');
+    repairingTickets.value = result.filter((ticket) => ticket.status === 'Repairing');
+    completedTickets.value = result.filter((ticket) => ticket.status === 'Completed');
   }
+};
+
+function reloadPage() {
+  window.location.reload();
 }
 
-const fetchTickets = async () => {
-  const { error, result }: Result.Either<EndpointError, Tickets> = await aeria.ticket.filter.GET({})
-
-  if (error) {
-    return error
-  }
-  if (result) {
-    allTickets.value = sortTicketsByPriority(result)
-  }
-}
-
-const reloadPage = () => {
-  window.location.reload()
-}
-
-function sortTicketsByPriority(tickets: Tickets): Tickets {
-  const priorityOrder = { 'Urgent': 1, 'Moderate': 2, 'Low': 3 };
-  return tickets.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+function loadingTickets(status: string) {
+  displayedCounts[status] += 10;
 }
 
 function capitalize(characters: string) {
   return characters.charAt(0).toUpperCase() + characters.slice(1).toLowerCase();
+}
+
+function ticketHierarchy(tickets: Tickets): Tickets {
+  const priorityOrder = { 'Urgent': 1, 'Moderate': 2, 'Low': 3 };
+  return tickets.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
 }
 
 function getStatusColor(status: string) {
@@ -98,7 +106,46 @@ function getPriorityColor(priority: string) {
       return '';
   }
 }
-fetchTickets()
+
+async function navigateTicket(id: string) {
+  router.push({
+    name: "/dashboard/tickets/[id]",
+    params: {
+      id,
+    },
+  });
+}
+
+async function fetchTickets(status: any) {
+  const { error, result }: Result.Either<EndpointError, Tickets> = await aeria.ticket.filter.GET({ status });
+
+  if (error) {
+    return metaStore.$actions.spawnToast({
+      text: status(error.message),
+      icon: 'warning',
+    })
+  }
+
+  if (result) {
+    switch (status) {
+      case 'Open':
+        openTickets.value = ticketHierarchy(result);
+        break;
+      case 'Repairing':
+        repairingTickets.value = ticketHierarchy(result);
+        break;
+      case 'Completed':
+        completedTickets.value = ticketHierarchy(result);
+        break;
+    }
+  }
+}
+
+onMounted(async () => {
+  await fetchTickets('Open');
+  await fetchTickets('Repairing');
+  await fetchTickets('Completed');
+});
 </script>
 
 <template>
@@ -106,12 +153,10 @@ fetchTickets()
   <aeria-input v-model="document" class="tw-shadow-md"></aeria-input>
 
   <div class="tw-flex tw-space-x-4">
-    <aeria-select class="tw-shadow-md" v-model="status" :multiple="1" :property="{
-      enum: ['Open', 'Repairing', 'Completed']
-    }"></aeria-select>
-    <aeria-select class="tw-shadow-md" v-model="priority" :multiple="1" :property="{
-      enum: ['Low', 'Moderate', 'Urgent']
-    }"></aeria-select>
+    <aeria-select class="tw-shadow-md" v-model="status" :multiple="1"
+      :property="{ enum: ['Open', 'Repairing', 'Completed'] }"></aeria-select>
+    <aeria-select class="tw-shadow-md" v-model="priority" :multiple="1"
+      :property="{ enum: ['Low', 'Moderate', 'Urgent'] }"></aeria-select>
 
     <aeria-button @click="filterTickets">
       <aeria-icon icon="magnifying-glass" style="--icon-size: 25px;"></aeria-icon>
@@ -121,16 +166,17 @@ fetchTickets()
     </aeria-button>
   </div>
   <!-- cardtickets -->
-  <template v-for="status in ['Open', 'Repairing', 'Completed']" :key="status">
-    <template v-if="allTickets.filter(ticket => ticket.status === status).length">
-      <div class="tw-flex tw-items-center tw-gap-2 tw-mt-4" :class="status === 'Completed' ? 'tw-opacity-50' : ''">
+  <div v-for="status in ['Open', 'Repairing', 'Completed']" :key="status">
+    <div>
+      <div class="tw-flex tw-items-center tw-gap-2 tw-mt-4" :class="status === 'Completed' ? 'tw-opacity-80' : ''">
         <div class="tw-w-4 tw-h-4 tw-rounded-full tw-shadow-md" :style="{ backgroundColor: getStatusColor(status) }">
         </div>
         <h3>{{ status.toUpperCase() }}</h3>
       </div>
       <aeria-grid>
-        <aeria-card v-for="ticket in allTickets.filter(ticket => ticket.status === status)" :key="ticket._id"
-          style="border-radius: 1%; max-width: 23rem; cursor: pointer;" class="tw-shadow-md"
+        <aeria-card
+          v-for="ticket in (status === 'Open' ? openTickets : status === 'Repairing' ? repairingTickets : completedTickets).slice(0, displayedCounts[status])"
+          :key="ticket._id" style="border-radius: 1%; max-width: 23rem; cursor: pointer;" class="tw-shadow-md"
           @click="navigateTicket(ticket._id)">
           <aeria-picture v-if="ticket.attached?.link" :url="ticket.attached?.link"></aeria-picture>
 
@@ -142,11 +188,20 @@ fetchTickets()
               </div>
             </aeria-info>
           </template>
+
           <template #footer>
             {{ capitalize(ticket.title) }}
           </template>
         </aeria-card>
+
+        <div class="tw-flex tw-justify-center tw-items-center">
+          <aeria-button
+            v-if="displayedCounts[status] < (status === 'Open' ? openTickets : status === 'Repairing' ? repairingTickets : completedTickets).length"
+            tw-rounded-full @click="loadingTickets(status)">
+            <aeria-icon icon="plus-square" style="--icon-size: 50px;"></aeria-icon>
+          </aeria-button>
+        </div>
       </aeria-grid>
-    </template>
-  </template>
+    </div>
+  </div>
 </template>
