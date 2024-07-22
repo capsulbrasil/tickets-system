@@ -88,7 +88,6 @@ onMounted(async () => {
                 <h1 class="tw-text-3xl tw-font-bold tw-mb-2">{{ capitalize(ticket.title) }}</h1>
                 <div class="tw-flex tw-justify-center tw-items-center tw-space-x-4">
                     <h3 class="tw-text-lg tw-font-medium tw-text-gray-700">{{ ticket.owner?.name }}</h3>
-                    <h3 class="tw-text-sm tw-font-light tw-text-gray-500">{{ ticket.owner?.email }}</h3>
                 </div>
             </div>
             <!-- priority -->

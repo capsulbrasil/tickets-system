@@ -24,8 +24,6 @@ const document = ref<string | null>(null);
 const status = ref<string | null>(null);
 const priority = ref<string | null>(null);
 
-console.log(typeof status)
-
 const displayedCounts = reactive<{ [key: string]: number }>({
   Open: 7,
   Repairing: 7,
@@ -142,9 +140,9 @@ async function fetchTickets(status: any) {
 }
 
 onMounted(async () => {
-  await fetchTickets('Open');
-  await fetchTickets('Repairing');
-  await fetchTickets('Completed');
+  await fetchTickets('Open')
+  await fetchTickets('Repairing')
+  await fetchTickets('Completed')
 });
 </script>
 
@@ -165,6 +163,7 @@ onMounted(async () => {
       <aeria-icon icon="arrows-counter-clockwise" style="--icon-size: 25px;"></aeria-icon>
     </aeria-button>
   </div>
+
   <!-- cardtickets -->
   <div v-for="status in ['Open', 'Repairing', 'Completed']" :key="status">
     <div>
@@ -197,8 +196,8 @@ onMounted(async () => {
         <div class="tw-flex tw-justify-center tw-items-center">
           <aeria-button
             v-if="displayedCounts[status] < (status === 'Open' ? openTickets : status === 'Repairing' ? repairingTickets : completedTickets).length"
-            tw-rounded-full @click="loadingTickets(status)">
-            <aeria-icon icon="plus-square" style="--icon-size: 50px;"></aeria-icon>
+            @click="loadingTickets(status)">
+            <aeria-icon icon="plus" style="--icon-size: 28px;"></aeria-icon>
           </aeria-button>
         </div>
       </aeria-grid>

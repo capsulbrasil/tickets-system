@@ -21,7 +21,10 @@ router.GET(
     const { error, result: tickets } =
       await context.collections.ticket.functions.getAll({
         filters: filters,
+        limit: 100,
       });
+
+    console.log(tickets?.length);
     if (error) {
       return Result.error(error);
     }
