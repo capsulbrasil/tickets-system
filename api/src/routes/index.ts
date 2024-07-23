@@ -7,6 +7,7 @@ router.GET(
   async (context) => {
     const document = context.request.query.document;
     const status = context.request.query.status;
+    const offset = context.request.query.offset;
     const priority = context.request.query.priority;
     const filters: any = {};
     if (document) {
@@ -21,10 +22,10 @@ router.GET(
     const { error, result: tickets } =
       await context.collections.ticket.functions.getAll({
         filters: filters,
-        limit: 100,
+        offset: offset,
+        limit: 7,
       });
 
-    console.log(tickets?.length);
     if (error) {
       return Result.error(error);
     }
@@ -46,6 +47,9 @@ router.GET(
         priority: {
           type: "string",
           enum: ["Low", "Moderate", "Urgent"],
+        },
+        offset: {
+          type: "number",
         },
       },
     },

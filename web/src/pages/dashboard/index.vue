@@ -24,11 +24,7 @@ const document = ref<string | null>(null);
 const status = ref<string | null>(null);
 const priority = ref<string | null>(null);
 
-const displayedCounts = reactive<{ [key: string]: number }>({
-  Open: 7,
-  Repairing: 7,
-  Completed: 7,
-});
+const offset = ref(0)
 
 const filterTickets = async () => {
   if (!document.value && !status.value && !priority.value) {
@@ -64,10 +60,6 @@ const filterTickets = async () => {
 
 function reloadPage() {
   window.location.reload();
-}
-
-function loadingTickets(status: string) {
-  displayedCounts[status] += 10;
 }
 
 function capitalize(characters: string) {
@@ -114,8 +106,11 @@ async function navigateTicket(id: string) {
   });
 }
 
-async function fetchTickets(status: any) {
-  const { error, result }: Result.Either<EndpointError, Tickets> = await aeria.ticket.filter.GET({ status });
+async function fetchTickets(status: any, incremet?: boolean) {
+  if (incremet) {
+    offset.value += 1
+  }
+  const { error, result }: Result.Either<EndpointError, Tickets> = await aeria.ticket.filter.GET({ status, offset: offset.value });
 
   if (error) {
     return metaStore.$actions.spawnToast({
@@ -123,17 +118,18 @@ async function fetchTickets(status: any) {
       icon: 'warning',
     })
   }
+  console.log(result)
 
   if (result) {
     switch (status) {
       case 'Open':
-        openTickets.value = ticketHierarchy(result);
+        openTickets.value.push(ticketHierarchy(result));
         break;
       case 'Repairing':
-        repairingTickets.value = ticketHierarchy(result);
+        repairingTickets.value.push(ticketHierarchy(result));
         break;
       case 'Completed':
-        completedTickets.value = ticketHierarchy(result);
+        completedTickets.value.push(ticketHierarchy(result));
         break;
     }
   }
@@ -174,7 +170,7 @@ onMounted(async () => {
       </div>
       <aeria-grid>
         <aeria-card
-          v-for="ticket in (status === 'Open' ? openTickets : status === 'Repairing' ? repairingTickets : completedTickets).slice(0, displayedCounts[status])"
+          v-for="ticket in (status === 'Open' ? openTickets : status === 'Repairing' ? repairingTickets : completedTickets)"
           :key="ticket._id" style="border-radius: 1%; max-width: 23rem; cursor: pointer;" class="tw-shadow-md"
           @click="navigateTicket(ticket._id)">
           <aeria-picture v-if="ticket.attached?.link" :url="ticket.attached?.link"></aeria-picture>
@@ -194,9 +190,7 @@ onMounted(async () => {
         </aeria-card>
 
         <div class="tw-flex tw-justify-center tw-items-center">
-          <aeria-button
-            v-if="displayedCounts[status] < (status === 'Open' ? openTickets : status === 'Repairing' ? repairingTickets : completedTickets).length"
-            @click="loadingTickets(status)">
+          <aeria-button @click="fetchTickets(status, true)">
             <aeria-icon icon="plus" style="--icon-size: 28px;"></aeria-icon>
           </aeria-button>
         </div>

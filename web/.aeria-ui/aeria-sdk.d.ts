@@ -752,6 +752,9 @@ declare type MirrorRouter = {
               "Moderate",
               "Urgent"
             ]
+          },
+          "offset": {
+            "type": "number"
           }
         }
       }
