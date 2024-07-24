@@ -22,7 +22,7 @@ router.GET(
     const { error, result: tickets } =
       await context.collections.ticket.functions.getAll({
         filters: filters,
-        offset: offset,
+        offset: Number(offset),
         limit: 7,
       });
 
