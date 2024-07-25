@@ -20,6 +20,10 @@ const openTickets = ref<Tickets>([]);
 const repairingTickets = ref<Tickets>([]);
 const completedTickets = ref<Tickets>([]);
 
+const hasMoreOpenTickets = ref<boolean>(true);
+const hasMoreRepairingTickets = ref<boolean>(true);
+const hasMoreCompletedTickets = ref<boolean>(true);
+
 const document = ref<string | null>(null);
 const status = ref<string | null>(null);
 const priority = ref<string | null>(null);
@@ -110,13 +114,6 @@ async function navigateTicket(id: string) {
   });
 }
 
-const hasMoreTickets = ref({
-  openTickets: true,
-  repairingTickets: true,
-  completedTickets: true
-});
-
-
 async function fetchTickets(status: any, increment?: boolean) {
   if (increment) {
     offset.value.openTickets += 7;
@@ -125,7 +122,8 @@ async function fetchTickets(status: any, increment?: boolean) {
   }
 
   const { error, result }: Result.Either<EndpointError, Tickets> = await aeria.ticket.filter.GET({
-    status, offset: (
+    status,
+    offset: (
       status == "Open" ? offset.value.openTickets : status == "Repairing" ? offset.value.repairingTickets : offset.value.completedTickets
     )
   });
@@ -138,18 +136,19 @@ async function fetchTickets(status: any, increment?: boolean) {
   }
 
   if (result) {
-    offset.value[`${status.toLowerCase()}Tickets`] = result.length;
-
     const filteredTickets = ticketHierarchy(result);
     switch (status) {
       case 'Open':
         openTickets.value = increment ? [...openTickets.value, ...filteredTickets] : filteredTickets;
+        hasMoreOpenTickets.value = result.length === 7;
         break;
       case 'Repairing':
         repairingTickets.value = increment ? [...repairingTickets.value, ...filteredTickets] : filteredTickets;
+        hasMoreRepairingTickets.value = result.length === 7;
         break;
       case 'Completed':
         completedTickets.value = increment ? [...completedTickets.value, ...filteredTickets] : filteredTickets;
+        hasMoreCompletedTickets.value = result.length === 7;
         break;
     }
   }
@@ -216,7 +215,7 @@ onMounted(async () => {
         </template>
 
         <div
-          v-if="(status === 'Open' ? openTickets.length : status === 'Repairing' ? repairingTickets.length : completedTickets.length) >= 7"
+          v-if="(status === 'Open' && hasMoreOpenTickets) || (status === 'Repairing' && hasMoreRepairingTickets) || (status === 'Completed' && hasMoreCompletedTickets)"
           class="tw-flex tw-justify-center tw-items-center">
           <aeria-button @click="fetchTickets(status, true)">
             <aeria-icon icon="plus" style="--icon-size: 25px;"></aeria-icon>
