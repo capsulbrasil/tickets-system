@@ -41,7 +41,7 @@ services:
     depends_on:
       - web
     ports:
-      - 80:80
+      - 8081:80
     volumes:
       - web-build:/var/www/html
 

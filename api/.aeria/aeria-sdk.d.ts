@@ -759,9 +759,6 @@ declare type MirrorRouter = {
         }
       }
     }
-  },
-  "/ticket/status": {
-    "POST": null
   }
 }
 

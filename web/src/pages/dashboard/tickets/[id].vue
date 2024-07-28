@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { CollectionItemWithId, Result, EndpointError } from '@aeriajs/types'
+import { CollectionItemWithId } from '@aeriajs/types'
+import { statusColor, priorityColor, capitalizeText } from '../../../func/utils';
 
 definePage({
     props: true,
@@ -35,36 +36,6 @@ async function updateStatus(newStatus: 'Repairing' | 'Completed') {
     ticket.value.status = result.status
 }
 
-function capitalize(characters: string) {
-    return characters.charAt(0).toUpperCase() + characters.slice(1).toLowerCase();
-}
-
-function priorityStyle(priority: string) {
-    switch (priority) {
-        case 'Low':
-            return 'tw-w-4 tw-h-4 tw-rounded-full tw-shadow-md tw-bg-[#8BC34A]';
-        case 'Moderate':
-            return 'tw-w-4 tw-h-4 tw-rounded-full tw-shadow-md tw-bg-[#FFC107]';
-        case 'Urgent':
-            return 'tw-w-4 tw-h-4 tw-rounded-full tw-shadow-md tw-bg-[#F44336]';
-        default:
-            return 'not found';
-    }
-}
-
-function visualStatus(status: string) {
-    switch (status) {
-        case 'Open':
-            return 'tw-w-4 tw-h-4 tw-rounded-full tw-shadow-md tw-bg-[#4CAF50]';
-        case 'Repairing':
-            return 'tw-w-4 tw-h-4 tw-rounded-full tw-shadow-md tw-bg-[#FF9800]';
-        case 'Completed':
-            return 'tw-w-4 tw-h-4 tw-rounded-full tw-shadow-md tw-bg-[#2196F3]';
-        default:
-            return 'not found';
-    }
-}
-
 onMounted(async () => {
     const { error, result } = await aeria().ticket.get.POST({
         filters: {
@@ -85,7 +56,7 @@ onMounted(async () => {
         <!-- title & id user -->
         <div class="tw-border tw-p-4 tw-mt-4">
             <div class="tw-text-center tw-mb-8">
-                <h1 class="tw-text-3xl tw-font-bold tw-mb-2">{{ capitalize(ticket.title) }}</h1>
+                <h1 class="tw-text-3xl tw-font-bold tw-mb-2">{{ capitalizeText(ticket.title) }}</h1>
                 <div class="tw-flex tw-justify-center tw-items-center tw-space-x-4">
                     <h3 class="tw-text-lg tw-font-medium tw-text-gray-700">{{ ticket.owner?.name }}</h3>
                 </div>
@@ -96,7 +67,9 @@ onMounted(async () => {
                     <span class="tw-mr-2 tw-font-medium">Priority</span>
                     <aeria-info where="bottom">
                         <template #text>{{ ticket.priority }}</template>
-                        <div :class="priorityStyle(ticket.priority)"></div>
+                        <div class="tw-w-4 tw-h-4 tw-rounded-full tw-shadow-md"
+                            :style="{ backgroundColor: priorityColor(ticket.priority) }">
+                        </div>
                     </aeria-info>
                 </div>
                 <!-- action -->
@@ -119,7 +92,9 @@ onMounted(async () => {
                     <span class="tw-mr-2 tw-font-medium">Status</span>
                     <aeria-info where="bottom" class="tw-flex tw-items-center">
                         <template #text>{{ ticket.status }}</template>
-                        <div :class="visualStatus(ticket.status)"></div>
+                        <div class="tw-w-4 tw-h-4 tw-rounded-full tw-shadow-md"
+                            :style="{ backgroundColor: statusColor(ticket.status) }">
+                        </div>
                     </aeria-info>
                 </div>
             </div>

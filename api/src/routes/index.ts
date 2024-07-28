@@ -10,6 +10,7 @@ router.GET(
     const offset = context.request.query.offset;
     const priority = context.request.query.priority;
     const filters: any = {};
+
     if (document) {
       filters.title = { $regex: `^${document}`, $options: "i" };
     }
@@ -19,12 +20,15 @@ router.GET(
     if (priority) {
       filters.priority = priority;
     }
+
+    const options: any = { filters };
+    if (!document && !priority) {
+      options.offset = Number(offset);
+      options.limit = 7;
+    }
+
     const { error, result: tickets } =
-      await context.collections.ticket.functions.getAll({
-        filters: filters,
-        offset: Number(offset),
-        limit: 7,
-      });
+      await context.collections.ticket.functions.getAll(options);
 
     if (error) {
       return Result.error(error);
@@ -55,12 +59,3 @@ router.GET(
     },
   }
 );
-
-router.POST("/ticket/status", async (context) => {
-  return context.collections.ticket.functions.insert({
-    what: {
-      _id: context.request.payload.id,
-      status: context.request.payload.status,
-    },
-  });
-});
