@@ -4,6 +4,7 @@ import { get, getAll, Result, throwIfError } from "aeria";
 
 export const ticket = extendTicketCollection({
   description: {
+    owned: "on-write",
     freshItem: {
       status: "Open",
     },

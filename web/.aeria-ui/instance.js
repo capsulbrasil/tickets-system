@@ -19,6 +19,9 @@ export default {
     ]
   },
   vite: {
+    build: {
+      sourcemap: true
+    },
     plugins: [
       vueRouter({
         dts: './.aeria-ui/typed-router.d.ts'
