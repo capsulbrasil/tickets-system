@@ -3,7 +3,6 @@ import type { CollectionItemWithId, Result, EndpointError } from '@aeriajs/types
 import { capitalizeText, statusColor, priorityColor } from '../../func/utils';
 import { useRouter } from 'vue-router';
 import { onMounted, ref } from 'vue';
-import Ticket from './ticket.vue';
 
 definePage({
   meta: {
@@ -26,9 +25,9 @@ const hasOpen = ref<boolean>(true);
 const hasRepairing = ref<boolean>(true);
 const hasCompleted = ref<boolean>(true);
 
-const status = ref<string | null>(null);
 const document = ref<string | null>(null);
 const priority = ref<string | null>(null);
+const status = ref<string | null>(null);
 
 const offset = ref({
   openTickets: 0,
@@ -59,13 +58,13 @@ const filterTicket = async () => {
   }
 
   if (result) {
-    openTickets.value = result.filter((ticket) => ticket.status === 'Open');
-    repairingTickets.value = result.filter((ticket) => ticket.status === 'Repairing');
-    completedTickets.value = result.filter((ticket) => ticket.status === 'Completed');
+    openTickets.value = orderTicket(result.filter((ticket) => ticket.status === 'Open'));
+    repairingTickets.value = orderTicket(result.filter((ticket) => ticket.status === 'Repairing'));
+    completedTickets.value = orderTicket(result.filter((ticket) => ticket.status === 'Completed'));
 
-    hasOpen.value = openTickets.value.length === 7;
-    hasRepairing.value = repairingTickets.value.length === 7;
-    hasCompleted.value = completedTickets.value.length === 7;
+    hasOpen.value = result.length === 7;
+    hasRepairing.value = result.length === 7;
+    hasCompleted.value = result.length === 7;
   }
 };
 
@@ -116,22 +115,34 @@ async function fetchTicket(status: any, increment?: boolean) {
   }
 
   if (result.length > 0) {
-    const filteredTickets = orderTicket(result);
+    const filteredTickets = result;
     switch (status) {
       case 'Open':
         openTickets.value = increment ? [...openTickets.value, ...filteredTickets] : filteredTickets;
+        openTickets.value = orderTicket(openTickets.value);
         hasOpen.value = result.length === 7;
-        offset.value.openTickets -= 7 - result.length
         break;
       case 'Repairing':
         repairingTickets.value = increment ? [...repairingTickets.value, ...filteredTickets] : filteredTickets;
+        repairingTickets.value = orderTicket(repairingTickets.value);
         hasRepairing.value = result.length === 7;
-        offset.value.repairingTickets -= 7 - result.length
         break;
       case 'Completed':
         completedTickets.value = increment ? [...completedTickets.value, ...filteredTickets] : filteredTickets;
+        completedTickets.value = orderTicket(completedTickets.value);
         hasCompleted.value = result.length === 7;
-        offset.value.completedTickets -= 7 - result.length
+        break;
+    }
+  } else {
+    switch (status) {
+      case 'Open':
+        hasOpen.value = false;
+        break;
+      case 'Repairing':
+        hasRepairing.value = false;
+        break;
+      case 'Completed':
+        hasCompleted.value = false;
         break;
     }
   }
@@ -146,7 +157,7 @@ onMounted(async () => {
 
 <template>
   <!-- filterbar -->
-  <aeria-input v-model="document" class="tw-shadow-md"></aeria-input>
+  <aeria-input v-model="document" class="tw-shadow-md" @keyup.enter="filterTicket"></aeria-input>
 
   <div class="tw-flex tw-space-x-4">
     <aeria-select class="tw-shadow-md" v-model="status" :multiple="1"
@@ -163,25 +174,25 @@ onMounted(async () => {
   </div>
 
   <!-- cardtickets -->
-  <div v-for="status in ['Open', 'Repairing', 'Completed']" :key="status">
-    <div>
-      <div class="tw-flex tw-items-center tw-gap-2 tw-mt-4" :class="status === 'Completed' ? 'tw-opacity-80' : ''">
-        <div class="tw-w-4 tw-h-4 tw-rounded-full tw-shadow-md" :style="{ backgroundColor: statusColor(status) }">
+  <div class="tw-border tw-p-2 tw-shadow-md">
+    <div v-for="status in ['Open', 'Repairing', 'Completed']" :key="status">
+      <div
+        v-if="status === 'Open' ? openTickets.length : status === 'Repairing' ? repairingTickets.length : completedTickets.length">
+        <div class="tw-flex tw-items-center tw-gap-2 tw-p-3">
+          <div class="tw-w-4 tw-h-4 tw-rounded-full tw-shadow-md" :style="{ backgroundColor: statusColor(status) }">
+          </div>
+          <h3 class="tw-flex tw-items-center after:tw-ml-2 after:tw-flex-1 after:tw-border-t after:tw-border-gray-300">
+            {{ status.toUpperCase() }}</h3>
         </div>
-        <h3>{{ status.toUpperCase() }}</h3>
-      </div>
-      <aeria-grid>
-        <template
-          v-if="status === 'Open' ? openTickets.length : status === 'Repairing' ? repairingTickets.length : completedTickets.length">
+        <aeria-grid>
           <aeria-card
             v-for="ticket in (status === 'Open' ? openTickets : status === 'Repairing' ? repairingTickets : completedTickets)"
-            :key="ticket._id" style="border-radius: 1%; max-width: 23rem; cursor: pointer;" class="tw-shadow-md"
+            :key="ticket._id" style="border-radius: 1%; max-width: 25rem; cursor: pointer;" class="tw-shadow-md"
             @click="navigateTicket(ticket._id)">
             <aeria-picture v-if="ticket.attached?.link" :url="ticket.attached?.link"></aeria-picture>
 
             <template #badge>
               <aeria-info where="left">
-                <template #text>{{ ticket.priority }}</template>
                 <div class="tw-w-4 tw-h-4 tw-rounded-full tw-shadow-md"
                   :style="{ backgroundColor: priorityColor(ticket.priority) }">
                 </div>
@@ -192,20 +203,17 @@ onMounted(async () => {
               {{ capitalizeText(ticket.title) }}
             </template>
           </aeria-card>
-        </template>
-        <template v-else>
-          <h3><b>No demand found</b></h3>
-        </template>
 
-        <div v-if="((status === 'Open' && hasOpen && openTickets.length) ||
-          (status === 'Repairing' && hasRepairing && repairingTickets.length) ||
-          (status === 'Completed' && hasCompleted && completedTickets.length))"
-          class="tw-flex tw-justify-center tw-items-center">
-          <aeria-button @click="fetchTicket(status, true)">
-            <aeria-icon icon="plus" style="--icon-size: 25px;"></aeria-icon>
-          </aeria-button>
-        </div>
-      </aeria-grid>
+          <div v-if="((status === 'Open' && hasOpen && openTickets.length % 7 === 0) ||
+            (status === 'Repairing' && hasRepairing && repairingTickets.length % 7 === 0) ||
+            (status === 'Completed' && hasCompleted && completedTickets.length % 7 === 0))"
+            class="tw-flex tw-justify-center tw-items-center">
+            <aeria-button @click="fetchTicket(status, true)">
+              <aeria-icon icon="plus" style="--icon-size: 25px;"></aeria-icon>
+            </aeria-button>
+          </div>
+        </aeria-grid>
+      </div>
     </div>
   </div>
 </template>

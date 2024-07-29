@@ -121,7 +121,7 @@ onMounted(async () => {
                                 <template #text>
                                     {{ comment.created_at }}
                                 </template>
-                                <aeria-icon style="--icon-size: 25px" icon="calendar">
+                                <aeria-icon style="--icon-size: 25px" icon="calendar-blank">
                                 </aeria-icon>
                             </aeria-info>
                         </div>
