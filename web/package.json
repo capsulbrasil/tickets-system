@@ -11,6 +11,16 @@
     "build:ci": "vue-tsc --noEmit && aeria-ui -m build",
     "build": "aeria-ui -m build"
   },
+  "aeriaSdk": {
+    "publicUrl": {
+      "development": "http://localhost:3000/api",
+      "production": "https://pedidos.capsulbrasil.com.br/api"
+    },
+    "storage": {
+      "strategy": "localStorage",
+      "namespace": "aeria"
+    }
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
