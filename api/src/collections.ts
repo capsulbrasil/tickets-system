@@ -25,10 +25,11 @@ export const ticket = extendTicketCollection({
       if (error) {
         return Result.error(error);
       }
-
+      // @ts-expect-error
       ticket.comments = throwIfError(
         await context.collections.comment.functions.getAll({
           filters: {
+            // @ts-expect-error
             ticket: ticket._id,
           },
         })
@@ -49,6 +50,7 @@ export const ticket = extendTicketCollection({
           comments: throwIfError(
             await context.collections.comment.functions.getAll({
               filters: {
+                // @ts-expect-error
                 ticket: ticket._id,
               },
             })
