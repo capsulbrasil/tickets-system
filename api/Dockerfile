@@ -1,7 +1,13 @@
 FROM node:20
 
 WORKDIR /opt/application/api
-COPY . .
+COPY .aeria .aeria
+COPY @types @types
+COPY public public
+COPY src src
+COPY package.json package.json
+COPY package-lock.json package-lock.json
+COPY tsconfig.json tsconfig.json
 
 RUN npm ci
 RUN npm run build

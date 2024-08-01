@@ -14,7 +14,7 @@
   "aeriaSdk": {
     "publicUrl": {
       "development": "http://localhost:3000/api",
-      "production": "https://pedidos.capsulbrasil.com.br/api"
+      "production": "https://suporte.capsulbrasil.com.br/api"
     },
     "storage": {
       "strategy": "localStorage",
