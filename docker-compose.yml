@@ -5,7 +5,7 @@ services:
     image: mongo
     restart: always
     volumes:
-      - /data/db:/data/db
+      - /data/tickets-db:/data/db
     logging:
       driver: none
 
@@ -41,7 +41,7 @@ services:
     depends_on:
       - web
     ports:
-      - 8081:80
+      - 8280:80
     volumes:
       - web-build:/var/www/html
 
