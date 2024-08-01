@@ -4,7 +4,6 @@ import { get, getAll, Result, throwIfError } from "aeria";
 
 export const ticket = extendTicketCollection({
   description: {
-    owned: "on-write",
     freshItem: {
       status: "Open",
     },
@@ -18,6 +17,11 @@ export const ticket = extendTicketCollection({
         },
       },
     },
+    properties: {
+      cu: {
+        type: 'string'
+      }
+    }
   },
   functions: {
     get: async (payload, context) => {
@@ -25,11 +29,10 @@ export const ticket = extendTicketCollection({
       if (error) {
         return Result.error(error);
       }
-      // @ts-expect-error
+
       ticket.comments = throwIfError(
         await context.collections.comment.functions.getAll({
           filters: {
-            // @ts-expect-error
             ticket: ticket._id,
           },
         })
@@ -50,7 +53,6 @@ export const ticket = extendTicketCollection({
           comments: throwIfError(
             await context.collections.comment.functions.getAll({
               filters: {
-                // @ts-expect-error
                 ticket: ticket._id,
               },
             })
