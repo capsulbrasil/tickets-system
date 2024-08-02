@@ -262,14 +262,20 @@ declare type MirrorDescriptions = {
       },
       "owner": {
         "$ref": "user",
+        "populate": [
+          "roles"
+        ],
         "noForm": true,
         "indexes": [
           "name"
         ]
+      },
+      "cu": {
+        "type": "string"
       }
     },
     "icon": "ticket",
-    "owned": "on-write",
+    "owned": true,
     "table": [
       "title",
       "priority",
