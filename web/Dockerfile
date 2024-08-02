@@ -1,7 +1,6 @@
 FROM node:20
 WORKDIR /opt/application/web
 COPY .aeria-ui .aeria-ui
-COPY @types @types
 COPY src src
 COPY static static
 COPY index.html index.html
