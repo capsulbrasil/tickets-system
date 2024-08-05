@@ -107,7 +107,9 @@ onMounted(async () => {
                     <hr class="tw-border-none tw-bg-gray-400 tw-my-5" style="height: 0.1px;">
                     <div class="tw-flex tw-flex-col tw-space-y-1" v-if="comment.described">
                         <div class="tw-flex tw-justify-between">
-                            <span><b>Comment made by</b> {{ comment.owner.name }}</span>
+                            <span><b>Comment made by</b> {{ comment.owner.name }}
+                            </span>
+
                             <aeria-info where="left">
                                 <template #text>{{ formatDateTime(comment.created_at, { hours: true }) }}</template>
                                 <aeria-icon style="--icon-size: 25px" icon="calendar-blank"></aeria-icon>
