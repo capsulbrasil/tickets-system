@@ -182,10 +182,10 @@ onMounted(async () => {
   }"></aeria-input>
 
   <div class="tw-flex tw-space-x-4">
-    <aeria-select v-model="status" :multiple="1" :property="{
+    <aeria-select v-model="status" :multiple="false" :property="{
       enum: [TicketStatus.Open, TicketStatus.Repairing, TicketStatus.Completed]
     }"></aeria-select>
-    <aeria-select v-model="priority" :multiple="1"
+    <aeria-select v-model="priority" :multiple="false"
       :property="{ enum: [TicketPriority.Low, TicketPriority.Moderate, TicketPriority.Urgent] }"></aeria-select>
 
     <aeria-button @click="filterTicket">

@@ -269,13 +269,10 @@ declare type MirrorDescriptions = {
         "indexes": [
           "name"
         ]
-      },
-      "cu": {
-        "type": "string"
       }
     },
     "icon": "ticket",
-    "owned": true,
+    "owned": "on-write",
     "table": [
       "title",
       "priority",
