@@ -59,8 +59,7 @@ onMounted(async () => {
                 <h1 class="tw-text-3xl tw-font-bold tw-mb-2">{{ capitalizeText(ticket.title) }}</h1>
                 <div class="tw-flex tw-justify-center tw-items-center tw-space-x-4">
                     <h3 class="tw-text-lg tw-font-medium tw-text-gray-700">{{ ticket.owner?.name }}</h3>
-                    <h3 v-for="(role, index) in ticket.owner?.roles" :key="index"
-                        class="tw-text-lg tw-font-medium tw-text-white tw-p-1.5 tw-rounded-md tw-bg-[#001155]">
+                    <h3 v-for="(role, index) in ticket.owner?.roles" :key="index">
                         {{ role }}
                     </h3>
                 </div>
