@@ -6,7 +6,7 @@ import { onMounted, ref } from 'vue';
 
 definePage({
   meta: {
-    title: 'Demands',
+    title: 'Dashboard',
     icon: 'grid-nine',
   },
 });
@@ -41,10 +41,18 @@ const document = ref<string | null>(null);
 const priority = ref<TicketPriority | null>(null);
 const status = ref<TicketStatus | null>(null);
 
+const panelVisible = ref(false)
+
 const offset = ref({
   openTickets: 0,
   repairingTickets: 0,
   completedTickets: 0,
+});
+
+const totalTicketCount = ref<{ [key in TicketStatus]: number }>({
+  [TicketStatus.Open]: 0,
+  [TicketStatus.Repairing]: 0,
+  [TicketStatus.Completed]: 0,
 });
 
 const filterTicket = async () => {
@@ -86,16 +94,17 @@ function resetOffsets() {
   offset.value.completedTickets = 0;
 }
 
+function orderTicket(tickets: Tickets): Tickets {
+  const priorityOrder = { [TicketPriority.Urgent]: 1, [TicketPriority.Moderate]: 2, [TicketPriority.Low]: 3 };
+  return tickets.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+}
+
 async function reloadTickets() {
   resetOffsets();
   await fetchTicket(TicketStatus.Open);
   await fetchTicket(TicketStatus.Repairing);
   await fetchTicket(TicketStatus.Completed);
-}
-
-function orderTicket(tickets: Tickets): Tickets {
-  const priorityOrder = { [TicketPriority.Urgent]: 1, [TicketPriority.Moderate]: 2, [TicketPriority.Low]: 3 };
-  return tickets.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+  await countAllTickets();
 }
 
 async function navigateTicket(id: string) {
@@ -167,48 +176,112 @@ async function fetchTicket(status: TicketStatus, increment?: boolean) {
   }
 }
 
+async function countAllTickets() {
+  totalTicketCount.value[TicketStatus.Open] = 0;
+  totalTicketCount.value[TicketStatus.Repairing] = 0;
+  totalTicketCount.value[TicketStatus.Completed] = 0;
+
+  let hasMoreTickets = true;
+  let offset = 0;
+
+  while (hasMoreTickets) {
+    const { error, result }: Result.Either<EndpointError, Tickets> = await aeria.ticket.filter.GET({
+      offset,
+    });
+
+    if (error) {
+      metaStore.$actions.spawnToast;
+      return;
+    }
+
+    if (result.length === 0) {
+      hasMoreTickets = false;
+      break;
+    }
+
+    result.forEach(ticket => {
+      if (ticket.status === TicketStatus.Open) {
+        totalTicketCount.value[TicketStatus.Open]++;
+      } else if (ticket.status === TicketStatus.Repairing) {
+        totalTicketCount.value[TicketStatus.Repairing]++;
+      } else if (ticket.status === TicketStatus.Completed) {
+        totalTicketCount.value[TicketStatus.Completed]++;
+      }
+    });
+
+    offset += result.length;
+  }
+}
+
 onMounted(async () => {
   await fetchTicket(TicketStatus.Open);
   await fetchTicket(TicketStatus.Repairing);
   await fetchTicket(TicketStatus.Completed);
+  await countAllTickets()
 });
 </script>
 
 <template>
+  <!-- header -->
+  <div class="tw-flex tw-items-center tw-justify-between tw-border tw-rounded tw-p-5">
+    <div class="tw-flex tw-items-center tw-space-x-5">
+      <aeria-picture width="2rem" height="2rem" url="favicon.png" alt="Capsul logo"></aeria-picture>
+      <h1 class="tw-opacity-90">Bem-vindo ao Suporte Capsul Brasil</h1>
+    </div>
+    <div class="tw-flex tw-items-center tw-space-x-2">
+
+      <p>Manual de Uso</p>
+      <aeria-icon large reactive @click="panelVisible = true" icon="question"
+        style="--icon-size: 1.7rem; cursor: pointer;">
+      </aeria-icon>
+    </div>
+  </div>
+
+  <!-- guide panel -->
+  <aeria-panel fixed-right close-hint title="Manual do Sistema" v-model="panelVisible"
+    @overlay-click="panelVisible = false">
+    <h1>Aqui vem as instruções</h1>
+  </aeria-panel>
+
   <!-- filterbar -->
-  <aeria-input v-model="document" @keyup.enter="filterTicket" :property="{
-    type: 'string',
-    placeholder: 'Buscar tickets',
-  }"></aeria-input>
+  <div class="tw-border tw-rounded tw-p-5">
+    <aeria-input v-model="document" @keyup.enter="filterTicket"
+      :property="{ type: 'string', placeholder: 'Search tickets' }"></aeria-input>
 
-  <div class="tw-flex tw-space-x-4">
-    <aeria-select v-model="status" :multiple="false" :property="{
-      enum: [TicketStatus.Open, TicketStatus.Repairing, TicketStatus.Completed]
-    }"></aeria-select>
-    <aeria-select v-model="priority" :multiple="false"
-      :property="{ enum: [TicketPriority.Low, TicketPriority.Moderate, TicketPriority.Urgent] }"></aeria-select>
+    <div class="tw-flex tw-space-x-4 tw-mt-4">
+      <aeria-select v-model="status" :multiple="false"
+        :property="{ enum: [TicketStatus.Open, TicketStatus.Repairing, TicketStatus.Completed] }"></aeria-select>
+      <aeria-select v-model="priority" :multiple="false"
+        :property="{ enum: [TicketPriority.Low, TicketPriority.Moderate, TicketPriority.Urgent] }"></aeria-select>
 
-    <aeria-button @click="filterTicket">
-      <aeria-icon icon="magnifying-glass" style="--icon-size: 20px;"></aeria-icon>
-    </aeria-button>
-    <aeria-button @click="reloadTickets">
-      <aeria-icon icon="arrows-counter-clockwise" style="--icon-size: 20px;"></aeria-icon>
-    </aeria-button>
+      <aeria-icon @click="filterTicket" icon="magnifying-glass" reactive
+        style="--icon-size: 1.5rem; cursor: pointer;"></aeria-icon>
+      <aeria-icon @click="reloadTickets" icon="arrows-counter-clockwise" reactive
+        style="--icon-size: 1.5rem; cursor: pointer;"></aeria-icon>
+    </div>
   </div>
 
   <!-- cardtickets -->
-  <div class="tw-border tw-p-5">
+  <div class="tw-border tw-rounded tw-p-5">
     <div v-for="status in [TicketStatus.Open, TicketStatus.Repairing, TicketStatus.Completed]" :key="status">
       <div
         v-if="status === TicketStatus.Open ? openTickets.length : status === TicketStatus.Repairing ? repairingTickets.length : completedTickets.length">
-        <div class="tw-flex tw-items-center tw-gap-2 tw-p-2">
-          <div class="tw-w-4 tw-h-4 tw-rounded-full" :style="{ backgroundColor: statusColor(status) }">
+        <div class="tw-flex tw-items-center tw-justify-between tw-border tw-rounded tw-p-1">
+          <div class="tw-flex tw-items-center tw-gap-2">
+            <div class="tw-w-4 tw-h-4 tw-rounded-full tw-ml-4" :style="{ backgroundColor: statusColor(status) }"></div>
+            <h3>
+              {{ status }}
+            </h3>
           </div>
-          <h3>
-            {{ status.toUpperCase() }}
-          </h3>
+          <div class="tw-text-right tw-font-medium tw-mr-4 ">
+            <aeria-icon reactive icon="ticket" style="--icon-size: 1.5rem;">
+              {{ totalTicketCount[status] }}
+            </aeria-icon>
+          </div>
         </div>
-        <aeria-grid>
+
+
+        <aeria-grid class=" tw-my-5">
           <aeria-card
             v-for="ticket in (status === TicketStatus.Open ? openTickets : status === TicketStatus.Repairing ? repairingTickets : completedTickets)"
             :key="ticket._id" style="border-radius: 1px; max-width: 25rem; cursor: pointer;"
@@ -232,9 +305,8 @@ onMounted(async () => {
             (status === TicketStatus.Repairing && hasRepairing && repairingTickets.length % 7 === 0) ||
             (status === TicketStatus.Completed && hasCompleted && completedTickets.length % 7 === 0))"
             class="tw-flex tw-justify-center tw-items-center">
-            <aeria-button @click="fetchTicket(status, true)">
-              <aeria-icon icon="plus" style="--icon-size: 20px;"></aeria-icon>
-            </aeria-button>
+            <aeria-icon icon="plus" reactive style="--icon-size: 2rem; cursor: pointer;"
+              @click="fetchTicket(status, true)"></aeria-icon>
           </div>
         </aeria-grid>
       </div>

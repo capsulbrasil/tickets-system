@@ -15,6 +15,7 @@ type Props = {
     id: string;
 };
 
+const panelVisible = ref(false)
 const props = defineProps<Props>();
 const ticket = ref<Ticket | null>(null);
 
@@ -102,14 +103,15 @@ onMounted(async () => {
             </div>
             <!-- Comments -->
             <div class="tw-border tw-p-4 tw-mt-4">
-                <h2>Comments</h2>
+                <div class="tw-flex tw-justify-between tw-items-center tw-w-full">
+                    <h2 class="tw-text-left">Comments</h2>
+                    <aeria-button large @click="panelVisible = true">To add</aeria-button>
+                </div>
                 <div v-for="comment in ticket.comments" :key="comment._id">
                     <hr class="tw-border-none tw-bg-gray-400 tw-my-5" style="height: 0.1px;">
                     <div class="tw-flex tw-flex-col tw-space-y-1" v-if="comment.described">
                         <div class="tw-flex tw-justify-between">
-                            <span><b>Comment made by</b> {{ comment.owner.name }}
-                            </span>
-
+                            <span><b>Comment made by</b> {{ comment.owner.name }}</span>
                             <aeria-info where="left">
                                 <template #text>{{ formatDateTime(comment.created_at, { hours: true }) }}</template>
                                 <aeria-icon style="--icon-size: 25px" icon="calendar-blank"></aeria-icon>
@@ -121,4 +123,15 @@ onMounted(async () => {
             </div>
         </div>
     </div>
+    <aeria-panel fixed-right close-hint title="Comment" v-model="panelVisible" @overlay-click="panelVisible = false">
+        <aeria-input :property="{
+            type: 'string',
+            placeholder: 'Leave a comment',
+        }"></aeria-input>
+        <template #footer>
+            <aeria-button>
+                Make a comment
+            </aeria-button>
+        </template>
+    </aeria-panel>
 </template>

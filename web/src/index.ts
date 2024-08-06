@@ -1,36 +1,32 @@
-import { useApp, defineOptions, AeriaMain } from 'aeria-ui'
-import aeriaEn from '@aeria-ui/i18n-en'
-import { en } from './i18n/index.js'
-import { routes } from './routes.js'
+import { useApp, defineOptions, AeriaMain } from "aeria-ui";
+import aeriaEn from "@aeria-ui/i18n-en";
+import { en } from "./i18n/index.js";
+import { routes } from "./routes.js";
 
-import '@aeria-ui/ui/style.css'
-import 'aeria-app-layout/style.css'
-import './style/main.less'
+import "@aeria-ui/ui/style.css";
+import "aeria-app-layout/style.css";
+import "./style/main.less";
 
-import NoResults from './components/no-results.vue'
+import NoResults from "./components/no-results.vue";
 
 const options = defineOptions({
   component: AeriaMain,
   routes,
   i18n: {
-    current: 'en',
+    current: "en",
     locales: {
-      en: [
-        aeriaEn,
-        en,
-      ],
+      en: [aeriaEn, en],
     },
   },
   menuSchema: [
-    '/dashboard/',
-    '/dashboard/ticket',
-    '/dashboard/comment',
-    '/dashboard/user',
+    "/dashboard/",
+    "/dashboard/ticket",
+    "/dashboard/comment",
+    "/dashboard/user",
   ],
-})
+});
 
 useApp(options).then(({ app, mount }) => {
-  app.provide('noResultsComponent', NoResults)
-  mount()
-})
-
+  app.provide("noResultsComponent", NoResults);
+  mount();
+});
