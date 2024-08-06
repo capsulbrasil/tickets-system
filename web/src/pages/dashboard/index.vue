@@ -225,8 +225,8 @@ onMounted(async () => {
   <!-- header -->
   <div class="tw-flex tw-items-center tw-justify-between tw-border tw-rounded tw-p-5">
     <div class="tw-flex tw-items-center tw-space-x-5">
-      <aeria-picture width="2rem" height="2rem" url="favicon.png" alt="Capsul logo"></aeria-picture>
-      <h1 class="tw-opacity-90">Bem-vindo ao Suporte Capsul Brasil</h1>
+      <aeria-picture width="4rem" height="4rem" url="/static/favicon.png" alt="Capsul logo"></aeria-picture>
+      <h1 class="tw-opacity-80">Bem-vindo ao Suporte Capsul Brasil</h1>
     </div>
     <div class="tw-flex tw-items-center tw-space-x-2">
 
@@ -281,10 +281,10 @@ onMounted(async () => {
         </div>
 
 
-        <aeria-grid class=" tw-my-5">
+        <aeria-grid class="tw-my-5">
           <aeria-card
             v-for="ticket in (status === TicketStatus.Open ? openTickets : status === TicketStatus.Repairing ? repairingTickets : completedTickets)"
-            :key="ticket._id" style="border-radius: 1px; max-width: 25rem; cursor: pointer;"
+            :key="ticket._id" style="border-radius: 0.25rem; max-width: 25rem; cursor: pointer;"
             @click="navigateTicket(ticket._id)">
             <aeria-picture v-if="ticket.attached?.link" :url="ticket.attached?.link"></aeria-picture>
 
