@@ -18,7 +18,7 @@ declare type MirrorDescriptions = {
           "title"
         ]
       },
-      "described": {
+      "description": {
         "type": "string"
       },
       "owner": {
@@ -49,7 +49,7 @@ declare type MirrorDescriptions = {
       "crud"
     ],
     "indexes": [
-      "described"
+      "description"
     ],
     "actions": {
       "spawnAdd": {
@@ -242,7 +242,7 @@ declare type MirrorDescriptions = {
         "items": {
           "$ref": "comment",
           "indexes": [
-            "described"
+            "description"
           ]
         }
       },

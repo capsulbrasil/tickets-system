@@ -19,11 +19,11 @@ collection Comment {
   icon "chat-text"
   owned true
   indexes {
-    described
+    description
   }
   properties {
     ticket Ticket
-    described str
+    description str
   }
   functions {
     get @expose

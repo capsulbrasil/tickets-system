@@ -112,7 +112,7 @@ onMounted(async () => {
                 </div>
                 <div v-for="comment in ticket.comments" :key="comment._id">
                     <div class="tw-border tw-rounded tw-p-4 tw-mt-4">
-                        <div class="tw-flex tw-flex-col tw-space-y-1" v-if="comment.described">
+                        <div class="tw-flex tw-flex-col tw-space-y-1" v-if="comment.description">
                             <div class="tw-flex tw-justify-between">
                                 <span><b>{{ comment.owner.name }}</b></span>
                                 <aeria-info where="left">
@@ -120,7 +120,7 @@ onMounted(async () => {
                                     <aeria-icon style="--icon-size: 25px" icon="calendar-blank"></aeria-icon>
                                 </aeria-info>
                             </div>
-                            <p>{{ comment.described }}</p>
+                            <p>{{ comment.description }}</p>
                         </div>
                     </div>
                 </div>

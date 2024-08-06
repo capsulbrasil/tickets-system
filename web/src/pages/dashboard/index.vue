@@ -225,7 +225,7 @@ onMounted(async () => {
   <!-- header -->
   <div class="tw-flex tw-items-center tw-justify-between tw-border tw-rounded tw-p-5">
     <div class="tw-flex tw-items-center tw-space-x-5">
-      <aeria-picture width="4rem" height="4rem" url="/static/favicon.png" alt="Capsul logo"></aeria-picture>
+      <aeria-picture width="4rem" height="4rem" url="/favicon.png" alt="Capsul logo"></aeria-picture>
       <h1 class="tw-opacity-80">Bem-vindo ao Suporte Capsul Brasil</h1>
     </div>
     <div class="tw-flex tw-items-center tw-space-x-2">
