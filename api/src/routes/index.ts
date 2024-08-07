@@ -12,7 +12,7 @@ router.GET(
     const filters: any = {};
 
     if (document) {
-      filters.title = { $regex: `^${document}`, $options: "i" };
+      filters.title = { $regex: `${document}`, $options: "i" };
     }
     if (status) {
       filters.status = status;

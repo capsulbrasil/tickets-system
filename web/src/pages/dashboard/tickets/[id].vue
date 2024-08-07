@@ -55,7 +55,7 @@ onMounted(async () => {
 <template>
     <div v-if="ticket">
         <!-- Title & User Roles -->
-        <div class="tw-border tw-rounded tw-p-4">
+        <div class="">
             <div class="tw-text-center">
                 <h1 class="tw-text-3xl tw-font-bold">{{ capitalizeText(ticket.title) }}</h1>
                 <div class="tw-flex tw-justify-center tw-items-center tw-space-x-2">
@@ -115,10 +115,7 @@ onMounted(async () => {
                         <div class="tw-flex tw-flex-col tw-space-y-1" v-if="comment.description">
                             <div class="tw-flex tw-justify-between">
                                 <span><b>{{ comment.owner.name }}</b></span>
-                                <aeria-info where="left">
-                                    <template #text>{{ formatDateTime(comment.created_at, { hours: true }) }}</template>
-                                    <aeria-icon style="--icon-size: 25px" icon="calendar-blank"></aeria-icon>
-                                </aeria-info>
+                                <div>{{ formatDateTime(comment.created_at, { hours: true }) }}</div>
                             </div>
                             <p>{{ comment.description }}</p>
                         </div>
@@ -127,6 +124,7 @@ onMounted(async () => {
             </div>
         </div>
     </div>
+
     <aeria-panel fixed-right close-hint title="Comment" v-model="panelVisible" @overlay-click="panelVisible = false">
         <aeria-input :property="{
             type: 'string',
