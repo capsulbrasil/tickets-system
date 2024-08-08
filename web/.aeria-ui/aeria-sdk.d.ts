@@ -381,7 +381,7 @@ declare type MirrorDescriptions = {
         "items": {
           "type": "string",
           "enum": [
-            "root",
+            "adm",
             "logistic",
             "support",
             "commerce",
@@ -389,7 +389,7 @@ declare type MirrorDescriptions = {
             "callcenter"
           ],
           "values": [
-            "root",
+            "adm",
             "logistic",
             "support",
             "commerce",

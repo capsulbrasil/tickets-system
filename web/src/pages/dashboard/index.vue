@@ -286,6 +286,7 @@ onMounted(async () => {
             <template #badge>
               <aeria-info where="left">
                 <template #text>{{ ticket.priority }}</template>
+
                 <div class="tw-w-4 tw-h-4 tw-rounded-full tw-opacity-70"
                   :style="{ backgroundColor: priorityColor(ticket.priority) }">
                 </div>
