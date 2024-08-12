@@ -3,7 +3,7 @@ collection TempFile extends aeria.tempFile {}
 collection User extends aeria.user {
   properties {
     roles []enum @values([
-      "adm",
+      "root",
       "logistic",
       "support",
       "commerce",

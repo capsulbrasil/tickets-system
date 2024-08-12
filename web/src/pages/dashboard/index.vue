@@ -222,44 +222,39 @@ onMounted(async () => {
 </script>
 
 <template>
-  <!-- header -->
-  <div class="tw-flex tw-items-center tw-justify-between tw-border tw-rounded tw-p-5">
+  <!-- Title and support -->
+  <header class="tw-flex tw-items-center tw-justify-between tw-border tw-rounded tw-p-5">
     <div class="tw-flex tw-items-center tw-space-x-5">
       <aeria-picture width="4rem" height="4rem" url="/favicon.png" alt="Capsul logo"></aeria-picture>
       <h1 class="tw-opacity-80">Bem-vindo ao Suporte Capsul Brasil</h1>
     </div>
     <div class="tw-flex tw-items-center tw-space-x-2">
-
       <p>Manual de Uso</p>
       <aeria-icon large reactive @click="panelVisible = true" icon="question"
         style="--icon-size: 1.7rem; cursor: pointer;">
       </aeria-icon>
     </div>
-  </div>
-  <!-- guide panel -->
-  <aeria-panel fixed-right close-hint title="Manual do Sistema" v-model="panelVisible"
-    @overlay-click="panelVisible = false">
-    <p>em construção</p>
-  </aeria-panel>
-  <!-- filterbar -->
-  <div class="tw-border tw-rounded tw-p-5">
+  </header>
+  <!--Filterbar-->
+  <nav class="tw-border tw-rounded tw-p-5">
+    <!--Searchbar-->
     <aeria-input v-model="document" @keyup.enter="filterTicket"
       :property="{ type: 'string', placeholder: 'Search tickets' }"></aeria-input>
-
     <div class="tw-flex tw-space-x-4 tw-mt-4">
+      <!--Specific selections-->
       <aeria-select v-model="status" :multiple="false"
         :property="{ enum: [TicketStatus.Open, TicketStatus.Repairing, TicketStatus.Completed] }"></aeria-select>
       <aeria-select v-model="priority" :multiple="false"
         :property="{ enum: [TicketPriority.Low, TicketPriority.Moderate, TicketPriority.Urgent] }"></aeria-select>
-
+      <!--Search and recharge-->
       <aeria-icon @click="filterTicket" icon="magnifying-glass" reactive
         style="--icon-size: 1.5rem; cursor: pointer;"></aeria-icon>
       <aeria-icon @click="reloadTickets" icon="arrows-counter-clockwise" reactive
         style="--icon-size: 1.5rem; cursor: pointer;"></aeria-icon>
     </div>
-  </div>
-  <!-- cardtickets -->
-  <div>
+  </nav>
+  <!--Ticket display-->
+  <section>
     <div v-for="status in [TicketStatus.Open, TicketStatus.Repairing, TicketStatus.Completed]" :key="status">
       <div
         v-if="status === TicketStatus.Open ? openTickets.length : status === TicketStatus.Repairing ? repairingTickets.length : completedTickets.length">
@@ -270,7 +265,7 @@ onMounted(async () => {
               {{ status }}
             </h3>
           </div>
-          <div class="tw-text-right tw-font-medium tw-mr-4 ">
+          <div class="tw-text-right tw-font-medium tw-mr-4 tw-flex">
             <aeria-icon reactive icon="ticket" style="--icon-size: 1.5rem;">
               {{ totalTicketCount[status] }}
             </aeria-icon>
@@ -282,21 +277,17 @@ onMounted(async () => {
             :key="ticket._id" style="border-radius: 0.25rem; max-width: 25rem; cursor: pointer;"
             @click="navigateTicket(ticket._id)">
             <aeria-picture v-if="ticket.attached?.link" :url="ticket.attached?.link"></aeria-picture>
-
             <template #badge>
               <aeria-info where="left">
                 <template #text>{{ ticket.priority }}</template>
-
                 <div class="tw-w-4 tw-h-4 tw-rounded-full tw-opacity-70"
                   :style="{ backgroundColor: priorityColor(ticket.priority) }">
                 </div>
               </aeria-info>
             </template>
-
             <template #footer>
               {{ capitalizeText(ticket.title) }}
             </template>
-
           </aeria-card>
           <div v-if="((status === TicketStatus.Open && hasOpen && openTickets.length % 7 === 0) ||
             (status === TicketStatus.Repairing && hasRepairing && repairingTickets.length % 7 === 0) ||
@@ -308,5 +299,10 @@ onMounted(async () => {
         </aeria-grid>
       </div>
     </div>
-  </div>
+  </section>
+  <!--Guide panel-->
+  <aeria-panel fixed-right close-hint title="Manual do Sistema" v-model="panelVisible"
+    @overlay-click="panelVisible = false">
+    <p>em construção</p>
+  </aeria-panel>
 </template>

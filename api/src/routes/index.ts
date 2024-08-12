@@ -50,7 +50,7 @@ router.GET(
         },
         priority: {
           type: "string",
-          enum: ["Low", "Moderate", "Urgent"],
+          enum: ["low", "Moderate", "Urgent"],
         },
         offset: {
           type: "number",

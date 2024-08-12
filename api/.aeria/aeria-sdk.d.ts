@@ -381,7 +381,7 @@ declare type MirrorDescriptions = {
         "items": {
           "type": "string",
           "enum": [
-            "adm",
+            "root",
             "logistic",
             "support",
             "commerce",
@@ -389,7 +389,7 @@ declare type MirrorDescriptions = {
             "callcenter"
           ],
           "values": [
-            "adm",
+            "root",
             "logistic",
             "support",
             "commerce",
@@ -771,7 +771,7 @@ declare type MirrorRouter = {
           "priority": {
             "type": "string",
             "enum": [
-              "Low",
+              "low",
               "Moderate",
               "Urgent"
             ]

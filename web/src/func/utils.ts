@@ -18,7 +18,7 @@ export function statusColor(status: string) {
 export function priorityColor(priority: string) {
   switch (priority) {
     case "Low":
-      return "#8BC34A"; // light green
+      return "#77e33d"; // light green
     case "Moderate":
       return "#FFC107"; // yellow
     case "Urgent":
