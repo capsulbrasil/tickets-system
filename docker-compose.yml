@@ -24,29 +24,19 @@ services:
       timeout: 5s
       interval: 10s
 
-  web:
-    build:
-      context: web
-    depends_on:
-      api:
-        condition: service_healthy
-    volumes:
-      - api-build:/opt/application/api
-      - web-build:/var/www/html
-
   nginx:
     build:
       context: nginx
     restart: always
     depends_on:
-      - web
+      - api
     ports:
       - 8280:80
     volumes:
+      - api-build:/opt/application/api
       - web-build:/var/www/html
 
 volumes:
   api-build:
   web-build:
   api-storage:
-

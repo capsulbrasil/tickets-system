@@ -44,7 +44,7 @@ onMounted(fetchTicket)
 <template>
     <div v-if="ticket">
         <!-- Name & Ticket ID -->
-        <header class="tw-flex tw-justify-between tw-items-center tw-mb-2.5">
+        <header class="tw-flex tw-justify-between tw-items-center tw-mb-1.5 ">
             <div class="tw-flex tw-items-center tw-space-x-2">
                 <aeria-icon icon="user-circle" style="--icon-size: 3rem;"></aeria-icon>
                 <h1 class="tw-text-lg">{{ ticket.owner?.name }}</h1>
