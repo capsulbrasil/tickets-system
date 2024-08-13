@@ -49,7 +49,7 @@ onMounted(fetchTicket)
                 <aeria-icon icon="user-circle" style="--icon-size: 3rem;"></aeria-icon>
                 <h1 class="tw-text-lg">{{ ticket.owner?.name }}</h1>
                 <h2 v-for="(role, index) in ticket.owner?.roles" :key="index"
-                    class="tw-text-lg tw-border tw-rounded tw-p-1 tw-transition-colors tw-duration-400 hover:tw-text-[#00197E] tw-cursor-pointer">
+                    class="tw-text-sm tw-border tw-rounded tw-p-1 tw-transition-colors tw-duration-400 hover:tw-text-[#00197E] tw-cursor-pointer">
                     {{ role }}
                 </h2>
             </div>

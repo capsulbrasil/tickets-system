@@ -228,10 +228,10 @@ onMounted(async () => {
       <aeria-picture width="4rem" height="4rem" url="/favicon.png" alt="Capsul logo"></aeria-picture>
       <h1 class="tw-opacity-80">Bem-vindo ao Suporte Capsul Brasil</h1>
     </div>
-    <div class="tw-flex tw-items-center tw-space-x-2">
+    <div @click="panelVisible = true" class="tw-flex tw-items-center tw-space-x-2 tw-cursor-pointer">
       <p>Manual de Uso</p>
-      <aeria-icon large reactive @click="panelVisible = true" icon="question"
-        style="--icon-size: 1.7rem; cursor: pointer;">
+      <aeria-icon large icon="question" style="--icon-size: 1.7rem; 
+      ">
       </aeria-icon>
     </div>
   </header>
