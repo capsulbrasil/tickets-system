@@ -17,19 +17,21 @@ collection Ticket {}
 
 collection Comment {
   icon "chat-text"
-  owned true
-  indexes {
+  owned "on-write"
+  required {
     description
   }
   properties {
     ticket Ticket
     description str
+    images []File @accept(["image/*"])
   }
   functions {
     get @expose
     getAll @expose
     insert @expose
     remove @expose
+    upload @expose
   }
   presets {
     crud
@@ -37,8 +39,8 @@ collection Comment {
 }
 
 collection Ticket {
-  owned true
   icon "ticket"
+  owned "on-write"
   filters{
     title
   }
@@ -75,7 +77,7 @@ collection Ticket {
     ])
     description str
     attached File @accept(["image/*"])
-    comments []Comment 
+    comments []Comment @inline
     created_at str @format("date-time")
     updated_at str @format("date-time")
     owner User @populate([roles])

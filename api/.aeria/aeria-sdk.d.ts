@@ -21,6 +21,20 @@ declare type MirrorDescriptions = {
       "description": {
         "type": "string"
       },
+      "images": {
+        "type": "array",
+        "items": {
+          "$ref": "file",
+          "accept": [
+            "image/*"
+          ],
+          "indexes": [
+            "name",
+            "link",
+            "type"
+          ]
+        }
+      },
       "owner": {
         "$ref": "user",
         "noForm": true,
@@ -44,12 +58,12 @@ declare type MirrorDescriptions = {
       }
     },
     "icon": "chat-text",
-    "owned": true,
+    "owned": "on-write",
+    "required": [
+      "description"
+    ],
     "presets": [
       "crud"
-    ],
-    "indexes": [
-      "description"
     ],
     "actions": {
       "spawnAdd": {
@@ -241,9 +255,7 @@ declare type MirrorDescriptions = {
         "type": "array",
         "items": {
           "$ref": "comment",
-          "indexes": [
-            "description"
-          ]
+          "inline": true
         }
       },
       "created_at": {
@@ -381,14 +393,6 @@ declare type MirrorDescriptions = {
         "items": {
           "type": "string",
           "enum": [
-            "root",
-            "logistic",
-            "support",
-            "commerce",
-            "producer",
-            "callcenter"
-          ],
-          "values": [
             "root",
             "logistic",
             "support",
@@ -571,6 +575,14 @@ declare type MirrorRouter = {
     }
   },
   "/comment/remove": {
+    "POST": {
+      "roles": [
+        "root"
+      ],
+      "builtin": true
+    }
+  },
+  "/comment/upload": {
     "POST": {
       "roles": [
         "root"

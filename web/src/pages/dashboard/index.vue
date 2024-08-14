@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { CollectionItemWithId, Result, EndpointError } from '@aeriajs/types'
-import { capitalizeText, statusColor, priorityColor } from '../../func/utils'
+import { capitalizeText, statusColor, priorityColor } from '../../utils.js'
 import { useRouter } from 'vue-router'
 import { onMounted, ref } from 'vue'
 
@@ -39,7 +39,6 @@ const hasCompleted = ref<boolean>(true)
 
 const document = ref<string | null>(null)
 const priority = ref<TicketPriority | null>(null)
-const status = ref<TicketStatus | null>(null)
 
 const panelVisible = ref(false)
 
@@ -77,15 +76,13 @@ const filterTicket = async () => {
     return metaStore.$actions.spawnToast
   }
 
-  if (result) {
-    openTickets.value = orderTicket(result.filter((ticket) => ticket.status === TicketStatus.Open))
-    repairingTickets.value = orderTicket(result.filter((ticket) => ticket.status === TicketStatus.Repairing))
-    completedTickets.value = orderTicket(result.filter((ticket) => ticket.status === TicketStatus.Completed))
+  openTickets.value = orderTicket(result.filter((ticket) => ticket.status === TicketStatus.Open))
+  repairingTickets.value = orderTicket(result.filter((ticket) => ticket.status === TicketStatus.Repairing))
+  completedTickets.value = orderTicket(result.filter((ticket) => ticket.status === TicketStatus.Completed))
 
-    hasOpen.value = result.length === 7
-    hasRepairing.value = result.length === 7
-    hasCompleted.value = result.length === 7
-  }
+  hasOpen.value = result.length === 7
+  hasRepairing.value = result.length === 7
+  hasCompleted.value = result.length === 7
 }
 
 function resetOffsets() {
@@ -95,7 +92,11 @@ function resetOffsets() {
 }
 
 function orderTicket(tickets: Tickets): Tickets {
-  const priorityOrder = { [TicketPriority.Urgent]: 1, [TicketPriority.Moderate]: 2, [TicketPriority.Low]: 3 }
+  const priorityOrder = {
+ [TicketPriority.Urgent]: 1,
+[TicketPriority.Moderate]: 2,
+[TicketPriority.Low]: 3,
+}
   return tickets.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority])
 }
 
@@ -109,8 +110,10 @@ async function reloadTickets() {
 
 async function navigateTicket(id: string) {
   router.push({
-    name: "/dashboard/tickets/[id]",
-    params: { id },
+    name: '/dashboard/ticket-[id]',
+    params: {
+ id,
+},
   })
 }
 
@@ -132,10 +135,12 @@ async function fetchTicket(status: TicketStatus, increment?: boolean) {
   const { error, result }: Result.Either<EndpointError, Tickets> = await aeria.ticket.filter.GET({
     status,
     offset: (
-      status === TicketStatus.Open ? offset.value.openTickets :
-        status === TicketStatus.Repairing ? offset.value.repairingTickets :
+      status === TicketStatus.Open
+? offset.value.openTickets :
+        status === TicketStatus.Repairing
+? offset.value.repairingTickets :
           offset.value.completedTickets
-    )
+    ),
   })
 
   if (error) {
@@ -146,17 +151,32 @@ async function fetchTicket(status: TicketStatus, increment?: boolean) {
     const filteredTickets = result
     switch (status) {
       case TicketStatus.Open:
-        openTickets.value = increment ? [...openTickets.value, ...filteredTickets] : filteredTickets
+        openTickets.value = increment
+? [
+...openTickets.value,
+...filteredTickets,
+]
+: filteredTickets
         openTickets.value = orderTicket(openTickets.value)
         hasOpen.value = result.length === 7
         break
       case TicketStatus.Repairing:
-        repairingTickets.value = increment ? [...repairingTickets.value, ...filteredTickets] : filteredTickets
+        repairingTickets.value = increment
+? [
+...repairingTickets.value,
+...filteredTickets,
+]
+: filteredTickets
         repairingTickets.value = orderTicket(repairingTickets.value)
         hasRepairing.value = result.length === 7
         break
       case TicketStatus.Completed:
-        completedTickets.value = increment ? [...completedTickets.value, ...filteredTickets] : filteredTickets
+        completedTickets.value = increment
+? [
+...completedTickets.value,
+...filteredTickets,
+]
+: filteredTickets
         completedTickets.value = orderTicket(completedTickets.value)
         hasCompleted.value = result.length === 7
         break
@@ -181,31 +201,33 @@ async function countAllTickets() {
   totalTicketCount.value[TicketStatus.Repairing] = 0
   totalTicketCount.value[TicketStatus.Completed] = 0
 
-  let hasMoreTickets = true
   let offset = 0
 
-  while (hasMoreTickets) {
+  for (;;) {
     const { error, result }: Result.Either<EndpointError, Tickets> = await aeria.ticket.filter.GET({
       offset,
     })
 
     if (error) {
-      metaStore.$actions.spawnToast
+      throw new Error
       return
     }
 
     if (result.length === 0) {
-      hasMoreTickets = false
       break
     }
 
-    result.forEach(ticket => {
-      if (ticket.status === TicketStatus.Open) {
-        totalTicketCount.value[TicketStatus.Open]++
-      } else if (ticket.status === TicketStatus.Repairing) {
-        totalTicketCount.value[TicketStatus.Repairing]++
-      } else if (ticket.status === TicketStatus.Completed) {
-        totalTicketCount.value[TicketStatus.Completed]++
+    result.forEach((ticket) => {
+      switch( ticket.status ) {
+        case TicketStatus.Open:
+          totalTicketCount.value[TicketStatus.Open]++
+          break
+        case TicketStatus.Repairing:
+          totalTicketCount.value[TicketStatus.Repairing]++
+          break
+        case TicketStatus.Completed:
+          totalTicketCount.value[TicketStatus.Completed]++
+          break
       }
     })
 
@@ -223,50 +245,150 @@ onMounted(async () => {
 
 <template>
   <!-- Title and support -->
-  <header class="tw-flex tw-items-center tw-justify-between tw-border tw-rounded tw-p-5">
-    <div class="tw-flex tw-items-center tw-space-x-5">
-      <aeria-picture width="4rem" height="4rem" url="/favicon.png" alt="Capsul logo"></aeria-picture>
-      <h1 class="tw-opacity-80">Bem-vindo ao Suporte Capsul Brasil</h1>
+  <header
+    class="
+      tw-flex
+      tw-items-center
+      tw-justify-between
+      tw-border
+      tw-rounded
+      tw-p-5
+    "
+  >
+    <div
+      class="
+        tw-flex
+        tw-items-center
+        tw-space-x-5
+      "
+    >
+      <aeria-picture
+        width="4rem"
+        height="4rem"
+        url="/favicon.png"
+        alt="Capsul logo"
+      />
+      <h1 class="tw-opacity-80">
+        Bem-vindo ao Suporte Capsul Brasil
+      </h1>
     </div>
-    <div @click="panelVisible = true" class="tw-flex tw-items-center tw-space-x-2 tw-cursor-pointer">
+    <div
+      class="
+        tw-flex
+        tw-items-center
+        tw-space-x-2
+        tw-cursor-pointer
+      "
+      @click="panelVisible = true"
+    >
       <p>Manual de Uso</p>
-      <aeria-icon large icon="question" style="--icon-size: 1.7rem; 
-      ">
-      </aeria-icon>
+      <aeria-icon
+        large
+        icon="question"
+        style="--icon-size: 1.7rem;
+      "
+      />
     </div>
   </header>
   <!--Filterbar-->
-  <nav class="tw-border tw-rounded tw-p-5">
+  <nav
+    class="
+      tw-border
+      tw-rounded
+      tw-p-5
+    "
+  >
     <!--Searchbar-->
-    <aeria-input v-model="document" @keyup.enter="filterTicket"
-      :property="{ type: 'string', placeholder: 'Search tickets' }"></aeria-input>
-    <div class="tw-flex tw-space-x-4 tw-mt-4">
+    <aeria-input
+      v-model="document"
+      :property="{ type: 'string', placeholder: 'Search tickets' }"
+      @keyup.enter="filterTicket"
+    />
+    <div
+      class="
+        tw-flex
+        tw-space-x-4
+        tw-mt-4
+      "
+    >
       <!--Specific selections-->
-      <aeria-select v-model="status" :multiple="false"
-        :property="{ enum: [TicketStatus.Open, TicketStatus.Repairing, TicketStatus.Completed] }"></aeria-select>
-      <aeria-select v-model="priority" :multiple="false"
-        :property="{ enum: [TicketPriority.Low, TicketPriority.Moderate, TicketPriority.Urgent] }"></aeria-select>
+      <aeria-select
+        v-model="status"
+        :multiple="false"
+        :property="{ enum: [TicketStatus.Open, TicketStatus.Repairing, TicketStatus.Completed] }"
+      />
+      <aeria-select
+        v-model="priority"
+        :multiple="false"
+        :property="{ enum: [TicketPriority.Low, TicketPriority.Moderate, TicketPriority.Urgent] }"
+      />
       <!--Search and recharge-->
-      <aeria-icon @click="filterTicket" icon="magnifying-glass" reactive
-        style="--icon-size: 1.5rem; cursor: pointer;"></aeria-icon>
-      <aeria-icon @click="reloadTickets" icon="arrows-counter-clockwise" reactive
-        style="--icon-size: 1.5rem; cursor: pointer;"></aeria-icon>
+      <aeria-icon
+        icon="magnifying-glass"
+        reactive
+        style="--icon-size: 1.5rem; cursor: pointer;"
+        @click="filterTicket"
+      />
+      <aeria-icon
+        icon="arrows-counter-clockwise"
+        reactive
+        style="--icon-size: 1.5rem; cursor: pointer;"
+        @click="reloadTickets"
+      />
     </div>
   </nav>
   <!--Ticket display-->
   <section>
-    <div v-for="status in [TicketStatus.Open, TicketStatus.Repairing, TicketStatus.Completed]" :key="status">
+    <div
+      v-for="status in [TicketStatus.Open, TicketStatus.Repairing, TicketStatus.Completed]"
+      :key="status"
+    >
       <div
-        v-if="status === TicketStatus.Open ? openTickets.length : status === TicketStatus.Repairing ? repairingTickets.length : completedTickets.length">
-        <div class="tw-flex tw-items-center tw-justify-between tw-border tw-rounded tw-p-1">
-          <div class="tw-flex tw-items-center tw-gap-2">
-            <div class="tw-w-4 tw-h-4 tw-rounded-full tw-ml-4" :style="{ backgroundColor: statusColor(status) }"></div>
+        v-if="status === TicketStatus.Open ? openTickets.length : status === TicketStatus.Repairing ? repairingTickets.length : completedTickets.length"
+      >
+        <div
+          class="
+            tw-flex
+            tw-items-center
+            tw-justify-between
+            tw-border
+            tw-rounded
+            tw-p-1
+          "
+        >
+          <div
+            class="
+              tw-flex
+              tw-items-center
+              tw-gap-2
+            "
+          >
+            <div
+              class="
+                tw-w-4
+                tw-h-4
+                tw-rounded-full
+                tw-ml-4
+              "
+              :style="{ backgroundColor: statusColor(status) }"
+            />
             <h3>
               {{ status }}
             </h3>
           </div>
-          <div class="tw-text-right tw-font-medium tw-mr-4 tw-flex">
-            <aeria-icon reactive icon="ticket" style="--icon-size: 1.5rem;">
+          <div
+            class="
+              tw-text-right
+              tw-font-medium
+              tw-mr-4
+              tw-flex
+            "
+          >
+            <aeria-icon
+              reactive
+              icon="ticket"
+              style="--icon-size: 1.5rem;"
+            >
               {{ totalTicketCount[status] }}
             </aeria-icon>
           </div>
@@ -274,35 +396,63 @@ onMounted(async () => {
         <aeria-grid class="tw-my-5">
           <aeria-card
             v-for="ticket in (status === TicketStatus.Open ? openTickets : status === TicketStatus.Repairing ? repairingTickets : completedTickets)"
-            :key="ticket._id" style="border-radius: 0.25rem; max-width: 25rem; cursor: pointer;"
-            @click="navigateTicket(ticket._id)">
-            <aeria-picture v-if="ticket.attached?.link" :url="ticket.attached?.link"></aeria-picture>
+            :key="ticket._id"
+            style="border-radius: 0.25rem; max-width: 25rem; cursor: pointer;"
+            @click="navigateTicket(ticket._id)"
+          >
+            <aeria-picture
+              v-if="ticket.attached?.link"
+              :url="ticket.attached?.link"
+            />
             <template #badge>
               <aeria-info where="left">
-                <template #text>{{ ticket.priority }}</template>
-                <div class="tw-w-4 tw-h-4 tw-rounded-full tw-opacity-70"
-                  :style="{ backgroundColor: priorityColor(ticket.priority) }">
-                </div>
+                <template #text>
+                  {{ ticket.priority }}
+                </template>
+                <div
+                  class="
+                    tw-w-4
+                    tw-h-4
+                    tw-rounded-full
+                    tw-opacity-70
+                  "
+                  :style="{ backgroundColor: priorityColor(ticket.priority) }"
+                />
               </aeria-info>
             </template>
             <template #footer>
               {{ capitalizeText(ticket.title) }}
             </template>
           </aeria-card>
-          <div v-if="((status === TicketStatus.Open && hasOpen && openTickets.length % 7 === 0) ||
-            (status === TicketStatus.Repairing && hasRepairing && repairingTickets.length % 7 === 0) ||
-            (status === TicketStatus.Completed && hasCompleted && completedTickets.length % 7 === 0))"
-            class="tw-flex tw-justify-center tw-items-center">
-            <aeria-icon icon="plus" reactive style="--icon-size: 2rem; cursor: pointer;"
-              @click="fetchTicket(status, true)"></aeria-icon>
+          <div
+            v-if="((status === TicketStatus.Open && hasOpen && openTickets.length % 7 === 0) ||
+              (status === TicketStatus.Repairing && hasRepairing && repairingTickets.length % 7 === 0) ||
+              (status === TicketStatus.Completed && hasCompleted && completedTickets.length % 7 === 0))"
+            class="
+              tw-flex
+              tw-justify-center
+              tw-items-center
+            "
+          >
+            <aeria-icon
+              icon="plus"
+              reactive
+              style="--icon-size: 2rem; cursor: pointer;"
+              @click="fetchTicket(status, true)"
+            />
           </div>
         </aeria-grid>
       </div>
     </div>
   </section>
   <!--Guide panel-->
-  <aeria-panel fixed-right close-hint title="Manual do Sistema" v-model="panelVisible"
-    @overlay-click="panelVisible = false">
+  <aeria-panel
+    v-model="panelVisible"
+    fixed-right
+    close-hint
+    title="Manual do Sistema"
+    @overlay-click="panelVisible = false"
+  >
     <p>em construção</p>
   </aeria-panel>
 </template>
