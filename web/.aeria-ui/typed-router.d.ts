@@ -22,5 +22,6 @@ declare module 'vue-router/auto-routes' {
     '/dashboard/': RouteRecordInfo<'/dashboard/', '/dashboard', Record<never, never>, Record<never, never>>,
     '/dashboard/ticket': RouteRecordInfo<'/dashboard/ticket', '/dashboard/ticket', Record<never, never>, Record<never, never>>,
     '/dashboard/ticket-[id]': RouteRecordInfo<'/dashboard/ticket-[id]', '/dashboard/ticket-:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/dashboard/tickets/[id]': RouteRecordInfo<'/dashboard/tickets/[id]', '/dashboard/tickets/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
   }
 }

@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { statusColor, priorityColor } from '../../func/utils'
+import { statusColor, priorityColor } from '../../utils'
 definePage({
-    meta: {
-        title: 'Tickets',
-        icon: 'ticket',
-    },
+  meta: {
+    title: 'Tickets',
+    icon: 'ticket',
+  },
 })
 </script>
 
@@ -18,41 +18,31 @@ definePage({
     </template>
     <!-- Colors of priorities -->
     <template #row-priority="{ row, column }">
-      <div
-        class="
+      <div class="
           tw-flex
           tw-items-center
           tw-gap-2
-        "
-      >
-        <div
-          class="
+        ">
+        <div class="
             tw-w-3
             tw-h-3
             tw-rounded-full
-          "
-          :style="{ backgroundColor: priorityColor(row[column]) }"
-        />
+          " :style="{ backgroundColor: priorityColor(row[column]) }" />
         <div>{{ row[column] }}</div>
       </div>
     </template>
     <!-- Status colors -->
     <template #row-status="{ row, column }">
-      <div
-        class="
+      <div class="
           tw-flex
           tw-items-center
           tw-gap-2
-        "
-      >
-        <div
-          class="
+        ">
+        <div class="
             tw-w-3
             tw-h-3
             tw-rounded-full
-          "
-          :style="{ backgroundColor: statusColor(row[column]) }"
-        />
+          " :style="{ backgroundColor: statusColor(row[column]) }" />
         <div>{{ row[column] }}</div>
       </div>
     </template>
