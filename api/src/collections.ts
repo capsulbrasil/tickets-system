@@ -42,7 +42,7 @@ export const ticket = extendTicketCollection({
       }
 
       const tickets: Ticket[] = [];
-      for (const ticket of result as Ticket[]) {
+      for (const ticket of result) {
         tickets.push({
           ...ticket,
           comments: throwIfError(
