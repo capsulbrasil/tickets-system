@@ -251,13 +251,6 @@ declare type MirrorDescriptions = {
           "type"
         ]
       },
-      "comments": {
-        "type": "array",
-        "items": {
-          "$ref": "comment",
-          "inline": true
-        }
-      },
       "created_at": {
         "type": "string",
         "format": "date-time",
@@ -281,6 +274,9 @@ declare type MirrorDescriptions = {
         "indexes": [
           "name"
         ]
+      },
+      "comments": {
+        "readOnly": true
       }
     },
     "icon": "ticket",
