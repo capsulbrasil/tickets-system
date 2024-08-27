@@ -309,16 +309,6 @@ declare type MirrorDescriptions = {
     "freshItem": {
       "status": "Open"
     },
-    "formLayout": {
-      "fields": {
-        "comments": {
-          "if": {
-            "operator": "truthy",
-            "term1": "_id"
-          }
-        }
-      }
-    },
     "actions": {
       "spawnAdd": {
         "label": "action.add",

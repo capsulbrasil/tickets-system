@@ -7,16 +7,6 @@ export const ticket = extendTicketCollection({
     freshItem: {
       status: "Open",
     },
-    formLayout: {
-      fields: {
-        comments: {
-          if: {
-            operator: "truthy",
-            term1: "_id",
-          },
-        },
-      },
-    },
     properties: {
       comments: {
         getter: async (document, context): Promise<unknown> => {
