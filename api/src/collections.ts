@@ -1,6 +1,6 @@
 export * from "../.aeria/out/collections/index.mjs";
-import { extendTicketCollection } from "../.aeria/out/index.mjs";
 import { throwIfError } from "aeria";
+import { extendTicketCollection } from "../.aeria/out/index.mjs";
 
 export const ticket = extendTicketCollection({
   description: {
