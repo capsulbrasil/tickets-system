@@ -6,7 +6,7 @@ import { onMounted, ref } from 'vue'
 
 definePage({
   meta: {
-    title: 'Dashboard',
+    title: 'Home',
     icon: 'grid-nine',
   },
 })
@@ -211,7 +211,7 @@ async function countAllTickets() {
 
     if (error) {
       throw new Error
-      return
+
     }
 
     if (result.length === 0) {
@@ -245,7 +245,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <!-- Title and support -->
+
   <header class="
       tw-flex
       tw-items-center
@@ -275,7 +275,7 @@ onMounted(async () => {
       " />
     </div>
   </header>
-  <!--Filterbar-->
+
   <nav class="
       tw-border
       tw-rounded
@@ -301,7 +301,7 @@ onMounted(async () => {
         @click="reloadTickets" />
     </div>
   </nav>
-  <!--Ticket display-->
+
   <section>
     <div v-for="status in [TicketStatus.Open, TicketStatus.Repairing, TicketStatus.Completed]" :key="status">
       <div
@@ -377,9 +377,10 @@ onMounted(async () => {
       </div>
     </div>
   </section>
-  <!--Guide panel-->
+
   <aeria-panel v-model="panelVisible" fixed-right close-hint title="Manual do Sistema"
     @overlay-click="panelVisible = false">
-    <p>em construção</p>
+    <h1>Manual de Uso do Sistema Capsul</h1>
   </aeria-panel>
+
 </template>

@@ -17,5 +17,11 @@
     "eslint-config-aeria": "^0.0.31",
     "husky": "^9.1.4",
     "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "@eslint/config-array": "^0.18.0",
+    "@eslint/object-schema": "^2.1.4",
+    "glob": "^11.0.0",
+    "rimraf": "^6.0.1"
   }
 }
