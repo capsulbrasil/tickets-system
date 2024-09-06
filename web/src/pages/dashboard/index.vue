@@ -31,9 +31,9 @@ const metaStore = useStore('meta')
 const router = useRouter()
 
 const alltickets = ref({
-  openTickets: { status: "Open", tickets:<Tickets>[]},
-  repairingTickets: { status: "Repairing", tickets:<Tickets>[]},
-  completedTickets: { status: "Completed", tickets:<Tickets>[]},
+  openTickets: { status: "Open", tickets: <Tickets>[] },
+  repairingTickets: { status: "Repairing", tickets: <Tickets>[] },
+  completedTickets: { status: "Completed", tickets: <Tickets>[] },
 })
 
 const document = ref<string | null>(null)
@@ -57,7 +57,7 @@ const totalTicketCount = ref<{ [key in TicketStatus]: number }>({
 
 const filterTicket = async () => {
   const query: any = {}
-  
+
   if (document.value) {
     query.document = document.value
   }
@@ -67,7 +67,7 @@ const filterTicket = async () => {
   if (priority.value) {
     query.priority = priority.value
   }
-  if (limit.value){
+  if (limit.value) {
     query.limit = limit.value
   }
 
@@ -106,8 +106,8 @@ watch(status, filterTicket)
 watch(priority, filterTicket)
 watch(document, filterTicket)
 
-async function navigateTicket(id: string) {
-  router.push({
+function navigateTicket(id: string) {
+  return router.push({
     name: '/dashboard/ticket-[id]',
     params: {
       id,
@@ -116,13 +116,13 @@ async function navigateTicket(id: string) {
 }
 
 async function countAllTickets() {
-  
+
   totalTicketCount.value[TicketStatus.Open] = 0
   totalTicketCount.value[TicketStatus.Repairing] = 0
   totalTicketCount.value[TicketStatus.Completed] = 0
-  
-  const {error,result} = await aeria.ticket.countAll.GET()
-  if(error){
+
+  const { error, result } = await aeria.ticket.countAll.GET()
+  if (error) {
     return
   }
   totalTicketCount.value[TicketStatus.Open] = result.openTickets
@@ -196,8 +196,7 @@ onMounted(async () => {
 
   <section>
     <div v-for="tickets in alltickets" :key="tickets.status">
-      <div
-        v-if="tickets.tickets.length > 0">
+      <div v-if="tickets.tickets.length > 0">
         <div class="
             tw-flex
             tw-items-center
@@ -233,9 +232,8 @@ onMounted(async () => {
           </div>
         </div>
         <aeria-grid class="tw-my-5">
-          <aeria-card
-            v-for="ticket in tickets.tickets" style="border-radius: 0.25rem; max-width: 25rem; cursor: pointer;"
-            @click="navigateTicket(ticket._id)">
+          <aeria-card v-for="ticket in tickets.tickets"
+            style="border-radius: 0.25rem; max-width: 25rem; cursor: pointer;" @click="navigateTicket(ticket._id)">
             <aeria-picture v-if="ticket.attached?.link" :url="ticket.attached?.link" />
             <template #badge>
               <aeria-info where="left">
@@ -254,13 +252,13 @@ onMounted(async () => {
               {{ capitalizeText(ticket.title) }}
             </template>
           </aeria-card>
-          <div v-if="totalTicketCount[tickets.status as TicketStatus] >= limit" class="
+          <div v-if="totalTicketCount[tickets.status as TicketStatus] >= 5" class="
               tw-flex
               tw-justify-center
               tw-items-center
             ">
             <aeria-icon icon="plus" reactive style="--icon-size: 2rem; cursor: pointer;"
-              @click="status = tickets.status as TicketStatus, limit *= 2" />
+              @click="status = tickets.status as TicketStatus, limit *= 5" />
           </div>
         </aeria-grid>
       </div>

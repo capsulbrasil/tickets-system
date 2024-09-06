@@ -4,10 +4,10 @@ import { type CollectionItemWithId } from '@aeriajs/types'
 import { statusColor, priorityColor, capitalizeText } from '../../utils.js'
 
 definePage({
-    props: true,
-    meta: {
- title: 'Report',
-},
+  props: true,
+  meta: {
+    title: 'Report',
+  },
 })
 
 type Ticket = CollectionItemWithId<'ticket'>
@@ -26,80 +26,67 @@ const addComment = () => {
 }
 
 const fetchTicket = async () => {
-    const { error, result } = await aeria().ticket.get.POST({
- filters: {
- _id: props.id,
-},
-})
-    if (!error) {
-ticket.value = result
-}
+  const { error, result } = await aeria().ticket.get.POST({
+    filters: {
+      _id: props.id,
+    },
+  })
+  if (!error) {
+    ticket.value = result
+  }
 }
 
 const updateStatus = async (newStatus: 'Repairing' | 'Completed') => {
-    if (!ticket.value) {
-return
-}
+  if (!ticket.value) {
+    return
+  }
 
-    const { error, result } = await aeria.ticket.insert.POST({
-        what: {
- _id: ticket.value._id,
-status: newStatus,
-},
-    })
+  const { error, result } = await aeria.ticket.insert.POST({
+    what: {
+      _id: ticket.value._id,
+      status: newStatus,
+    },
+  })
 
-    if( error ){
-      throw new Error
-    }
-    ticket.value.status = result.status
+  if (error) {
+    throw new Error
+  }
+  ticket.value.status = result.status
 }
 
 const copy = (text: string) => {
-    navigator.clipboard.writeText(text).then(() => {
-        alert('ID copiado')
-    }).catch((error) => {
-        console.error('Erro ao copiar o ID: ', error)
-    })
+  navigator.clipboard.writeText(text).then(() => {
+    alert('ID copiado')
+  }).catch((error) => {
+    console.error('Erro ao copiar o ID: ', error)
+  })
 }
 
 onMounted(fetchTicket)
 </script>
 
 <template>
-  <div
-    v-if="ticket"
-    class="
+  <div v-if="ticket" class="
       tw-flex
       tw-flex-col
       tw-gap-4
-    "
-  >
+    ">
     <!-- Name & Ticket ID -->
-    <header
-      class="
+    <header class="
         tw-flex
         tw-justify-between
         tw-items-center
-      "
-    >
-      <div
-        class="
+      ">
+      <div class="
           tw-flex
           tw-items-center
           tw-space-x-2
-        "
-      >
-        <aeria-icon
-          icon="user-circle"
-          style="--icon-size: 3rem;"
-        />
+        ">
+        <aeria-icon icon="user-circle" style="--icon-size: 3rem;" />
         <h1 class="tw-text-lg">
           {{ ticket.owner?.name }}
         </h1>
-        <h2
-          v-for="(role, index) in ticket.owner?.roles"
-          :key="index"
-          class="
+        <h2 v-for="(role, index) in ticket.owner?.roles" :key="index" class="
             tw-text-sm
             tw-border
             tw-rounded
@@ -109,108 +96,76 @@ onMounted(fetchTicket)
             tw-cursor-pointer
 
             hover:tw-text-[#00197E]
-          "
-        >
+          ">
           {{ role }}
         </h2>
       </div>
       <div class="tw-flex">
-        <aeria-icon
-          reactive
-          icon="copy"
-          style="--icon-size: 1.5rem;"
-          class="
+        <aeria-icon reactive icon="copy" style="--icon-size: 1.5rem;" class="
             tw-mr-5
             tw-cursor-pointer
-          "
-          @click="copy(ticket._id)"
-        >
+          " @click="copy(ticket._id)">
           <code>{{ ticket._id }}</code>
         </aeria-icon>
-        <aeria-context-menu
-          :actions="[
-            { label: 'Repairing', icon: 'eye', click: () => updateStatus('Repairing') },
-            { label: 'Completed', icon: 'eye-closed', click: () => updateStatus('Completed') },
-          ]"
-        >
-          <div
-            class="
+        <aeria-context-menu :actions="[
+          { label: 'Repairing', icon: 'eye', click: () => updateStatus('Repairing') },
+          { label: 'Completed', icon: 'eye-closed', click: () => updateStatus('Completed') },
+        ]">
+          <div class="
               tw-border
               tw-rounded
               tw-flex
               tw-items-center
               tw-p-1
               tw-cursor-pointer
-            "
-          >
-            <div
-              class="
+            ">
+            <div class="
                 tw-w-4
                 tw-h-4
                 tw-rounded-full
                 tw-shadow-md
                 tw-ml-3
-              "
-              :style="{ backgroundColor: statusColor(ticket.status) }"
-            />
-            <span
-              class="
+              " :style="{ backgroundColor: statusColor(ticket.status) }" />
+            <span class="
                 tw-uppercase
                 tw-font-bold
                 tw-ml-2
-              "
-            >{{ ticket.status }}</span>
+              ">{{ ticket.status }}</span>
 
-            <aeria-icon
-              style="--icon-size: 1.5rem; cursor: pointer"
-              icon="plus"
-              class="
+            <aeria-icon style="--icon-size: 1.5rem; cursor: pointer" icon="plus" class="
                 tw-ml-1
                 tw-mr-1
                 tw-p-2
-              "
-            />
+              " />
           </div>
         </aeria-context-menu>
       </div>
     </header>
     <!-- Ticket Report -->
     <section>
-      <div
-        class="
+      <div class="
           tw-flex
           tw-gap-4
-        "
-      >
-        <div
-          class="
+        ">
+        <div class="
             tw-border
             tw-rounded
             tw-p-4
             tw-flex-1
-          "
-        >
-          <div
-            class="
+          ">
+          <div class="
               tw-flex
               tw-items-center
               tw-justify-between
-            "
-          >
-            <div
-              class="
+            ">
+            <div class="
                 tw-font-bold
                 tw-text-2xl
                 tw-mr-5
-              "
-              :style="{ color: priorityColor(ticket.priority) }"
-            >
+              " :style="{ color: priorityColor(ticket.priority) }">
               {{ capitalizeText(ticket.title) }}
             </div>
-            <aeria-icon
-              icon="calendar-blank"
-              style="--icon-size: 1.5rem;"
-            >
+            <aeria-icon icon="calendar-blank" style="--icon-size: 1.5rem;">
               {{ formatDateTime(ticket.created_at) }}
             </aeria-icon>
           </div>
@@ -219,12 +174,7 @@ onMounted(fetchTicket)
           </p>
         </div>
 
-        <aeria-picture
-          v-if="ticket.attached?.link"
-          expandable
-          object-fit="contain"
-          :url="ticket.attached.link"
-          class="
+        <aeria-picture v-if="ticket.attached?.link" expandable object-fit="contain" :url="ticket.attached.link" class="
             tw-h-80
             tw-flex-shrink-0
             tw-border
@@ -232,71 +182,47 @@ onMounted(fetchTicket)
             tw-p-3
 
             lg:tw-max-w-[32%]
-          "
-        />
+          " />
       </div>
     </section>
     <!-- Comments -->
-    <section
-      class="
+    <section class="
         tw-border
         tw-rounded
         tw-p-4
-      "
-    >
-      <div
-        class="
+      ">
+      <div class="
           tw-flex
           tw-justify-between
           tw-items-center
           tw-w-full
-        "
-      >
-        <aeria-icon
-          icon="chat-text"
-          class="tw-text-lg"
-        >
+        ">
+        <aeria-icon icon="chat-text" class="tw-text-lg">
           Comments
         </aeria-icon>
 
-        <aeria-button
-          icon="plus"
-          variant="alt"
-          @click="addComment"
-        >
+        <aeria-button icon="plus" variant="alt" @click="addComment">
           Adicionar
         </aeria-button>
       </div>
 
-      <div
-        v-for="comment in ticket.comments"
-        :key="comment._id"
-        class="
+      <div v-for="comment in ticket.comments" :key="comment._id" class="
           tw-border
           tw-rounded
           tw-p-4
           tw-mt-4
-        "
-      >
-        <div
-          v-if="comment.description"
-          class="
+        ">
+        <div v-if="comment.description" class="
             tw-flex
             tw-flex-col
             tw-space-y-1
-          "
-        >
-          <div
-            class="
+          ">
+          <div class="
               tw-flex
               tw-justify-between
-            "
-          >
+            ">
             <b>{{ comment.owner.name }}</b>
-            <aeria-icon
-              icon="calendar"
-              class="tw-text-xs"
-            >
+            <aeria-icon icon="calendar" class="tw-text-xs">
               {{ formatDateTime(comment.created_at, { hours: true }) }}
             </aeria-icon>
           </div>
@@ -306,19 +232,12 @@ onMounted(fetchTicket)
     </section>
   </div>
 
-  <aeria-insert-panel
-    v-model:visible="addCommentPanel"
-    fixed-right
-    close-hint
-    v-bind="{
-      title: 'Adicionar comentário',
-      collection: 'comment',
-      form: [
-        'description',
-        'images',
-      ],
-    }"
-    @insert="ticket.comments.unshift($event)"
-    @cancel="addCommentPanel = false"
-  />
+  <aeria-insert-panel v-model:visible="addCommentPanel" fixed-right close-hint v-bind="{
+    title: 'Adicionar comentário',
+    collection: 'comment',
+    form: [
+      'description',
+      'images',
+    ],
+  }" @insert="ticket.comments.unshift($event)" @cancel="addCommentPanel = false" />
 </template>
