@@ -19,7 +19,6 @@ router.GET("/ticket/filter", async (context) => {
 
     const options: any = {};
     if (limit) {
-      //options.offset = Number(offset);
       options.offset = 0
       options.limit = Number(limit);
     }
@@ -57,7 +56,6 @@ router.GET("/ticket/filter", async (context) => {
         });
       }
     }
-    console.log(options)
     const {error: openErrorTickets,result: openTickets } = await context.collections.ticket.functions.getAll({
       filters:{
         status:'Open',
