@@ -10,7 +10,10 @@ definePage({
 },
 })
 
-type Ticket = CollectionItemWithId<'ticket'>
+type Ticket = Omit<CollectionItemWithId<'ticket'>, 'comments'> & {
+  comments: CollectionItemWithId<'comment'>[]
+}
+
 type Props = { id: string }
 
 const ticket = ref<Ticket | null>(null)
@@ -21,7 +24,9 @@ const commentStore = useStore('comment')
 const addCommentPanel = ref(false)
 const addComment = () => {
   commentStore.$actions.clearItem()
-  commentStore.item.ticket = props.id
+  Object.assign(commentStore.item, {
+    ticket: props.id,
+  })
   addCommentPanel.value = true
 }
 
@@ -32,7 +37,7 @@ const fetchTicket = async () => {
 },
 })
     if (!error) {
-ticket.value = result
+ticket.value = result as unknown as Ticket
 }
 }
 
@@ -224,6 +229,7 @@ onMounted(fetchTicket)
           expandable
           object-fit="contain"
           :url="ticket.attached.link"
+          alt="Ticket attachment"
           class="
             tw-h-80
             tw-flex-shrink-0
@@ -292,7 +298,7 @@ onMounted(fetchTicket)
               tw-justify-between
             "
           >
-            <b>{{ comment.owner.name }}</b>
+            <b>{{ comment.owner?.name }}</b>
             <aeria-icon
               icon="calendar"
               class="tw-text-xs"
@@ -307,6 +313,7 @@ onMounted(fetchTicket)
   </div>
 
   <aeria-insert-panel
+    v-if="ticket"
     v-model:visible="addCommentPanel"
     fixed-right
     close-hint

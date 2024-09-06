@@ -27,8 +27,8 @@ enum TicketPriority {
 type Ticket = CollectionItemWithId<'ticket'>
 type Tickets = Ticket[]
 
-const metaStore = useStore('meta')
 const router = useRouter()
+const metaStore = useStore('meta')
 
 const alltickets = ref({
   openTickets: { status: "Open", tickets:<Tickets>[]},
@@ -106,8 +106,8 @@ watch(status, filterTicket)
 watch(priority, filterTicket)
 watch(document, filterTicket)
 
-async function navigateTicket(id: string) {
-  router.push({
+function navigateTicket(id: string) {
+  return router.push({
     name: '/dashboard/ticket-[id]',
     params: {
       id,
@@ -236,7 +236,7 @@ onMounted(async () => {
           <aeria-card
             v-for="ticket in tickets.tickets" style="border-radius: 0.25rem; max-width: 25rem; cursor: pointer;"
             @click="navigateTicket(ticket._id)">
-            <aeria-picture v-if="ticket.attached?.link" :url="ticket.attached?.link" />
+            <aeria-picture v-if="ticket.attached?.link" :url="ticket.attached?.link" alt="Ticket attachment" />
             <template #badge>
               <aeria-info where="left">
                 <template #text>
