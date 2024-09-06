@@ -9,26 +9,20 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
-    AeriaBadge: typeof import('@aeria-ui/ui')['AeriaBadge']
     AeriaButton: typeof import('@aeria-ui/ui')['AeriaButton']
     AeriaCard: typeof import('@aeria-ui/ui')['AeriaCard']
     AeriaContextMenu: typeof import('@aeria-ui/ui')['AeriaContextMenu']
     AeriaCrud: typeof import('@aeria-ui/ui')['AeriaCrud']
-    AeriaForm: typeof import('@aeria-ui/ui')['AeriaForm']
     AeriaGrid: typeof import('@aeria-ui/ui')['AeriaGrid']
     AeriaIcon: typeof import('@aeria-ui/ui')['AeriaIcon']
     AeriaInfo: typeof import('@aeria-ui/ui')['AeriaInfo']
     AeriaInput: typeof import('@aeria-ui/ui')['AeriaInput']
     AeriaInsertPanel: typeof import('@aeria-ui/ui')['AeriaInsertPanel']
-    AeriaManual: typeof import('@aeria-ui/ui')['AeriaManual']
-    AeriaModal: typeof import('@aeria-ui/ui')['AeriaModal']
     AeriaPanel: typeof import('@aeria-ui/ui')['AeriaPanel']
     AeriaPicture: typeof import('@aeria-ui/ui')['AeriaPicture']
     AeriaSelect: typeof import('@aeria-ui/ui')['AeriaSelect']
-    AeriaTextblock: typeof import('@aeria-ui/ui')['AeriaTextblock']
     NoResults: typeof import('./../src/components/no-results.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    TicketDescription: typeof import('./../src/components/ticketDescription.vue')['default']
   }
 }
