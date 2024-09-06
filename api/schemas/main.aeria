@@ -82,6 +82,7 @@ collection Ticket {
     owner User @populate([roles])
   }
   functions {
+    count @expose
     get @expose
     getAll @expose
     insert @expose

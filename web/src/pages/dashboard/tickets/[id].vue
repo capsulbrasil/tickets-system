@@ -19,6 +19,7 @@ const fetchTicket = async () => {
     const { error, result } = await aeria().ticket.get.POST({ filters: { _id: propsConfig.id } })
     if (!error) ticket.value = result
 }
+    
 
 const updateStatus = async (newStatus: 'Repairing' | 'Completed') => {
     if (!ticket.value) return
@@ -96,7 +97,7 @@ onMounted(fetchTicket)
             </div>
         </section>
         <!-- Comments -->
-        <section class="tw-border tw-rounded tw-p-4 tw-mt-3.5">
+        <section v-if="ticket.comments" class="tw-border tw-rounded tw-p-4 tw-mt-3.5">
             <div class="tw-flex tw-justify-between tw-items-center tw-w-full">
                 <aeria-icon large icon="chat-text" style="--icon-size: 2rem">
                     <h4 class="tw-text-left tw-text-xl">Comments</h4>

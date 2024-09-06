@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import type { CollectionItemWithId, Result, EndpointError } from '@aeriajs/types'
+import type { CollectionItemWithId } from '@aeriajs/types'
 import { capitalizeText, statusColor, priorityColor } from '../../utils.js'
 import { useRouter } from 'vue-router'
 import { onMounted, ref } from 'vue'
+import Ticket from './ticket.vue';
 
 definePage({
   meta: {
@@ -29,17 +30,16 @@ type Tickets = Ticket[]
 const metaStore = useStore('meta')
 const router = useRouter()
 
-const openTickets = ref<Tickets>([])
-const repairingTickets = ref<Tickets>([])
-const completedTickets = ref<Tickets>([])
-
-const hasOpen = ref<boolean>(true)
-const hasRepairing = ref<boolean>(true)
-const hasCompleted = ref<boolean>(true)
+const alltickets = ref({
+  openTickets: { status: "Open", tickets:<Tickets>[]},
+  repairingTickets: { status: "Repairing", tickets:<Tickets>[]},
+  completedTickets: { status: "Completed", tickets:<Tickets>[]},
+})
 
 const document = ref<string | null>(null)
 const priority = ref<TicketPriority | null>(null)
 const status = ref<TicketStatus | null>(null)
+const limit = ref<number>(5)
 
 const panelVisible = ref(false)
 
@@ -56,11 +56,8 @@ const totalTicketCount = ref<{ [key in TicketStatus]: number }>({
 })
 
 const filterTicket = async () => {
-  if (!document.value && !status.value && !priority.value) {
-    return
-  }
-
   const query: any = {}
+  
   if (document.value) {
     query.document = document.value
   }
@@ -70,20 +67,18 @@ const filterTicket = async () => {
   if (priority.value) {
     query.priority = priority.value
   }
+  if (limit.value){
+    query.limit = limit.value
+  }
 
-  const { error, result }: Result.Either<EndpointError, Tickets> = await aeria.ticket.filter.GET(query)
+  const { error, result } = await aeria.ticket.filter.GET(query)
 
   if (error) {
     return metaStore.$actions.spawnToast
   }
-
-  openTickets.value = orderTicket(result.filter((ticket) => ticket.status === TicketStatus.Open))
-  repairingTickets.value = orderTicket(result.filter((ticket) => ticket.status === TicketStatus.Repairing))
-  completedTickets.value = orderTicket(result.filter((ticket) => ticket.status === TicketStatus.Completed))
-
-  hasOpen.value = result.length === 7
-  hasRepairing.value = result.length === 7
-  hasCompleted.value = result.length === 7
+  alltickets.value.openTickets.tickets = orderTicket(result.openTickets.filter((ticket: Ticket) => ticket.status === TicketStatus.Open))
+  alltickets.value.repairingTickets.tickets = orderTicket(result.repairingTickets.filter((ticket: Ticket) => ticket.status === TicketStatus.Repairing))
+  alltickets.value.completedTickets.tickets = orderTicket(result.completedTickets.filter((ticket: Ticket) => ticket.status === TicketStatus.Completed))
 }
 
 function resetOffsets() {
@@ -103,11 +98,13 @@ function orderTicket(tickets: Tickets): Tickets {
 
 async function reloadTickets() {
   resetOffsets()
-  await fetchTicket(TicketStatus.Open)
-  await fetchTicket(TicketStatus.Repairing)
-  await fetchTicket(TicketStatus.Completed)
+  await filterTicket()
   await countAllTickets()
 }
+
+watch(status, filterTicket)
+watch(priority, filterTicket)
+watch(document, filterTicket)
 
 async function navigateTicket(id: string) {
   router.push({
@@ -118,128 +115,23 @@ async function navigateTicket(id: string) {
   })
 }
 
-async function fetchTicket(status: TicketStatus, increment?: boolean) {
-  if (increment) {
-    switch (status) {
-      case TicketStatus.Open:
-        offset.value.openTickets += 7
-        break
-      case TicketStatus.Repairing:
-        offset.value.repairingTickets += 7
-        break
-      case TicketStatus.Completed:
-        offset.value.completedTickets += 7
-        break
-    }
-  }
-
-  const { error, result }: Result.Either<EndpointError, Tickets> = await aeria.ticket.filter.GET({
-    status,
-    offset: (
-      status === TicketStatus.Open
-        ? offset.value.openTickets :
-        status === TicketStatus.Repairing
-          ? offset.value.repairingTickets :
-          offset.value.completedTickets
-    ),
-  })
-
-  if (error) {
-    return metaStore.$actions.spawnToast
-  }
-
-  if (result.length > 0) {
-    const filteredTickets = result
-    switch (status) {
-      case TicketStatus.Open:
-        openTickets.value = increment
-          ? [
-            ...openTickets.value,
-            ...filteredTickets,
-          ]
-          : filteredTickets
-        openTickets.value = orderTicket(openTickets.value)
-        hasOpen.value = result.length === 7
-        break
-      case TicketStatus.Repairing:
-        repairingTickets.value = increment
-          ? [
-            ...repairingTickets.value,
-            ...filteredTickets,
-          ]
-          : filteredTickets
-        repairingTickets.value = orderTicket(repairingTickets.value)
-        hasRepairing.value = result.length === 7
-        break
-      case TicketStatus.Completed:
-        completedTickets.value = increment
-          ? [
-            ...completedTickets.value,
-            ...filteredTickets,
-          ]
-          : filteredTickets
-        completedTickets.value = orderTicket(completedTickets.value)
-        hasCompleted.value = result.length === 7
-        break
-    }
-  } else {
-    switch (status) {
-      case TicketStatus.Open:
-        hasOpen.value = false
-        break
-      case TicketStatus.Repairing:
-        hasRepairing.value = false
-        break
-      case TicketStatus.Completed:
-        hasCompleted.value = false
-        break
-    }
-  }
-}
-
 async function countAllTickets() {
+  
   totalTicketCount.value[TicketStatus.Open] = 0
   totalTicketCount.value[TicketStatus.Repairing] = 0
   totalTicketCount.value[TicketStatus.Completed] = 0
-
-  let offset = 0
-
-  for (; ;) {
-    const { error, result }: Result.Either<EndpointError, Tickets> = await aeria.ticket.filter.GET({
-      offset,
-    })
-
-    if (error) {
-      throw new Error
-
-    }
-
-    if (result.length === 0) {
-      break
-    }
-
-    result.forEach((ticket) => {
-      switch (ticket.status) {
-        case TicketStatus.Open:
-          totalTicketCount.value[TicketStatus.Open]++
-          break
-        case TicketStatus.Repairing:
-          totalTicketCount.value[TicketStatus.Repairing]++
-          break
-        case TicketStatus.Completed:
-          totalTicketCount.value[TicketStatus.Completed]++
-          break
-      }
-    })
-
-    offset += result.length
+  
+  const {error,result} = await aeria.ticket.countAll.GET()
+  if(error){
+    return
   }
+  totalTicketCount.value[TicketStatus.Open] = result.openTickets
+  totalTicketCount.value[TicketStatus.Repairing] = result.repairingTickets
+  totalTicketCount.value[TicketStatus.Completed] = result.completedTickets
 }
 
 onMounted(async () => {
-  await fetchTicket(TicketStatus.Open)
-  await fetchTicket(TicketStatus.Repairing)
-  await fetchTicket(TicketStatus.Completed)
+  await filterTicket()
   await countAllTickets()
 })
 </script>
@@ -295,17 +187,17 @@ onMounted(async () => {
       <aeria-select v-model="priority" :multiple="false"
         :property="{ enum: [TicketPriority.Low, TicketPriority.Moderate, TicketPriority.Urgent] }" />
       <!--Search and recharge-->
-      <aeria-icon icon="magnifying-glass" reactive style="--icon-size: 1.5rem; cursor: pointer;"
-        @click="filterTicket" />
+      <!--<aeria-icon icon="magnifying-glass" reactive style="--icon-size: 1.5rem; cursor: pointer;"
+        @click="filterTicket" /> -->
       <aeria-icon icon="arrows-counter-clockwise" reactive style="--icon-size: 1.5rem; cursor: pointer;"
-        @click="reloadTickets" />
+        @click="status = null, limit = 5" />
     </div>
   </nav>
 
   <section>
-    <div v-for="status in [TicketStatus.Open, TicketStatus.Repairing, TicketStatus.Completed]" :key="status">
+    <div v-for="tickets in alltickets" :key="tickets.status">
       <div
-        v-if="status === TicketStatus.Open ? openTickets.length : status === TicketStatus.Repairing ? repairingTickets.length : completedTickets.length">
+        v-if="tickets.tickets.length > 0">
         <div class="
             tw-flex
             tw-items-center
@@ -324,9 +216,9 @@ onMounted(async () => {
                 tw-h-4
                 tw-rounded-full
                 tw-ml-4
-              " :style="{ backgroundColor: statusColor(status) }" />
+              " :style="{ backgroundColor: statusColor(tickets.status) }" />
             <h3>
-              {{ status }}
+              {{ tickets.status }}
             </h3>
           </div>
           <div class="
@@ -336,14 +228,13 @@ onMounted(async () => {
               tw-flex
             ">
             <aeria-icon reactive icon="ticket" style="--icon-size: 1.5rem;">
-              {{ totalTicketCount[status] }}
+              {{ totalTicketCount[tickets.status as TicketStatus] }}
             </aeria-icon>
           </div>
         </div>
         <aeria-grid class="tw-my-5">
           <aeria-card
-            v-for="ticket in (status === TicketStatus.Open ? openTickets : status === TicketStatus.Repairing ? repairingTickets : completedTickets)"
-            :key="ticket._id" style="border-radius: 0.25rem; max-width: 25rem; cursor: pointer;"
+            v-for="ticket in tickets.tickets" style="border-radius: 0.25rem; max-width: 25rem; cursor: pointer;"
             @click="navigateTicket(ticket._id)">
             <aeria-picture v-if="ticket.attached?.link" :url="ticket.attached?.link" />
             <template #badge>
@@ -363,15 +254,13 @@ onMounted(async () => {
               {{ capitalizeText(ticket.title) }}
             </template>
           </aeria-card>
-          <div v-if="((status === TicketStatus.Open && hasOpen && openTickets.length % 7 === 0) ||
-            (status === TicketStatus.Repairing && hasRepairing && repairingTickets.length % 7 === 0) ||
-            (status === TicketStatus.Completed && hasCompleted && completedTickets.length % 7 === 0))" class="
+          <div v-if="totalTicketCount[tickets.status as TicketStatus] >= limit" class="
               tw-flex
               tw-justify-center
               tw-items-center
             ">
             <aeria-icon icon="plus" reactive style="--icon-size: 2rem; cursor: pointer;"
-              @click="fetchTicket(status, true)" />
+              @click="status = tickets.status as TicketStatus, limit *= 2" />
           </div>
         </aeria-grid>
       </div>

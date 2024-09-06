@@ -615,6 +615,14 @@ declare type MirrorRouter = {
       "builtin": true
     }
   },
+  "/ticket/count": {
+    "POST": {
+      "roles": [
+        "root"
+      ],
+      "builtin": true
+    }
+  },
   "/ticket/get": {
     "POST": {
       "roles": [
@@ -776,9 +784,145 @@ declare type MirrorRouter = {
           },
           "offset": {
             "type": "number"
+          },
+          "limit": {
+            "type": "number"
           }
         }
-      }
+      },
+      "response": [
+        {
+          "type": "object",
+          "properties": {
+            "_tag": {
+              "const": "Error"
+            },
+            "result": {},
+            "error": {
+              "type": "object",
+              "required": [
+                "httpStatus",
+                "code"
+              ],
+              "properties": {
+                "httpStatus": {
+                  "enum": [
+                    404
+                  ]
+                },
+                "code": {
+                  "enum": [
+                    "NO_TICKETS_FOUND"
+                  ]
+                },
+                "message": {
+                  "type": "string"
+                },
+                "details": {
+                  "type": "object",
+                  "variable": true
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "_tag": {
+              "const": "Result"
+            },
+            "error": {},
+            "result": {
+              "type": "object",
+              "properties": {
+                "openTickets": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "ticket"
+                  }
+                },
+                "repairingTickets": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "ticket"
+                  }
+                },
+                "closedTickets": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "ticket"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "/ticket/countAll": {
+    "GET": {
+      "response": [
+        {
+          "type": "object",
+          "properties": {
+            "_tag": {
+              "const": "Error"
+            },
+            "result": {},
+            "error": {
+              "type": "object",
+              "required": [
+                "httpStatus",
+                "code"
+              ],
+              "properties": {
+                "httpStatus": {
+                  "enum": [
+                    404
+                  ]
+                },
+                "code": {
+                  "enum": [
+                    "NO_TICKETS_FOUND"
+                  ]
+                },
+                "message": {
+                  "type": "string"
+                },
+                "details": {
+                  "type": "object",
+                  "variable": true
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "_tag": {
+              "const": "Result"
+            },
+            "error": {},
+            "result": {
+              "type": "object",
+              "properties": {
+                "openTickets": {
+                  "type": "number"
+                },
+                "repairingTickets": {
+                  "type": "number"
+                },
+                "closedTickets": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      ]
     }
   }
 }
