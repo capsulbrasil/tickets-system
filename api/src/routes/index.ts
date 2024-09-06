@@ -2,7 +2,9 @@ import { createRouter, Result } from "aeria";
 
 export const router = createRouter();
 
-router.GET("/ticket/filter", async (context) => {
+router.GET(
+  "/ticket/filter",
+  async (context) => {
     const document = context.request.query.document;
     const status = context.request.query.status;
     const offset = context.request.query.offset;
