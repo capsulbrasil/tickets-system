@@ -27,8 +27,8 @@ enum TicketPriority {
 type Ticket = CollectionItemWithId<'ticket'>
 type Tickets = Ticket[]
 
-const metaStore = useStore('meta')
 const router = useRouter()
+const metaStore = useStore('meta')
 
 const alltickets = ref({
   openTickets: { status: "Open", tickets: <Tickets>[] },
@@ -232,8 +232,9 @@ onMounted(async () => {
           </div>
         </div>
         <aeria-grid class="tw-my-5">
-          <aeria-card v-for="ticket in tickets.tickets"
-            style="border-radius: 0.25rem; max-width: 25rem; cursor: pointer;" @click="navigateTicket(ticket._id)">
+          <aeria-card
+            v-for="ticket in tickets.tickets" style="border-radius: 0.25rem; max-width: 25rem; cursor: pointer;"
+            @click="navigateTicket(ticket._id)">
             <aeria-picture v-if="ticket.attached?.link" :url="ticket.attached?.link" />
             <template #badge>
               <aeria-info where="left">
@@ -258,7 +259,7 @@ onMounted(async () => {
               tw-items-center
             ">
             <aeria-icon icon="plus" reactive style="--icon-size: 2rem; cursor: pointer;"
-              @click="status = tickets.status as TicketStatus, limit *= 5" />
+              @click="status = tickets.status as TicketStatus, limit *= 2" />
           </div>
         </aeria-grid>
       </div>

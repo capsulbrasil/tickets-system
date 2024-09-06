@@ -10,7 +10,10 @@ definePage({
   },
 })
 
-type Ticket = CollectionItemWithId<'ticket'>
+type Ticket = Omit<CollectionItemWithId<'ticket'>, 'comments'> & {
+  comments: CollectionItemWithId<'comment'>[]
+}
+
 type Props = { id: string }
 
 const ticket = ref<Ticket | null>(null)
@@ -21,11 +24,14 @@ const commentStore = useStore('comment')
 const addCommentPanel = ref(false)
 const addComment = () => {
   commentStore.$actions.clearItem()
-  commentStore.item.ticket = props.id
+  Object.assign(commentStore.item, {
+    ticket: props.id,
+  })
   addCommentPanel.value = true
 }
 
 const fetchTicket = async () => {
+<<<<<<< HEAD
   const { error, result } = await aeria().ticket.get.POST({
     filters: {
       _id: props.id,
@@ -34,6 +40,16 @@ const fetchTicket = async () => {
   if (!error) {
     ticket.value = result
   }
+=======
+    const { error, result } = await aeria().ticket.get.POST({
+ filters: {
+ _id: props.id,
+},
+})
+    if (!error) {
+ticket.value = result as unknown as Ticket
+}
+>>>>>>> 577bea390ed041bea72f6fc32746eaa2fc2e688a
 }
 
 const updateStatus = async (newStatus: 'Repairing' | 'Completed') => {
@@ -174,7 +190,17 @@ onMounted(fetchTicket)
           </p>
         </div>
 
+<<<<<<< HEAD
         <aeria-picture v-if="ticket.attached?.link" expandable object-fit="contain" :url="ticket.attached.link" class="
+=======
+        <aeria-picture
+          v-if="ticket.attached?.link"
+          expandable
+          object-fit="contain"
+          :url="ticket.attached.link"
+          alt="Ticket attachment"
+          class="
+>>>>>>> 577bea390ed041bea72f6fc32746eaa2fc2e688a
             tw-h-80
             tw-flex-shrink-0
             tw-border
@@ -220,9 +246,19 @@ onMounted(fetchTicket)
           <div class="
               tw-flex
               tw-justify-between
+<<<<<<< HEAD
             ">
             <b>{{ comment.owner.name }}</b>
             <aeria-icon icon="calendar" class="tw-text-xs">
+=======
+            "
+          >
+            <b>{{ comment.owner?.name }}</b>
+            <aeria-icon
+              icon="calendar"
+              class="tw-text-xs"
+            >
+>>>>>>> 577bea390ed041bea72f6fc32746eaa2fc2e688a
               {{ formatDateTime(comment.created_at, { hours: true }) }}
             </aeria-icon>
           </div>
@@ -232,6 +268,7 @@ onMounted(fetchTicket)
     </section>
   </div>
 
+<<<<<<< HEAD
   <aeria-insert-panel v-model:visible="addCommentPanel" fixed-right close-hint v-bind="{
     title: 'Adicionar comentário',
     collection: 'comment',
@@ -240,4 +277,22 @@ onMounted(fetchTicket)
       'images',
     ],
   }" @insert="ticket.comments.unshift($event)" @cancel="addCommentPanel = false" />
+=======
+  <aeria-insert-panel
+    v-if="ticket"
+    v-model:visible="addCommentPanel"
+    fixed-right
+    close-hint
+    v-bind="{
+      title: 'Adicionar comentário',
+      collection: 'comment',
+      form: [
+        'description',
+        'images',
+      ],
+    }"
+    @insert="ticket.comments.unshift($event)"
+    @cancel="addCommentPanel = false"
+  />
+>>>>>>> 577bea390ed041bea72f6fc32746eaa2fc2e688a
 </template>
