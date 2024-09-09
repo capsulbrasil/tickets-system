@@ -1,16 +1,14 @@
-import { createRouter, endpointErrorSchema, HTTPStatus, Result, resultSchema } from "aeria";
+import { createRouter, endpointErrorSchema, HTTPStatus, Result, resultSchema, type Filters } from "aeria";
 import { ticket } from "../collections.js";
 
 export const router = createRouter();
 
-router.GET(
-  "/ticket/filter",
-  async (context) => {
+router.GET("/ticket/filter", async (context) => {
     const document = context.request.query.document;
     const status = context.request.query.status;
     const priority = context.request.query.priority;
     const limit = context.request.query.limit;
-    const filters: any = {};
+    const filters: Filters<typeof ticket.item> = {}
 
     if (document) {
       filters.title = { $regex: `${document}`, $options: "i" };
@@ -19,7 +17,7 @@ router.GET(
       filters.priority = priority;
     }
 
-    const options: any = {};
+    const options: Parameters<typeof context.collections.ticket.functions.getAll>[0] = {};
     if (limit) {
       options.offset = 0
       options.limit = Number(limit);
@@ -103,7 +101,7 @@ router.GET(
         },
         priority: {
           type: "string",
-          enum: ["low", "Moderate", "Urgent"],
+          enum: ["Low", "Moderate", "Urgent"],
         },
         offset: {
           type: "number",
