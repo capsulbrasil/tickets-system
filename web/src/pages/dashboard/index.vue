@@ -102,9 +102,7 @@ async function reloadTickets() {
   await countAllTickets()
 }
 
-watch(status, filterTicket)
-watch(priority, filterTicket)
-watch(document, filterTicket)
+watch([status, priority, document], filterTicket)
 
 function navigateTicket(id: string) {
   return router.push({
@@ -116,7 +114,6 @@ function navigateTicket(id: string) {
 }
 
 async function countAllTickets() {
-  
   totalTicketCount.value[TicketStatus.Open] = 0
   totalTicketCount.value[TicketStatus.Repairing] = 0
   totalTicketCount.value[TicketStatus.Completed] = 0
@@ -151,7 +148,7 @@ onMounted(async () => {
         tw-items-center
         tw-space-x-5
       ">
-      <aeria-picture width="4rem" height="4rem" url="/favicon.png" alt="Capsul logo" />
+      <!-- <aeria-picture width="4rem" height="4rem" url="/favicon.png" alt="Capsul logo" /> -->
       <h1 class="tw-opacity-80">
         Bem-vindo ao Suporte Capsul Brasil
       </h1>
