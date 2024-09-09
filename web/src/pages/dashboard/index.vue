@@ -254,13 +254,13 @@ onMounted(async () => {
               {{ capitalizeText(ticket.title) }}
             </template>
           </aeria-card>
-          <div v-if="totalTicketCount[tickets.status as TicketStatus] >= limit" class="
+          <div v-if="totalTicketCount[tickets.status as TicketStatus] >= 5" class="
               tw-flex
               tw-justify-center
               tw-items-center
             ">
             <aeria-icon icon="plus" reactive style="--icon-size: 2rem; cursor: pointer;"
-              @click="status = tickets.status as TicketStatus, limit *= 2" />
+              @click="status = tickets.status as TicketStatus, limit += 5" />
           </div>
         </aeria-grid>
       </div>
