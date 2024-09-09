@@ -276,6 +276,7 @@ declare type MirrorDescriptions = {
         ]
       },
       "comments": {
+        "noForm": true,
         "readOnly": true
       }
     },
@@ -382,7 +383,7 @@ declare type MirrorDescriptions = {
             "root",
             "logistic",
             "support",
-            "commerce",
+            "commercial",
             "producer",
             "callcenter"
           ]
@@ -430,6 +431,9 @@ declare type MirrorDescriptions = {
         "noForm": true,
         "readOnly": true,
         "isTimestamp": true
+      },
+      "business": {
+        "type": "string"
       },
       "created_at": {
         "type": "string",
