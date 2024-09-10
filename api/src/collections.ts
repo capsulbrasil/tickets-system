@@ -9,6 +9,7 @@ export const ticket = extendTicketCollection({
     },
     properties: {
       comments: {
+        noForm: true,
         getter: async (document, context): Promise<unknown> => {
           return throwIfError(await context.collections.comment.functions.getAll({
             filters: {

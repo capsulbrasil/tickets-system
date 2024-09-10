@@ -120,8 +120,15 @@ onMounted(async () => {
 </script>
 
 <template>
+
   <header class="
-      tw-flex  tw-items-center tw-justify-between tw-border tw-rounded tw-p-5">
+      tw-flex
+      tw-items-center
+      tw-justify-between
+      tw-border
+      tw-rounded
+      tw-p-5
+    ">
     <div class="tw-flex tw-items-center tw-space-x-5">
       <aeria-picture width="4rem" height="4rem" url="/favicon.png" alt="Capsul logo" />
       <h1 class="tw-opacity-80">
