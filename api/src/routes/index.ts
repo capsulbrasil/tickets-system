@@ -1,4 +1,10 @@
-import { createRouter, endpointErrorSchema, HTTPStatus, Result, resultSchema } from "aeria";
+import {
+  createRouter,
+  endpointErrorSchema,
+  HTTPStatus,
+  Result,
+  resultSchema,
+} from "aeria";
 import { ticket } from "../collections.js";
 
 export const router = createRouter();
@@ -21,71 +27,74 @@ router.GET(
 
     const options: any = {};
     if (limit) {
-      options.offset = 0
+      options.offset = 0;
       options.limit = Number(limit);
     }
-    if (status){
+    if (status) {
       const { error, result: tickets } =
-      await context.collections.ticket.functions.getAll({
-        filters:{
-          status: status,
-          ...filters
-        },
-        ...options
-      });
+        await context.collections.ticket.functions.getAll({
+          filters: {
+            status: status,
+            ...filters,
+          },
+          ...options,
+        });
       if (error) {
-        context.error(HTTPStatus.NotFound, {code:'NO_TICKETS_FOUND'});
+        context.error(HTTPStatus.NotFound, { code: "NO_TICKETS_FOUND" });
       }
-      if (status === "Open"){
+      if (status === "Open") {
         return Result.result({
-          openTickets:tickets,
-          repairingTickets:[],
-          completedTickets:[]
+          openTickets: tickets,
+          repairingTickets: [],
+          completedTickets: [],
         });
       }
-      if (status === "Repairing"){
+      if (status === "Repairing") {
         return Result.result({
-          openTickets:[],
+          openTickets: [],
           repairingTickets: tickets,
-          completedTickets:[]
+          completedTickets: [],
         });
       }
-      if(status === "Completed"){
+      if (status === "Completed") {
         return Result.result({
-          openTickets:[],
-          repairingTickets:[],
-          completedTickets:tickets
+          openTickets: [],
+          repairingTickets: [],
+          completedTickets: tickets,
         });
       }
     }
-    const {error: openErrorTickets,result: openTickets } = await context.collections.ticket.functions.getAll({
-      filters:{
-        status:'Open',
-        ...filters
-      },
-      ...options
-    });
-    const {error: repairingErrorTickets,result: repairingTickets} = await context.collections.ticket.functions.getAll({
-      filters:{
-        status:'Repairing',
-        ...filters
-      },
-      ...options
-    });
-    const {error: completedErrorTickets,result: completedTickets} = await context.collections.ticket.functions.getAll({
-      filters:{
-        status:'Completed',
-        ...filters
-      },
-      ...options
-    });
-    if(openErrorTickets && repairingErrorTickets && completedErrorTickets){
-      context.error(HTTPStatus.NotFound, {code:'NO_TICKETS_FOUND'})
+    const { error: openErrorTickets, result: openTickets } =
+      await context.collections.ticket.functions.getAll({
+        filters: {
+          status: "Open",
+          ...filters,
+        },
+        ...options,
+      });
+    const { error: repairingErrorTickets, result: repairingTickets } =
+      await context.collections.ticket.functions.getAll({
+        filters: {
+          status: "Repairing",
+          ...filters,
+        },
+        ...options,
+      });
+    const { error: completedErrorTickets, result: completedTickets } =
+      await context.collections.ticket.functions.getAll({
+        filters: {
+          status: "Completed",
+          ...filters,
+        },
+        ...options,
+      });
+    if (openErrorTickets && repairingErrorTickets && completedErrorTickets) {
+      context.error(HTTPStatus.NotFound, { code: "NO_TICKETS_FOUND" });
     }
     return Result.result({
       openTickets,
       repairingTickets,
-      completedTickets
+      completedTickets,
     });
   },
   {
@@ -108,87 +117,93 @@ router.GET(
         offset: {
           type: "number",
         },
-        limit:{
-          type: "number"
-        }
+        limit: {
+          type: "number",
+        },
       },
     },
-    response:[
+    response: [
       endpointErrorSchema({
-        httpStatus:[HTTPStatus.NotFound],
-        code: ["NO_TICKETS_FOUND"]
+        httpStatus: [HTTPStatus.NotFound],
+        code: ["NO_TICKETS_FOUND"],
       }),
       resultSchema({
-        type:'object',
-        properties:{
-          openTickets:{
-            type:'array',
-            items:{
-              $ref:'ticket'
-            }
+        type: "object",
+        properties: {
+          openTickets: {
+            type: "array",
+            items: {
+              $ref: "ticket",
+            },
           },
-          repairingTickets:{
-            type:'array',
-            items:{
-              $ref:'ticket'
-            }
+          repairingTickets: {
+            type: "array",
+            items: {
+              $ref: "ticket",
+            },
           },
-          closedTickets:{
-            type:'array',
-            items:{
-              $ref:'ticket'
-            }
+          closedTickets: {
+            type: "array",
+            items: {
+              $ref: "ticket",
+            },
           },
-        }
-      })
-    ]
+        },
+      }),
+    ],
   }
 );
 
-router.GET('/ticket/countAll', async (context) => {
-  const {error: openErrorTickets,result: openTickets } = await context.collections.ticket.functions.count({
-    filters:{
-      status:'Open',
-    },
-  });
-  const {error: repairingErrorTickets,result: repairingTickets} = await context.collections.ticket.functions.count({
-    filters:{
-      status:'Repairing',
-    },
-  });
-  const {error: completedErrorTickets,result: completedTickets} = await context.collections.ticket.functions.count({
-    filters:{
-      status:'Completed',
-    },
-  });
-  if(openErrorTickets && repairingErrorTickets && completedErrorTickets){
-    context.error(HTTPStatus.NotFound, {code:'NO_TICKETS_FOUND'})
+router.GET(
+  "/ticket/countAll",
+  async (context) => {
+    const { error: openErrorTickets, result: openTickets } =
+      await context.collections.ticket.functions.count({
+        filters: {
+          status: "Open",
+        },
+      });
+    const { error: repairingErrorTickets, result: repairingTickets } =
+      await context.collections.ticket.functions.count({
+        filters: {
+          status: "Repairing",
+        },
+      });
+    const { error: completedErrorTickets, result: completedTickets } =
+      await context.collections.ticket.functions.count({
+        filters: {
+          status: "Completed",
+        },
+      });
+    if (openErrorTickets && repairingErrorTickets && completedErrorTickets) {
+      context.error(HTTPStatus.NotFound, { code: "NO_TICKETS_FOUND" });
+    }
+    return Result.result({
+      openTickets,
+      repairingTickets,
+      completedTickets,
+    });
+  },
+  {
+    response: [
+      endpointErrorSchema({
+        httpStatus: [HTTPStatus.NotFound],
+        code: ["NO_TICKETS_FOUND"],
+      }),
+      resultSchema({
+        type: "object",
+        properties: {
+          openTickets: {
+            type: "number",
+          },
+          repairingTickets: {
+            type: "number",
+          },
+          closedTickets: {
+            type: "number",
+          },
+        },
+      }),
+    ],
   }
-  return Result.result({
-    openTickets,
-    repairingTickets,
-    completedTickets
-  });
-},
-{
-  response:[
-    endpointErrorSchema({
-      httpStatus:[HTTPStatus.NotFound],
-      code: ["NO_TICKETS_FOUND"]
-    }),
-    resultSchema({
-      type:'object',
-      properties:{
-        openTickets:{
-          type:'number',
-        },
-        repairingTickets:{
-          type:'number',
-        },
-        closedTickets:{
-          type:'number',
-        },
-      }
-    })
-  ]
-})
+);

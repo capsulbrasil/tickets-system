@@ -11,288 +11,126 @@ definePage({
 })
 
 type Ticket = Omit<CollectionItemWithId<'ticket'>, 'comments'> & {
-  comments: CollectionItemWithId<'comment'>[]
+  comments?: CollectionItemWithId<'comment'>[]
 }
 
 type Props = { id: string }
 
+const commentStore = useStore('comment')
 const ticket = ref<Ticket | null>(null)
+const addCommentPanel = ref(false)
 const props = defineProps<Props>()
 
-const commentStore = useStore('comment')
-
-const addCommentPanel = ref(false)
 const addComment = () => {
   commentStore.$actions.clearItem()
-  Object.assign(commentStore.item, {
-    ticket: props.id,
-  })
+  Object.assign(commentStore.item, { ticket: props.id })
   addCommentPanel.value = true
 }
 
 const fetchTicket = async () => {
-<<<<<<< HEAD
   const { error, result } = await aeria().ticket.get.POST({
-    filters: {
-      _id: props.id,
-    },
+    filters: { _id: props.id },
   })
   if (!error) {
     ticket.value = result
   }
-=======
-    const { error, result } = await aeria().ticket.get.POST({
- filters: {
- _id: props.id,
-},
-})
-    if (!error) {
-ticket.value = result as unknown as Ticket
-}
->>>>>>> 577bea390ed041bea72f6fc32746eaa2fc2e688a
 }
 
 const updateStatus = async (newStatus: 'Repairing' | 'Completed') => {
-  if (!ticket.value) {
-    return
-  }
+  if (!ticket.value) return
 
   const { error, result } = await aeria.ticket.insert.POST({
-    what: {
-      _id: ticket.value._id,
-      status: newStatus,
-    },
+    what: { _id: ticket.value._id, status: newStatus },
   })
 
-  if (error) {
-    throw new Error
-  }
+  if (error) throw new Error()
   ticket.value.status = result.status
 }
 
 const copy = (text: string) => {
-  navigator.clipboard.writeText(text).then(() => {
-    alert('ID copiado')
-  }).catch((error) => {
-    console.error('Erro ao copiar o ID: ', error)
-  })
+  navigator.clipboard.writeText(text)
+    .then(() => alert('ID copiado'))
+    .catch((error) => console.error('Erro ao copiar o ID: ', error))
 }
 
 onMounted(fetchTicket)
 </script>
 
 <template>
-  <div v-if="ticket" class="
-      tw-flex
-      tw-flex-col
-      tw-gap-4
-    ">
-    <!-- Name & Ticket ID -->
-    <header class="
-        tw-flex
-        tw-justify-between
-        tw-items-center
-      ">
-      <div class="
-          tw-flex
-          tw-items-center
-          tw-space-x-2
-        ">
-        <aeria-icon icon="user-circle" style="--icon-size: 3rem;" />
-        <h1 class="tw-text-lg">
-          {{ ticket.owner?.name }}
-        </h1>
-        <h2 v-for="(role, index) in ticket.owner?.roles" :key="index" class="
-            tw-text-sm
-            tw-border
-            tw-rounded
-            tw-p-1
-            tw-transition-colors
-            tw-duration-400
-            tw-cursor-pointer
+  <div v-if="ticket" class="tw-flex tw-flex-col tw-gap-4">
 
-            hover:tw-text-[#00197E]
-          ">
+    <header class="tw-flex tw-justify-between tw-items-center">
+      <div class="tw-flex tw-items-center tw-space-x-2">
+        <aeria-icon icon="user-circle" style="--icon-size: 3rem;" />
+        <h1 class="tw-text-lg">{{ ticket.owner?.name }}</h1>
+        <h2 v-for="(role, index) in ticket.owner?.roles" :key="index"
+          class="tw-text-sm tw-border tw-rounded tw-p-1 tw-transition-colors tw-duration-400 tw-cursor-pointer hover:tw-text-[#00197E]">
           {{ role }}
         </h2>
       </div>
       <div class="tw-flex">
-        <aeria-icon reactive icon="copy" style="--icon-size: 1.5rem;" class="
-            tw-mr-5
-            tw-cursor-pointer
-          " @click="copy(ticket._id)">
+        <aeria-icon reactive icon="copy" style="--icon-size: 1.5rem;" class="tw-mr-5 tw-cursor-pointer"
+          @click="copy(ticket._id)">
           <code>{{ ticket._id }}</code>
         </aeria-icon>
         <aeria-context-menu :actions="[
           { label: 'Repairing', icon: 'eye', click: () => updateStatus('Repairing') },
           { label: 'Completed', icon: 'eye-closed', click: () => updateStatus('Completed') },
         ]">
-          <div class="
-              tw-border
-              tw-rounded
-              tw-flex
-              tw-items-center
-              tw-p-1
-              tw-cursor-pointer
-            ">
-            <div class="
-                tw-w-4
-                tw-h-4
-                tw-rounded-full
-                tw-shadow-md
-                tw-ml-3
-              " :style="{ backgroundColor: statusColor(ticket.status) }" />
-            <span class="
-                tw-uppercase
-                tw-font-bold
-                tw-ml-2
-              ">{{ ticket.status }}</span>
-
-            <aeria-icon style="--icon-size: 1.5rem; cursor: pointer" icon="plus" class="
-                tw-ml-1
-                tw-mr-1
-                tw-p-2
-              " />
+          <div class="tw-border tw-rounded tw-flex tw-items-center tw-p-1 tw-cursor-pointer">
+            <div class="tw-w-4 tw-h-4 tw-rounded-full tw-shadow-md tw-ml-3"
+              :style="{ backgroundColor: statusColor(ticket.status) }" />
+            <span class="tw-uppercase tw-font-bold tw-ml-2">{{ ticket.status }}</span>
+            <aeria-icon style="--icon-size: 1.5rem;" icon="plus" class="tw-ml-1 tw-mr-1 tw-p-2" />
           </div>
         </aeria-context-menu>
       </div>
     </header>
-    <!-- Ticket Report -->
+
     <section>
-      <div class="
-          tw-flex
-          tw-gap-4
-        ">
-        <div class="
-            tw-border
-            tw-rounded
-            tw-p-4
-            tw-flex-1
-          ">
-          <div class="
-              tw-flex
-              tw-items-center
-              tw-justify-between
-            ">
-            <div class="
-                tw-font-bold
-                tw-text-2xl
-                tw-mr-5
-              " :style="{ color: priorityColor(ticket.priority) }">
+      <div class="tw-flex tw-gap-4">
+        <div class="tw-border tw-rounded tw-p-4 tw-flex-1">
+          <div class="tw-flex tw-items-center tw-justify-between">
+            <div class="tw-font-bold tw-text-2xl tw-mr-5" :style="{ color: priorityColor(ticket.priority) }">
               {{ capitalizeText(ticket.title) }}
             </div>
             <aeria-icon icon="calendar-blank" style="--icon-size: 1.5rem;">
               {{ formatDateTime(ticket.created_at) }}
             </aeria-icon>
           </div>
-          <p class="tw-mr-1">
-            {{ ticket.description }}
-          </p>
+          <p class="tw-mr-1">{{ ticket.description }}</p>
         </div>
-
-<<<<<<< HEAD
-        <aeria-picture v-if="ticket.attached?.link" expandable object-fit="contain" :url="ticket.attached.link" class="
-=======
-        <aeria-picture
-          v-if="ticket.attached?.link"
-          expandable
-          object-fit="contain"
-          :url="ticket.attached.link"
-          alt="Ticket attachment"
-          class="
->>>>>>> 577bea390ed041bea72f6fc32746eaa2fc2e688a
-            tw-h-80
-            tw-flex-shrink-0
-            tw-border
-            tw-rounded
-            tw-p-3
-
-            lg:tw-max-w-[32%]
-          " />
+        <aeria-picture v-if="ticket.attached?.link" expandable object-fit="contain" :url="ticket.attached.link"
+          class="tw-h-80 tw-flex-shrink-0 tw-border tw-rounded tw-p-3 lg:tw-max-w-[32%]" />
       </div>
     </section>
-    <!-- Comments -->
-    <section class="
-        tw-border
-        tw-rounded
-        tw-p-4
-      ">
-      <div class="
-          tw-flex
-          tw-justify-between
-          tw-items-center
-          tw-w-full
-        ">
-        <aeria-icon icon="chat-text" class="tw-text-lg">
-          Comments
-        </aeria-icon>
 
-        <aeria-button icon="plus" variant="alt" @click="addComment">
-          Adicionar
-        </aeria-button>
+    <section class="tw-border tw-rounded tw-p-4">
+      <div class="tw-flex tw-justify-between tw-items-center tw-w-full">
+        <aeria-icon icon="chat-text" class="tw-text-lg">Comments</aeria-icon>
+        <aeria-button icon="plus" variant="alt" @click="addComment">Adicionar</aeria-button>
       </div>
-
-      <div v-for="comment in ticket.comments" :key="comment._id" class="
-          tw-border
-          tw-rounded
-          tw-p-4
-          tw-mt-4
-        ">
-        <div v-if="comment.description" class="
-            tw-flex
-            tw-flex-col
-            tw-space-y-1
-          ">
-          <div class="
-              tw-flex
-              tw-justify-between
-<<<<<<< HEAD
-            ">
-            <b>{{ comment.owner.name }}</b>
-            <aeria-icon icon="calendar" class="tw-text-xs">
-=======
-            "
-          >
+      <div v-for="comment in ticket.comments" :key="comment._id" class="tw-border tw-rounded tw-p-4 tw-mt-4">
+        <div v-if="comment.description" class="tw-flex tw-flex-col tw-space-y-1">
+          <div class="tw-flex tw-justify-between">
             <b>{{ comment.owner?.name }}</b>
-            <aeria-icon
-              icon="calendar"
-              class="tw-text-xs"
-            >
->>>>>>> 577bea390ed041bea72f6fc32746eaa2fc2e688a
+            <aeria-icon icon="calendar" class="tw-text-sm">
               {{ formatDateTime(comment.created_at, { hours: true }) }}
             </aeria-icon>
           </div>
-          <p>{{ comment.description }}</p>
+          <div class="tw-flex tw-justify-between tw-gap-2">
+            <p>{{ comment.description }}</p>
+            <aeria-picture class="lg:tw-max-w-[15%] tw-p-1 tw-border" v-for="image in comment.images"
+              v-if="comment.images" :url="image.link" expandable />
+          </div>
         </div>
       </div>
     </section>
   </div>
 
-<<<<<<< HEAD
   <aeria-insert-panel v-model:visible="addCommentPanel" fixed-right close-hint v-bind="{
     title: 'Adicionar comentário',
     collection: 'comment',
-    form: [
-      'description',
-      'images',
-    ],
-  }" @insert="ticket.comments.unshift($event)" @cancel="addCommentPanel = false" />
-=======
-  <aeria-insert-panel
-    v-if="ticket"
-    v-model:visible="addCommentPanel"
-    fixed-right
-    close-hint
-    v-bind="{
-      title: 'Adicionar comentário',
-      collection: 'comment',
-      form: [
-        'description',
-        'images',
-      ],
-    }"
-    @insert="ticket.comments.unshift($event)"
-    @cancel="addCommentPanel = false"
-  />
->>>>>>> 577bea390ed041bea72f6fc32746eaa2fc2e688a
+    form: ['description', 'images'],
+  }" @insert="ticket?.comments" @cancel="addCommentPanel = false" />
 </template>

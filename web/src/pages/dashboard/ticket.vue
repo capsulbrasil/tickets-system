@@ -10,13 +10,11 @@ definePage({
 
 <template>
   <aeria-crud collection="ticket">
-    <!-- Title in bold -->
     <template #row-title="{ row, column }">
       <div class="tw-font-semibold">
         {{ row[column] }}
       </div>
     </template>
-    <!-- Colors of priorities -->
     <template #row-priority="{ row, column }">
       <div class="
           tw-flex
@@ -31,7 +29,6 @@ definePage({
         <div>{{ row[column] }}</div>
       </div>
     </template>
-    <!-- Status colors -->
     <template #row-status="{ row, column }">
       <div class="
           tw-flex
