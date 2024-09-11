@@ -29,12 +29,14 @@ router.GET(
     const options: Parameters<
       typeof context.collections.ticket.functions.getAll
     >[0] = {};
-    if (limit) {
-      options.offset = 0;
-      options.limit = 5;
-    }
+
+    options.offset = 0;
+    options.limit = 5;
+
     if (status) {
-      options.limit = Number(limit)
+      if(limit){
+        options.limit = Number(limit)
+      }
       const { error, result: tickets } =
         await context.collections.ticket.functions.getAll({
           filters: {
