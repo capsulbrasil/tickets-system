@@ -31,9 +31,10 @@ router.GET(
     >[0] = {};
     if (limit) {
       options.offset = 0;
-      options.limit = Number(limit);
+      options.limit = 5;
     }
     if (status) {
+      options.limit = Number(limit)
       const { error, result: tickets } =
         await context.collections.ticket.functions.getAll({
           filters: {
@@ -43,7 +44,7 @@ router.GET(
           ...options,
         });
       if (error) {
-        context.error(HTTPStatus.NotFound, { code: "NO_TICKETS_FOUND" });
+        return context.error(HTTPStatus.NotFound, { code: "NO_TICKETS_FOUND" });
       }
       if (status === "Open") {
         return Result.result({

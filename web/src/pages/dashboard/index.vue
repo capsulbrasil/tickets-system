@@ -52,7 +52,7 @@ const totalTicketCount = ref<{ [key in TicketStatus]: number }>({
 
 const filterTicket = async () => {
   const query: any = {}
-
+  
   if (document.value) {
     query.document = document.value
   }
@@ -66,6 +66,10 @@ const filterTicket = async () => {
     query.limit = limit.value
   }
 
+  if(status.value !== TicketStatus.Open && status.value !== TicketStatus.Repairing && status.value !== TicketStatus.Completed){
+    query.limit = 5
+    limit.value = 5
+  }
   const { error, result } = await aeria.ticket.filter.GET(query)
 
   if (error) {
@@ -192,7 +196,7 @@ onMounted(async () => {
           <div v-if="totalTicketCount[tickets.status as TicketStatus] >= 5" class="
               tw-flex tw-justify-center tw-items-center">
             <aeria-icon icon="plus" reactive style="--icon-size: 2rem; cursor: pointer;"
-              @click="status = tickets.status as TicketStatus, limit *= 5" />
+              @click="status = tickets.status as TicketStatus, limit += 5" />
           </div>
         </aeria-grid>
       </div>
