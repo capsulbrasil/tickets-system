@@ -238,7 +238,8 @@ declare type MirrorDescriptions = {
         ]
       },
       "description": {
-        "type": "string"
+        "type": "string",
+        "element": "textarea"
       },
       "attached": {
         "$ref": "file",

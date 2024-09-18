@@ -9,7 +9,7 @@ COPY package.json package.json
 COPY package-lock.json package-lock.json
 COPY tsconfig.json tsconfig.json
 
-RUN npm ci
+RUN npm install
 CMD cp ../api/node_modules/aeria-sdk/dist/runtime.* node_modules/aeria-sdk/dist || true \
   && cp ../api/.aeria/aeria-sdk.d.ts .aeria-ui || true \
   && npm run build \

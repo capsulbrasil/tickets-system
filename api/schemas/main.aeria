@@ -76,7 +76,7 @@ collection Ticket {
       "Moderate",
       "Urgent"
     ])
-    description str
+    description str @element("textarea")
     attached File @accept(["image/*"])
     created_at str @format("date-time")
     updated_at str @format("date-time")

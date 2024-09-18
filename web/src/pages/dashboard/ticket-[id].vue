@@ -120,7 +120,7 @@ onMounted(fetchTicket)
           </div>
           <div class="tw-flex tw-justify-between tw-gap-2">
             <p>{{ comment.description }}</p>
-            <aeria-picture class="lg:tw-max-w-[15%] tw-p-1 tw-border" v-for="image in comment.images"
+            <aeria-picture class="lg:tw-max-w-[10%] tw-p-1 tw-border" v-for="image in comment.images"
               v-if="comment.images" :url="image.link" expandable />
           </div>
         </div>
