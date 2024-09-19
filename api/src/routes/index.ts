@@ -18,7 +18,6 @@ router.GET(
     const priority = context.request.query.priority;
     const limit = context.request.query.limit;
     const filters: Filters<typeof ticket.item> = {};
-
     if (document) {
       filters.title = { $regex: `${document}`, $options: "i" };
     }
@@ -34,8 +33,8 @@ router.GET(
     options.limit = 5;
 
     if (status) {
-      if(limit){
-        options.limit = Number(limit)
+      if (limit) {
+        options.limit = Number(limit);
       }
       const { error, result: tickets } =
         await context.collections.ticket.functions.getAll({

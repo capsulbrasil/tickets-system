@@ -7,13 +7,16 @@ const metaStore = useStore('meta')
 <template>
   <dashboard-layout>
     <template #super>
-      <aeria-icon v-clickable :icon="metaStore.theme === 'dark'
+      <aeria-icon style="--icon-size: 1.5rem;" v-clickable :icon="metaStore.theme === 'dark'
         ? 'moon'
         : 'sun'
         " @click="metaStore.theme === 'dark'
           ? metaStore.$actions.saveTheme('default')
           : metaStore.$actions.saveTheme('dark')
           " />
+      <a href="https://wa.me/553798050282" target="_blank">
+        <aeria-icon large icon="headset" style="--icon-size: 1.5rem;" />
+      </a>
     </template>
   </dashboard-layout>
 </template>

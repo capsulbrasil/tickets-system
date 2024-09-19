@@ -110,24 +110,27 @@ onMounted(fetchTicket)
         <aeria-icon icon="chat-text" class="tw-text-lg">Comments</aeria-icon>
         <aeria-button icon="plus" variant="alt" @click="addComment">Adicionar</aeria-button>
       </div>
-      <div v-for="comment in ticket.comments" :key="comment._id" class="tw-border tw-rounded tw-p-4 tw-mt-4">
-        <div v-if="comment.description" class="tw-flex tw-flex-col tw-space-y-1">
+      <div v-for="comment in ticket.comments" :key="comment._id" class="tw-mt-4 tw-border tw-rounded tw-p-3">
+        <div v-if="comment.description" class="tw-space-y-2">
           <div class="tw-flex tw-justify-between">
             <b>{{ comment.owner?.name }}</b>
             <aeria-icon icon="calendar" class="tw-text-sm">
               {{ formatDateTime(comment.created_at, { hours: true }) }}
             </aeria-icon>
           </div>
-          <div class="tw-flex tw-justify-between tw-gap-2">
-            <p>{{ comment.description }}</p>
-            <aeria-picture class="lg:tw-max-w-[10%] tw-p-1 tw-border" v-for="image in comment.images"
-              v-if="comment.images" :url="image.link" expandable />
+          <div class="tw-flex tw-gap-4">
+            <div class="tw-flex-1">
+              <p>{{ comment.description }}</p>
+            </div>
+            <div class="tw-flex tw-items-start">
+              <aeria-picture class="tw-w-16 tw-h-16 tw-object-cover tw-border" v-for="image in comment.images"
+                v-if="comment.images" :url="image.link" expandable />
+            </div>
           </div>
         </div>
       </div>
     </section>
   </div>
-
   <aeria-insert-panel v-model:visible="addCommentPanel" fixed-right close-hint v-bind="{
     title: 'Adicionar comentário',
     collection: 'comment',

@@ -85,6 +85,12 @@ const filterTicket = async () => {
   alltickets.value.completedTickets.tickets = orderTicket(result.completedTickets.filter((ticket: Ticket) => ticket.status === TicketStatus.Completed))
 }
 
+function resetFilter() {
+  document.value = null
+  status.value = null
+  priority.value = null
+}
+
 function orderTicket(tickets: Tickets): Tickets {
   const priorityOrder = {
     [TicketPriority.Urgent]: 1,
@@ -136,14 +142,14 @@ onMounted(async () => {
     </div>
     <div class="tw-flex tw-items-center tw-space-x-2 tw-cursor-pointer" @click="panelVisible = true">
       <p>Manual de Uso</p>
-      <aeria-icon large icon="question" style="--icon-size: 1.7rem;" />
+      <aeria-icon large icon="question" style="--icon-size: 1.5rem;" />
     </div>
   </header>
 
   <ManualPanel v-if="panelVisible" @close="panelVisible = false" />
 
   <nav class="tw-border tw-rounded tw-p-5">
-    <aeria-input v-model="document" :property="{ type: 'string', placeholder: 'Search tickets' }"
+    <aeria-input v-model="document" :property="{ type: 'string', placeholder: 'Pesquise aqui' }"
       @keyup.enter="filterTicket" />
     <div class="tw-flex tw-space-x-4 tw-mt-4">
       <aeria-select v-model="status" :multiple="false"
@@ -151,7 +157,8 @@ onMounted(async () => {
       <aeria-select v-model="priority" :multiple="false"
         :property="{ enum: [TicketPriority.Low, TicketPriority.Moderate, TicketPriority.Urgent] }" />
       <aeria-icon icon="arrows-counter-clockwise" reactive style="--icon-size: 1.5rem; cursor: pointer;"
-        @click="status = null, limit = 5" />
+        @click="resetFilter" />
+      <aeria-icon icon="ticket" reactive style="--icon-size: 1.5rem; cursor: pointer;" @click="navigateToAddTicket" />
     </div>
   </nav>
 
@@ -165,12 +172,11 @@ onMounted(async () => {
             <h3>{{ tickets.status }}</h3>
           </div>
           <div class="tw-text-right tw-font-medium tw-m-2">
-            <aeria-icon reactive icon="plus" style="--icon-size: 1.2rem;" @click="navigateToAddTicket">
+            <div class="tw-border tw-rounded tw-p-3">
               {{ totalTicketCount[tickets.status as TicketStatus] }}
-            </aeria-icon>
+            </div>
           </div>
         </div>
-
         <aeria-grid class="tw-my-5">
           <aeria-card v-for="ticket in tickets.tickets" :key="ticket._id"
             style="border-radius: 0.25rem; max-width: 25rem; cursor: pointer;" @click="navigateTicket(ticket._id)">
@@ -190,7 +196,7 @@ onMounted(async () => {
           </aeria-card>
           <div v-if="totalTicketCount[tickets.status as TicketStatus] >= 5"
             class="tw-flex tw-justify-center tw-items-center">
-            <aeria-icon icon="plus" reactive style="--icon-size: 2rem; cursor: pointer;"
+            <aeria-icon icon="plus" reactive style="--icon-size: 1.5rem; cursor: pointer;"
               @click="status = tickets.status as TicketStatus, limit += 5" />
           </div>
         </aeria-grid>
