@@ -24,7 +24,30 @@ collection Comment {
   }
   properties {
     ticket Ticket
-    description str
+    description str @element("textarea")
+    images []File @accept(["image/*"])
+  }
+  functions {
+    get @expose
+    getAll @expose
+    insert @expose
+    remove @expose
+    upload @expose
+  }
+  presets {
+    crud
+  }
+}
+
+collection Topic {
+  icon "text-align-left"
+  owned "on-write"
+  required {
+    title
+  }
+  properties {
+    title str
+    description str @element("textarea")
     images []File @accept(["image/*"])
   }
   functions {
@@ -44,12 +67,17 @@ collection Ticket {
   owned "on-write"
   filters{
     title
+    topic
+    status
+    priority
+
   }
   indexes {
     title
   }
   required {
     title
+    topic
     priority
     status
     description
@@ -57,15 +85,14 @@ collection Ticket {
   }
   table {
     title
-    priority
-    description
-    attached
+    topic
     status
+    priority
     created_at
-    updated_at
   }
   properties {
-    title str @maxLength(40)
+    title str
+    topic Topic
     status enum @values([
       "Open",
       "Repairing",

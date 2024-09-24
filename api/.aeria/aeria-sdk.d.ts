@@ -19,7 +19,8 @@ declare type MirrorDescriptions = {
         ]
       },
       "description": {
-        "type": "string"
+        "type": "string",
+        "element": "textarea"
       },
       "images": {
         "type": "array",
@@ -220,8 +221,13 @@ declare type MirrorDescriptions = {
     "$id": "ticket",
     "properties": {
       "title": {
-        "type": "string",
-        "maxLength": 40
+        "type": "string"
+      },
+      "topic": {
+        "$ref": "topic",
+        "indexes": [
+          "title"
+        ]
       },
       "status": {
         "enum": [
@@ -285,22 +291,24 @@ declare type MirrorDescriptions = {
     "owned": "on-write",
     "table": [
       "title",
-      "priority",
-      "description",
-      "attached",
+      "topic",
       "status",
-      "created_at",
-      "updated_at"
+      "priority",
+      "created_at"
     ],
     "required": [
       "title",
+      "topic",
       "priority",
       "status",
       "description",
       "attached"
     ],
     "filters": [
-      "title"
+      "title",
+      "topic",
+      "status",
+      "priority"
     ],
     "presets": [
       "crud"
@@ -311,6 +319,93 @@ declare type MirrorDescriptions = {
     "freshItem": {
       "status": "Open"
     },
+    "actions": {
+      "spawnAdd": {
+        "label": "action.add",
+        "event": "spawnAdd",
+        "icon": "plus",
+        "button": true,
+        "translate": true
+      }
+    },
+    "individualActions": {
+      "spawnEdit": {
+        "label": "action.edit",
+        "event": "spawnEdit",
+        "icon": "pencil-simple",
+        "translate": true
+      },
+      "viewItem": {
+        "label": "action.view",
+        "icon": "eye",
+        "translate": true,
+        "route": {
+          "name": "/dashboard/:collection/:id",
+          "setItem": true
+        }
+      },
+      "remove": {
+        "label": "action.remove",
+        "icon": "trash",
+        "ask": true,
+        "translate": true
+      }
+    }
+  },
+  "topic": {
+    "$id": "topic",
+    "properties": {
+      "title": {
+        "type": "string"
+      },
+      "description": {
+        "type": "string",
+        "element": "textarea"
+      },
+      "images": {
+        "type": "array",
+        "items": {
+          "$ref": "file",
+          "accept": [
+            "image/*"
+          ],
+          "indexes": [
+            "name",
+            "link",
+            "type"
+          ]
+        }
+      },
+      "owner": {
+        "$ref": "user",
+        "noForm": true,
+        "indexes": [
+          "name"
+        ]
+      },
+      "created_at": {
+        "type": "string",
+        "format": "date-time",
+        "noForm": true,
+        "readOnly": true,
+        "isTimestamp": true
+      },
+      "updated_at": {
+        "type": "string",
+        "format": "date-time",
+        "noForm": true,
+        "readOnly": true,
+        "isTimestamp": true
+      }
+    },
+    "icon": "text-align-left",
+    "owned": "on-write",
+    "required": [
+      "title"
+    ],
+    "presets": [
+      "crud"
+    ],
     "actions": {
       "spawnAdd": {
         "label": "action.add",
@@ -661,6 +756,46 @@ declare type MirrorRouter = {
     }
   },
   "/ticket/remove": {
+    "POST": {
+      "roles": [
+        "root"
+      ],
+      "builtin": true
+    }
+  },
+  "/topic/get": {
+    "POST": {
+      "roles": [
+        "root"
+      ],
+      "builtin": true
+    }
+  },
+  "/topic/getAll": {
+    "POST": {
+      "roles": [
+        "root"
+      ],
+      "builtin": true
+    }
+  },
+  "/topic/insert": {
+    "POST": {
+      "roles": [
+        "root"
+      ],
+      "builtin": true
+    }
+  },
+  "/topic/remove": {
+    "POST": {
+      "roles": [
+        "root"
+      ],
+      "builtin": true
+    }
+  },
+  "/topic/upload": {
     "POST": {
       "roles": [
         "root"

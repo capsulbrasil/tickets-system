@@ -61,7 +61,6 @@ onMounted(fetchTicket)
 
     <header class="tw-flex tw-justify-between tw-items-center">
       <div class="tw-flex tw-items-center tw-space-x-2">
-        <aeria-icon icon="user-circle" style="--icon-size: 3rem;" />
         <h1 class="tw-text-lg">{{ ticket.owner?.name }}</h1>
         <h2 v-for="(role, index) in ticket.owner?.roles" :key="index"
           class="tw-text-sm tw-border tw-rounded tw-p-1 tw-transition-colors tw-duration-400 tw-cursor-pointer hover:tw-text-[#00197E]">

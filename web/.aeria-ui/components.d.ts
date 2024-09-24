@@ -9,6 +9,7 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AeriaAccordion: typeof import('@aeria-ui/ui')['AeriaAccordion']
     AeriaButton: typeof import('@aeria-ui/ui')['AeriaButton']
     AeriaCard: typeof import('@aeria-ui/ui')['AeriaCard']
     AeriaContextMenu: typeof import('@aeria-ui/ui')['AeriaContextMenu']
@@ -21,6 +22,7 @@ declare module '@vue/runtime-core' {
     AeriaPanel: typeof import('@aeria-ui/ui')['AeriaPanel']
     AeriaPicture: typeof import('@aeria-ui/ui')['AeriaPicture']
     AeriaSelect: typeof import('@aeria-ui/ui')['AeriaSelect']
+    AeriaTable: typeof import('@aeria-ui/ui')['AeriaTable']
     Manual: typeof import('./../src/components/manual.vue')['default']
     ManualPanel: typeof import('./../src/components/manualPanel.vue')['default']
     NoResults: typeof import('./../src/components/no-results.vue')['default']
