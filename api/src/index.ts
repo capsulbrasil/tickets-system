@@ -1,6 +1,6 @@
-import { init } from "aeria";
+import { collections, init } from "aeria";
 import { router } from "./routes/index.js";
-export * as collections from "./collections.js";
+export * as collections from "./collections/index.js";
 
 export default init({
   router,

@@ -19,8 +19,23 @@ enum TicketStatus {
   Completed = 'Completed',
 }
 
+type Ticket = CollectionItemWithId<'ticket'>
+
 const router = useRouter();
 const metaStore = useStore('meta');
+const ticket = ref<Ticket | null>(null)
+
+const totalTicketCount = ref<{ [key in TicketStatus]: number }>({
+  [TicketStatus.Open]: 0,
+  [TicketStatus.Repairing]: 0,
+  [TicketStatus.Completed]: 0,
+});
+
+const totalTickets = computed(() =>
+  totalTicketCount.value[TicketStatus.Open] +
+  totalTicketCount.value[TicketStatus.Repairing] +
+  totalTicketCount.value[TicketStatus.Completed]
+);
 
 function navigateTicket(id: string) {
   return router.push({
@@ -28,12 +43,6 @@ function navigateTicket(id: string) {
     params: { id },
   })
 }
-
-const totalTicketCount = ref<{ [key in TicketStatus]: number }>({
-  [TicketStatus.Open]: 0,
-  [TicketStatus.Repairing]: 0,
-  [TicketStatus.Completed]: 0,
-});
 
 async function countAllTickets() {
   try {
@@ -55,15 +64,11 @@ async function countAllTickets() {
   }
 }
 
-const totalTickets = computed(() =>
-  totalTicketCount.value[TicketStatus.Open] +
-  totalTicketCount.value[TicketStatus.Repairing] +
-  totalTicketCount.value[TicketStatus.Completed]
-);
-
 onMounted(async () => {
   await countAllTickets();
 });
+
+const t = '66f401747cb24dbac12fe770'
 </script>
 
 <template>
@@ -91,16 +96,16 @@ onMounted(async () => {
         </div>
         <div class="tw-flex tw-space-x-2 tw-mt-2">
           <div class="tw-bg-[color:var(--theme-background-color-shade-5)] tw-pl-5 tw-flex-1">
-            <p class="tw-font-semibold">Divergências por Tópico</p>
+            <p class="tw-text-center">Divergências por tópico</p>
           </div>
           <div class="tw-bg-[color:var(--theme-background-color-shade-5)] tw-pl-5 tw-flex-1">
-            <p class="tw-font-semibold">Divergências por Tópico</p>
+            <p class="tw-text-center">Outros futuros insights</p>
           </div>
         </div>
       </div>
     </div>
   </section>
-
+  <aeria-button @click="navigateTicket(t)">Acesse o ticket</aeria-button>
   <aeria-crud collection="ticket">
     <template #row-title="{ row, column }">
       <div class="tw-font-semibold">{{ capitalizeText(row[column]) }}</div>

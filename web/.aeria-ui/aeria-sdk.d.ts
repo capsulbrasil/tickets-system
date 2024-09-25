@@ -400,6 +400,10 @@ declare type MirrorDescriptions = {
     },
     "icon": "text-align-left",
     "owned": "on-write",
+    "table": [
+      "title",
+      "images"
+    ],
     "required": [
       "title"
     ],

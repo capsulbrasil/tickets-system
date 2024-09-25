@@ -42,6 +42,10 @@ collection Comment {
 collection Topic {
   icon "text-align-left"
   owned "on-write"
+  table {
+   title
+   images
+  }
   required {
     title
   }
@@ -70,7 +74,6 @@ collection Ticket {
     topic
     status
     priority
-
   }
   indexes {
     title
