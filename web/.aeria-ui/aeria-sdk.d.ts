@@ -225,6 +225,9 @@ declare type MirrorDescriptions = {
       },
       "topic": {
         "$ref": "topic",
+        "populate": [
+          "images"
+        ],
         "indexes": [
           "title"
         ]
@@ -319,16 +322,12 @@ declare type MirrorDescriptions = {
     "freshItem": {
       "status": "Open"
     },
-    "actions": {
-      "spawnAdd": {
-        "label": "action.add",
-        "event": "spawnAdd",
-        "icon": "plus",
-        "button": true,
-        "translate": true
-      }
-    },
     "individualActions": {
+      "viewContent": {
+        "label": "Ver ticket",
+        "icon": "magnifying-glass",
+        "button": true
+      },
       "spawnEdit": {
         "label": "action.edit",
         "event": "spawnEdit",
@@ -348,6 +347,22 @@ declare type MirrorDescriptions = {
         "label": "action.remove",
         "icon": "trash",
         "ask": true,
+        "translate": true
+      }
+    },
+    "tableLayout": {
+      "actions": {
+        "viewContent": {
+          "button": true
+        }
+      }
+    },
+    "actions": {
+      "spawnAdd": {
+        "label": "action.add",
+        "event": "spawnAdd",
+        "icon": "plus",
+        "button": true,
         "translate": true
       }
     }

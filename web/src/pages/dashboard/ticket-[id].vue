@@ -58,28 +58,32 @@ onMounted(fetchTicket)
 
 <template>
   <div v-if="ticket" class="tw-flex tw-flex-col tw-p-5 tw-gap-4 tw-bg-[color:var(--theme-background-color-shade-2)]">
-    <div class="tw-flex tw-gap-4">
-      <div class="tw-w-1/2 tw-p-3 tw-bg-[color:var(--theme-background-color-shade-5)]">
-        <section class="tw-border tw-rounded tw-p-4">
-          <div class="tw-flex tw-justify-between tw-items-center tw-w-full">
-            <aeria-icon icon="chat-text" class="tw-text-lg">Comments</aeria-icon>
-            <aeria-button icon="plus" variant="alt" @click="addComment">Adicionar</aeria-button>
+    <div class="tw-flex tw-gap-4 tw-h-full">
+      <!-- Chat Section -->
+      <div class="tw-w-1/2 tw-p-3 tw-bg-[color:var(--theme-background-color-shade-3)] tw-flex tw-flex-col">
+        <section class="tw-flex-1 tw-flex tw-flex-col">
+          <div
+            class="tw-flex tw-justify-between tw-items-center tw-p-3 tw-bg-[color:var(--theme-background-color-shade-4)]">
+            <aeria-icon icon="chat">Chat</aeria-icon>
+            <aeria-button icon="plus" variant="alt" @click="addComment">Escrever</aeria-button>
           </div>
-          <div v-for="comment in ticket.comments" :key="comment._id" class="tw-mt-4 tw-border tw-rounded tw-p-3">
-            <div v-if="comment.description" class="tw-space-y-2">
-              <div class="tw-flex tw-justify-between">
-                <b>{{ comment.owner?.name }}</b>
-                <aeria-icon icon="calendar" class="tw-text-sm">
-                  {{ formatDateTime(comment.created_at, { hours: true }) }}
-                </aeria-icon>
-              </div>
-              <div class="tw-flex tw-gap-4">
-                <div class="tw-flex-1">
-                  <p>{{ comment.description }}</p>
+
+          <div
+            class="tw-p-3 tw-overflow-y-auto tw-flex-1 tw-bg-[color:var(--theme-background-color-shade-4)] tw-max-h-[calc(100vh-12rem)]">
+            <div v-for="comment in ticket.comments" :key="comment._id" class="tw-mt-4">
+              <div v-if="comment.description"
+                class="tw-space-y-2 tw-p-4 tw-bg-[color:var(--theme-background-color-shade-5)]">
+                <div class="tw-flex tw-justify-between">
+                  <b>{{ comment.owner?.name }}</b>
+                  <aeria-icon icon="calendar" class="tw-text-sm">
+                    {{ formatDateTime(comment.created_at, { hours: true }) }}
+                  </aeria-icon>
                 </div>
-                <div class="tw-flex tw-items-start">
-                  <aeria-picture class="tw-w-12 tw-h-12 tw-object-cover tw-border" v-for="image in comment.images"
-                    v-if="comment.images" :url="image.link" expandable />
+                <hr class="tw-border">
+                <div class="tw-flex tw-gap-1">
+                  <p class="tw-flex-1">{{ comment.description }}</p>
+                  <aeria-picture v-if="comment.images" class="tw-w-12 tw-h-12 tw-object-cover tw-border"
+                    v-for="image in comment.images" :url="image.link" expandable />
                 </div>
               </div>
             </div>
@@ -87,14 +91,13 @@ onMounted(fetchTicket)
         </section>
       </div>
 
-      <div class="tw-w-1/2 tw-p-4 tw-bg-[color:var(--theme-background-color-shade-3)]">
+      <!-- Info Section -->
+      <div class="tw-w-1/2 tw-p-4 tw-bg-[color:var(--theme-background-color-shade-3)] tw-flex tw-flex-col">
         <div class="tw-bg-[color:var(--theme-background-color-shade-4)] tw-p-3">
-
-          <div class="tw-flex tw-items-center tw-justify-between">
+          <div class="tw-flex tw-justify-between tw-items-center">
             <div class="tw-flex tw-items-center">
               <div class="tw-w-2 tw-h-2 tw-rounded-full tw-mr-2"
-                :style="{ backgroundColor: priorityColor(ticket?.priority) }">
-              </div>
+                :style="{ backgroundColor: priorityColor(ticket?.priority) }"></div>
               <h3>{{ capitalizeText(ticket.title) }}</h3>
             </div>
             <aeria-icon reactive icon="copy" class="tw-cursor-pointer" @click="copy(ticket._id)">
@@ -109,17 +112,19 @@ onMounted(fetchTicket)
             <p>{{ formatDateTime(ticket.created_at) }}</p>
           </div>
         </div>
+
         <div class="tw-bg-[color:var(--theme-background-color-shade-4)] tw-p-2 tw-mt-2">
-          <p class="tw-mr-1">{{ ticket.description }}</p>
+          <p>{{ ticket.description }}</p>
           <aeria-picture v-if="ticket.attached?.link" expandable object-fit="contain" :url="ticket.attached.link" />
         </div>
+
         <div class="tw-flex tw-justify-between tw-bg-[color:var(--theme-background-color-shade-4)] tw-p-2 tw-mt-2">
-
-          {{ ticket.topic?.title }}
-
+          <div v-for="image in ticket.topic?.images">
+            <aeria-picture object-fit="contain" class="tw-h-9" :url="image.link" />
+          </div>
           <aeria-context-menu :actions="[
             { label: 'Repairing', icon: 'eye', click: () => updateStatus('Repairing') },
-            { label: 'Completed', icon: 'eye-closed', click: () => updateStatus('Completed') },
+            { label: 'Completed', icon: 'eye-closed', click: () => updateStatus('Completed') }
           ]">
             <div
               class="tw-flex tw-items-center tw-p-1 tw-cursor-pointer tw-bg-[color:var(--theme-background-color-shade-5)] tw-rounded-sm">
@@ -129,9 +134,7 @@ onMounted(fetchTicket)
               <aeria-icon icon="plus" class="tw-p-2" />
             </div>
           </aeria-context-menu>
-
         </div>
-
       </div>
     </div>
   </div>
