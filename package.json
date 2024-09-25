@@ -5,18 +5,19 @@
   "scripts": {
     "preinstall": "node scripts/preinstall.js",
     "postinstall": "husky",
-    "dev": "dualist api web"
+    "dev": "dualist api web",
+    "installdeps": "rm package-lock.json; rm -r node_modules; rm api/package-lock.json; rm -r api/node_modules; rm web/package-lock.json; rm -r web/node_modules; npm install"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@commitlint/cli": "^19.4.0",
-    "@commitlint/config-conventional": "^19.2.2",
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
     "dualist": "^0.0.5",
     "eslint-config-aeria": "^0.0.31",
-    "husky": "^9.1.4",
-    "typescript": "^5.5.4"
+    "husky": "^9.1.6",
+    "typescript": "^5.6.2"
   },
   "dependencies": {
     "@eslint/config-array": "^0.18.0",

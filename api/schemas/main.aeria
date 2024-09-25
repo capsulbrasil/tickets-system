@@ -95,7 +95,7 @@ collection Ticket {
   }
   properties {
     title str
-    topic Topic
+    topic Topic @populate([images])
     status enum @values([
       "Open",
       "Repairing",

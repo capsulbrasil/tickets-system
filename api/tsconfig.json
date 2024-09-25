@@ -2,9 +2,6 @@
     "extends": "@aeriajs/cli/config/tsconfig.json",
     "compilerOptions": {
         "outDir": "dist",
-        "preserveSymlinks": true,
-        "module": "CommonJS",
-        "moduleResolution": "node10"
     },
     "include": [
         "@types/*.d.ts",
