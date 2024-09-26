@@ -19,8 +19,5 @@ declare module 'vue-router/auto-routes' {
    */
   export interface RouteNamedMap {
     '/dashboard': RouteRecordInfo<'/dashboard', '/dashboard', Record<never, never>, Record<never, never>>,
-    '/dashboard/': RouteRecordInfo<'/dashboard/', '/dashboard', Record<never, never>, Record<never, never>>,
-    '/dashboard/ticket': RouteRecordInfo<'/dashboard/ticket', '/dashboard/ticket', Record<never, never>, Record<never, never>>,
-    '/dashboard/ticket-[id]': RouteRecordInfo<'/dashboard/ticket-[id]', '/dashboard/ticket-:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
   }
 }

@@ -6,7 +6,7 @@ import { statusColor, priorityColor, capitalizeText } from '../../utils.js'
 definePage({
   props: true,
   meta: {
-    title: 'Report',
+    title: 'Relatório do Ticket',
   },
 })
 
@@ -57,22 +57,23 @@ onMounted(fetchTicket)
 </script>
 
 <template>
-  <div v-if="ticket" class="tw-flex tw-flex-col tw-p-5 tw-gap-4 tw-bg-[color:var(--theme-background-color-shade-2)]">
+  <div v-if="ticket"
+    class="tw-flex tw-flex-col tw-p-5 tw-gap-4 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-2)]">
     <div class="tw-flex tw-gap-4 tw-h-full">
-      <!-- Chat Section -->
-      <div class="tw-w-1/2 tw-p-3 tw-bg-[color:var(--theme-background-color-shade-3)] tw-flex tw-flex-col">
+      <div
+        class="tw-w-1/2 tw-p-3 tw-flex tw-flex-col tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-3)]">
         <section class="tw-flex-1 tw-flex tw-flex-col">
           <div
-            class="tw-flex tw-justify-between tw-items-center tw-p-3 tw-bg-[color:var(--theme-background-color-shade-4)]">
+            class="tw-flex tw-justify-between tw-items-center tw-p-3 tw-mb-2 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
             <aeria-icon icon="chat">Chat</aeria-icon>
-            <aeria-button icon="plus" variant="alt" @click="addComment">Escrever</aeria-button>
+            <aeria-button icon="plus" variant="alt" @click="addComment">Comentar</aeria-button>
           </div>
 
           <div
-            class="tw-p-3 tw-overflow-y-auto tw-flex-1 tw-bg-[color:var(--theme-background-color-shade-4)] tw-max-h-[calc(100vh-12rem)]">
-            <div v-for="comment in ticket.comments" :key="comment._id" class="tw-mt-4">
-              <div v-if="comment.description"
-                class="tw-space-y-2 tw-p-4 tw-bg-[color:var(--theme-background-color-shade-5)]">
+            class="tw-p-3 tw-overflow-y-auto tw-flex-1 tw-max-h-[calc(100vh-12rem)] tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
+            <div v-for="comment in ticket.comments" :key="comment._id"
+              class="tw-mt-4 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-5)]">
+              <div v-if="comment.description" class="tw-space-y-2 tw-p-4">
                 <div class="tw-flex tw-justify-between">
                   <b>{{ comment.owner?.name }}</b>
                   <aeria-icon icon="calendar" class="tw-text-sm">
@@ -91,10 +92,10 @@ onMounted(fetchTicket)
         </section>
       </div>
 
-      <!-- Info Section -->
-      <div class="tw-w-1/2 tw-p-4 tw-bg-[color:var(--theme-background-color-shade-3)] tw-flex tw-flex-col">
-        <div class="tw-bg-[color:var(--theme-background-color-shade-4)] tw-p-3">
-          <div class="tw-flex tw-justify-between tw-items-center">
+      <div
+        class="tw-w-1/2 tw-p-4 tw-flex tw-flex-col tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-3)]">
+        <div class="tw-p-3 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
+          <div class="tw-flex tw-justify-between tw-items-center ">
             <div class="tw-flex tw-items-center">
               <div class="tw-w-2 tw-h-2 tw-rounded-full tw-mr-2"
                 :style="{ backgroundColor: priorityColor(ticket?.priority) }"></div>
@@ -113,14 +114,15 @@ onMounted(fetchTicket)
           </div>
         </div>
 
-        <div class="tw-bg-[color:var(--theme-background-color-shade-4)] tw-p-2 tw-mt-2">
+        <div class="tw-p-2 tw-mt-2 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
           <p>{{ ticket.description }}</p>
           <aeria-picture v-if="ticket.attached?.link" expandable object-fit="contain" :url="ticket.attached.link" />
         </div>
 
-        <div class="tw-flex tw-justify-between tw-bg-[color:var(--theme-background-color-shade-4)] tw-p-2 tw-mt-2">
-          <div v-for="image in ticket.topic?.images">
-            <aeria-picture object-fit="contain" class="tw-h-9" :url="image.link" />
+        <div
+          class="tw-flex tw-justify-between tw-p-2 tw-mt-2 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
+          <div v-for="image in ticket.topic?.images" class="tw-flex tw-justify-center tw-items-center">
+            <aeria-picture object-fit="contain" class="tw-h-8" :url="image.link" />
           </div>
           <aeria-context-menu :actions="[
             { label: 'Repairing', icon: 'eye', click: () => updateStatus('Repairing') },

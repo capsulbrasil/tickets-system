@@ -915,111 +915,6 @@ declare type MirrorRouter = {
       ]
     }
   },
-  "/ticket/filter": {
-    "GET": {
-      "query": {
-        "required": [],
-        "variable": true,
-        "type": "object",
-        "properties": {
-          "document": {
-            "type": "string"
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "Open",
-              "Repairing",
-              "Completed"
-            ]
-          },
-          "priority": {
-            "type": "string",
-            "enum": [
-              "Low",
-              "Moderate",
-              "Urgent"
-            ]
-          },
-          "offset": {
-            "type": "number"
-          },
-          "limit": {
-            "type": "number"
-          }
-        }
-      },
-      "response": [
-        {
-          "type": "object",
-          "properties": {
-            "_tag": {
-              "const": "Error"
-            },
-            "result": {},
-            "error": {
-              "type": "object",
-              "required": [
-                "httpStatus",
-                "code"
-              ],
-              "properties": {
-                "httpStatus": {
-                  "enum": [
-                    404
-                  ]
-                },
-                "code": {
-                  "enum": [
-                    "NO_TICKETS_FOUND"
-                  ]
-                },
-                "message": {
-                  "type": "string"
-                },
-                "details": {
-                  "type": "object",
-                  "variable": true
-                }
-              }
-            }
-          }
-        },
-        {
-          "type": "object",
-          "properties": {
-            "_tag": {
-              "const": "Result"
-            },
-            "error": {},
-            "result": {
-              "type": "object",
-              "properties": {
-                "openTickets": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "ticket"
-                  }
-                },
-                "repairingTickets": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "ticket"
-                  }
-                },
-                "closedTickets": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "ticket"
-                  }
-                }
-              }
-            }
-          }
-        }
-      ]
-    }
-  },
   "/ticket/countAll": {
     "GET": {
       "response": [
@@ -1039,12 +934,14 @@ declare type MirrorRouter = {
               "properties": {
                 "httpStatus": {
                   "enum": [
-                    404
+                    404,
+                    500
                   ]
                 },
                 "code": {
                   "enum": [
-                    "NO_TICKETS_FOUND"
+                    "NO_TICKETS_FOUND",
+                    "INTERNAL_SERVER_ERROR"
                   ]
                 },
                 "message": {
@@ -1074,7 +971,7 @@ declare type MirrorRouter = {
                 "repairingTickets": {
                   "type": "number"
                 },
-                "closedTickets": {
+                "completedTickets": {
                   "type": "number"
                 }
               }

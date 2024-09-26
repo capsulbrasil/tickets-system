@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import { capitalizeText, statusColor, priorityColor } from '../../utils.js';
-import ManualPanel from '../../components/manualPanel.vue';
 import type { CollectionItemWithId } from '@aeriajs/types';
-import { useRouter } from 'vue-router';
 import { onMounted, ref, computed } from 'vue';
-import { user } from 'aeria-ui';
 
 definePage({
   meta: {
-    title: 'Dashboard',
-    icon: 'diamonds-four',
+    title: 'Central',
+    icon: 'airplay',
   },
 });
 
@@ -19,11 +16,8 @@ enum TicketStatus {
   Completed = 'Completed',
 }
 
-type Ticket = CollectionItemWithId<'ticket'>
-
-const router = useRouter();
-const metaStore = useStore('meta');
-const ticket = ref<Ticket | null>(null)
+type Ticket = CollectionItemWithId<'ticket'>;
+const topicCounts = ref<{ [topic: string]: number }>({});
 
 const totalTicketCount = ref<{ [key in TicketStatus]: number }>({
   [TicketStatus.Open]: 0,
@@ -37,11 +31,35 @@ const totalTickets = computed(() =>
   totalTicketCount.value[TicketStatus.Completed]
 );
 
-function navigateTicket(id: string) {
-  return router.push({
-    name: '/dashboard/ticket-[id]',
-    params: { id },
-  })
+const sortedTopics = computed(() => {
+  return Object.entries(topicCounts.value)
+    .sort(([, a], [, b]) => b - a)
+    .reduce((acc, [topic, count]) => {
+      acc[topic] = count;
+      return acc;
+    }, {} as { [topic: string]: number });
+});
+
+async function countTicketsByTopic() {
+  try {
+    const { error, result } = await aeria.ticket.getAll.POST();
+
+    if (error) {
+      console.error("Erro ao buscar tickets:", error);
+      return;
+    }
+
+    const counts: { [topic: string]: number } = {};
+
+    result.data.forEach((ticket: Ticket) => {
+      const topicName = ticket.topic.title || 'Sem Tópico';
+      counts[topicName] = (counts[topicName] || 0) + 1;
+    });
+
+    topicCounts.value = counts;
+  } catch (err) {
+    console.error("Erro ao contar tickets por tópico:", err);
+  }
 }
 
 async function countAllTickets() {
@@ -58,17 +76,15 @@ async function countAllTickets() {
       [TicketStatus.Repairing]: result.repairingTickets || 0,
       [TicketStatus.Completed]: result.completedTickets || 0,
     };
-
   } catch (err) {
-    console.error("Erro inesperado ao buscar contagem de tickets:", err);
+    console.error("Erro ao buscar contagem de tickets:", err);
   }
 }
 
 onMounted(async () => {
   await countAllTickets();
+  await countTicketsByTopic();
 });
-
-const t = '66f401747cb24dbac12fe770'
 </script>
 
 <template>
@@ -76,17 +92,17 @@ const t = '66f401747cb24dbac12fe770'
     Bem-vindo {{ currentUser.name.split(' ')[0] }}, ao Suporte Capsul
   </h1>
 
-  <section>
-    <div class="tw-flex tw-space-x-2">
-      <div class="tw-flex-1 tw-p-3 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-2)]">
-        <aeria-icon icon="chat-circle-dots" style="--icon-size: 1.5rem">Chat</aeria-icon>
+  <section class="tw-bg-[color:var(--theme-background-color-shade-2)] tw-rounded-sm">
+    <div class="tw-flex tw-space-x-1">
+      <article class="tw-flex-1 tw-p-3 tw-rounded-sm tw-m-3 tw-bg-[color:var(--theme-background-color-shade-3)]">
+        <aeria-icon icon="broadcast" style="--icon-size: 1.5rem">Broadcast</aeria-icon>
         <hr class="tw-border" />
-      </div>
-      <div class="tw-flex-1 tw-p-3 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-2)]">
+      </article>
+      <article class="tw-flex-1 tw-p-3 tw-m-3 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-3)]">
         <aeria-icon icon="chart-bar" style="--icon-size: 1.5rem">Dashboard</aeria-icon>
         <hr class="tw-border" />
-        <div class="tw-flex tw-justify-around tw-p-1 tw-bg-[color:var(--theme-background-color-shade-5)] tw-rounded-sm">
-          <p class="tw-text-center">Resumo de demandas</p>
+        <div class="tw-flex tw-justify-around tw-p-2 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
+          <p>Panorama de Demandas</p>
           <aeria-icon icon="ticket">{{ totalTickets }}</aeria-icon>
           <div v-for="status in [TicketStatus.Open, TicketStatus.Repairing, TicketStatus.Completed]" :key="status"
             class="tw-flex tw-items-center">
@@ -95,20 +111,34 @@ const t = '66f401747cb24dbac12fe770'
           </div>
         </div>
         <div class="tw-flex tw-space-x-2 tw-mt-2">
-          <div class="tw-bg-[color:var(--theme-background-color-shade-5)] tw-pl-5 tw-flex-1">
-            <p class="tw-text-center">Divergências por tópico</p>
+          <div class="tw-flex-1 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
+            <div class="tw-p-1">
+              <p class="tw-text-center">Análise dos Tópicos</p>
+            </div>
+            <div class="tw-pl-1 tw-pr-1 tw-rounded-sm">
+              <div v-for="(count, topic) in sortedTopics" :key="topic"
+                class="tw-flex tw-justify-between tw-items-center tw-m-1 tw-pl-2 tw-pr-2 tw-bg-[color:var(--theme-background-color-shade-5)]">
+                <p>{{ topic }}</p>
+                <aeria-icon icon="ticket">{{ count }}</aeria-icon>
+              </div>
+            </div>
           </div>
-          <div class="tw-bg-[color:var(--theme-background-color-shade-5)] tw-pl-5 tw-flex-1">
+          <div class="tw-pl-5 tw-flex-1 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
             <p class="tw-text-center">Outros futuros insights</p>
           </div>
         </div>
-      </div>
+      </article>
     </div>
   </section>
-  <aeria-button @click="navigateTicket(t)">Acesse o ticket</aeria-button>
+
   <aeria-crud collection="ticket">
     <template #row-title="{ row, column }">
       <div class="tw-font-semibold">{{ capitalizeText(row[column]) }}</div>
+    </template>
+    <template #row-topic="{ row, column }">
+      <div v-for="image in row[column]?.images" :key="image.id" class="tw-flex tw-items-center">
+        <aeria-picture object-fit="contain" class="tw-h-4" :url="image.link" />
+      </div>
     </template>
     <template #row-priority="{ row, column }">
       <div class="tw-flex tw-items-center tw-gap-2">
