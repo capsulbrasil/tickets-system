@@ -1,6 +1,6 @@
 import { init } from "aeria";
 import { router } from "./routes/index.js";
-export * as collections from "./collections.js";
+export * as collections from "./collections/index.js";
 
 export default init({
   router,
@@ -19,5 +19,6 @@ export default init({
       fs: process.env.STORAGE_PATH,
       tempFs: process.env.STORAGE_TEMP_PATH,
     },
+    tokenUserProperties: ['name', 'email']
   },
 });

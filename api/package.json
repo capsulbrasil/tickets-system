@@ -1,5 +1,4 @@
 {
-
   "version": "1.0.0",
   "description": "",
   "type": "module",
@@ -32,7 +31,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aeria": "^0.0.178",
-    "aeria-sdk": "^0.0.134"
+    "aeria": "^0.0.179",
+    "aeria-sdk": "^0.0.134",
+    "discord.js": "^14.16.2"
   }
 }

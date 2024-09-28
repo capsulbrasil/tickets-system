@@ -2,4 +2,6 @@
 production.env
 dist
 node_modules
-**/.aeria/out
+**/.aeria
+package-lock.json
+**/package-lock.json
