@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { onMounted, ref, computed } from 'vue';
 import { capitalizeText, statusColor, priorityColor } from '../../utils.js';
 import type { CollectionItemWithId } from '@aeriajs/types';
-import { onMounted, ref, computed } from 'vue';
 
 definePage({
   meta: {
@@ -17,7 +17,9 @@ enum TicketStatus {
 }
 
 type Ticket = CollectionItemWithId<'ticket'>;
+
 const topicCounts = ref<{ [topic: string]: number }>({});
+const urgentTickets = ref<Ticket[]>([]);
 
 const totalTicketCount = ref<{ [key in TicketStatus]: number }>({
   [TicketStatus.Open]: 0,
@@ -39,6 +41,32 @@ const sortedTopics = computed(() => {
       return acc;
     }, {} as { [topic: string]: number });
 });
+
+async function fetchUrgentTickets() {
+  try {
+    const { error, result } = await aeria.ticket.getAll.POST();
+
+    if (error) {
+      console.error("Erro ao buscar tickets:", error);
+      return;
+    }
+
+    const now = new Date();
+    const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+    urgentTickets.value = result.data.filter((ticket: Ticket) => {
+      const ticketDate = ticket.created_at ? new Date(ticket.created_at) : null;
+      return (
+        ticket.priority === 'Urgent' &&
+        ticket.status === TicketStatus.Open &&
+        ticketDate &&
+        ticketDate < twentyFourHoursAgo
+      );
+    });
+  } catch (err) {
+    console.error("Erro ao buscar tickets urgentes:", err);
+  }
+}
 
 async function countTicketsByTopic() {
   try {
@@ -84,6 +112,7 @@ async function countAllTickets() {
 onMounted(async () => {
   await countAllTickets();
   await countTicketsByTopic();
+  await fetchUrgentTickets();
 });
 </script>
 
@@ -115,7 +144,7 @@ onMounted(async () => {
             <div class="tw-p-1">
               <p class="tw-text-center">Análise dos Tópicos</p>
             </div>
-            <div class="tw-pl-1 tw-pr-1 tw-rounded-sm">
+            <div class="tw-pl-1 tw-pr-1 tw-rounded-sm tw-max-h-58 tw-overflow-y-auto">
               <div v-for="(count, topic) in sortedTopics" :key="topic"
                 class="tw-flex tw-justify-between tw-items-center tw-m-1 tw-pl-2 tw-pr-2 tw-bg-[color:var(--theme-background-color-shade-5)]">
                 <p>{{ topic }}</p>
@@ -123,8 +152,20 @@ onMounted(async () => {
               </div>
             </div>
           </div>
-          <div class="tw-pl-5 tw-flex-1 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
-            <p class="tw-text-center">Outros futuros insights</p>
+          <div class="tw-flex-1 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
+            <div class="tw-p-1">
+              <p class="tw-text-center">Demandas Urgentes (<b>24 horas</b>)</p>
+            </div>
+            <div v-if="urgentTickets.length > 0" class="tw-pl-1 tw-pr-1 tw-rounded-sm tw-max-h-58 tw-overflow-y-auto">
+              <div v-for="ticket in urgentTickets" :key="ticket._id"
+                class="tw-flex tw-justify-between tw-items-center tw-m-1 tw-pl-2 tw-pr-2 tw-bg-[color:var(--theme-background-color-shade-5)]">
+                <p>{{ ticket.title }}</p>
+                <aeria-icon icon="warning"></aeria-icon>
+              </div>
+            </div>
+            <div v-else>
+              <p class="tw-text-center">Nenhuma Demanda Urgente.</p>
+            </div>
           </div>
         </div>
       </article>
