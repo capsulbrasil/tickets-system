@@ -278,7 +278,8 @@ declare type MirrorDescriptions = {
       "owner": {
         "$ref": "user",
         "populate": [
-          "roles"
+          "roles",
+          "email"
         ],
         "noForm": true,
         "indexes": [
@@ -915,71 +916,8 @@ declare type MirrorRouter = {
       ]
     }
   },
-  "/ticket/countAll": {
-    "GET": {
-      "response": [
-        {
-          "type": "object",
-          "properties": {
-            "_tag": {
-              "const": "Error"
-            },
-            "result": {},
-            "error": {
-              "type": "object",
-              "required": [
-                "httpStatus",
-                "code"
-              ],
-              "properties": {
-                "httpStatus": {
-                  "enum": [
-                    404,
-                    500
-                  ]
-                },
-                "code": {
-                  "enum": [
-                    "NO_TICKETS_FOUND",
-                    "INTERNAL_SERVER_ERROR"
-                  ]
-                },
-                "message": {
-                  "type": "string"
-                },
-                "details": {
-                  "type": "object",
-                  "variable": true
-                }
-              }
-            }
-          }
-        },
-        {
-          "type": "object",
-          "properties": {
-            "_tag": {
-              "const": "Result"
-            },
-            "error": {},
-            "result": {
-              "type": "object",
-              "properties": {
-                "openTickets": {
-                  "type": "number"
-                },
-                "repairingTickets": {
-                  "type": "number"
-                },
-                "completedTickets": {
-                  "type": "number"
-                }
-              }
-            }
-          }
-        }
-      ]
-    }
+  "/countAll": {
+    "GET": null
   }
 }
 

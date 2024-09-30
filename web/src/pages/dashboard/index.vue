@@ -42,78 +42,22 @@ const sortedTopics = computed(() => {
     }, {} as { [topic: string]: number });
 });
 
-async function fetchUrgentTickets() {
-  try {
-    const { error, result } = await aeria.ticket.getAll.POST();
+async function fetchCounts() {
+  const response = await fetch('/countAll');
+  const data = await response.json();
 
-    if (error) {
-      console.error("Erro ao buscar tickets:", error);
-      return;
-    }
-
-    const now = new Date();
-    const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-
-    urgentTickets.value = result.data.filter((ticket: Ticket) => {
-      const ticketDate = ticket.created_at ? new Date(ticket.created_at) : null;
-      return (
-        ticket.priority === 'Urgent' &&
-        ticket.status === TicketStatus.Open &&
-        ticketDate &&
-        ticketDate < twentyFourHoursAgo
-      );
-    });
-  } catch (err) {
-    console.error("Erro ao buscar tickets urgentes:", err);
-  }
-}
-
-async function countTicketsByTopic() {
-  try {
-    const { error, result } = await aeria.ticket.getAll.POST();
-
-    if (error) {
-      console.error("Erro ao buscar tickets:", error);
-      return;
-    }
-
-    const counts: { [topic: string]: number } = {};
-
-    result.data.forEach((ticket: Ticket) => {
-      const topicName = ticket.topic.title || 'Sem Tópico';
-      counts[topicName] = (counts[topicName] || 0) + 1;
-    });
-
-    topicCounts.value = counts;
-  } catch (err) {
-    console.error("Erro ao contar tickets por tópico:", err);
-  }
-}
-
-async function countAllTickets() {
-  try {
-    const { error, result } = await aeria.ticket.countAll.GET();
-
-    if (error) {
-      console.error("Erro ao buscar contagem de tickets:", error);
-      return;
-    }
-
-    totalTicketCount.value = {
-      [TicketStatus.Open]: result.openTickets || 0,
-      [TicketStatus.Repairing]: result.repairingTickets || 0,
-      [TicketStatus.Completed]: result.completedTickets || 0,
-    };
-  } catch (err) {
-    console.error("Erro ao buscar contagem de tickets:", err);
-  }
+  totalTicketCount.value = data.totalByStatus;
+  topicCounts.value = data.totalByTopic.reduce((acc: any, topic: any) => {
+    acc[topic._id] = topic.count;
+    return acc;
+  }, {});
+  urgentTickets.value = data.urgentCount;
 }
 
 onMounted(async () => {
-  await countAllTickets();
-  await countTicketsByTopic();
-  await fetchUrgentTickets();
+  await fetchCounts();
 });
+
 </script>
 
 <template>
@@ -171,7 +115,6 @@ onMounted(async () => {
       </article>
     </div>
   </section>
-
   <aeria-crud collection="ticket">
     <template #row-title="{ row, column }">
       <div class="tw-font-semibold">{{ capitalizeText(row[column]) }}</div>
