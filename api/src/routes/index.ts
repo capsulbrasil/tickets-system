@@ -26,8 +26,22 @@ router.GET("/countAll", async (context) => {
         ],
         totalByTopic: [
           {
+            $lookup:{
+              from:'topic',
+              localField:"topic",
+              foreignField:"_id",
+              as: "lookUpTopic"
+            }
+          },
+          {
+            $unwind:{
+              path:"$lookUpTopic",
+              preserveNullAndEmptyArrays: true,
+            }
+          },
+          {
             $group: {
-              _id: "$topic.title",
+              _id: "$lookUpTopic.title",
               count: { $sum: 1 },
             },
           },
@@ -36,7 +50,9 @@ router.GET("/countAll", async (context) => {
           {
             $match: {
               $or: [
-                { status: "Open", created_at: { $lt: twentyFourHoursAgo } },
+                { status: "Open", 
+                  created_at: { $lt: twentyFourHoursAgo } 
+                },
                 {
                   status: "Repairing",
                   created_at: { $lt: twentyFourHoursAgo },
@@ -64,19 +80,32 @@ router.GET("/countAll", async (context) => {
             },
           },
         },
-        totalByTopic: "$totalByTopic",
+        totalByTopic: {
+          $arrayToObject: {
+            $map: {
+              input: "$totalByTopic",
+              as: "topic",
+              in: {
+                k: "$$topic._id",
+                v: "$$topic.count",
+              },
+            },
+          },
+        },
         urgentCount: { $arrayElemAt: ["$urgentTickets.urgentCount", 0] },
       },
     },
   ];
 
-  const result = await context.collections.ticket.model
-    .aggregate(aggregationPipeline)
-    .toArray();
+  const result = await context.collections.ticket.model.aggregate(aggregationPipeline).next();
 
-  context.body = {
+  if(!result){
+    return context.error(HTTPStatus.InternalServerError, {code:"TICKET_COUNT_AGGREGATION_FAILED"})
+  }
+  return Result.result
+  /* context.body = {
     totalByStatus: result[0].totalByStatus,
     totalByTopic: result[0].totalByTopic,
     urgentCount: result[0].urgentCount || 0,
-  };
+  }; */
 });
