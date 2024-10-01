@@ -36,7 +36,7 @@ const fetchTicket = async () => {
   }
 }
 
-const updateStatus = async (newStatus: 'Repairing' | 'Completed') => {
+const updateStatus = async (newStatus: 'Reparando' | 'Resolvido') => {
   if (!ticket.value) return
 
   const { error, result } = await aeria.ticket.insert.POST({
@@ -70,7 +70,7 @@ onMounted(fetchTicket)
           </div>
 
           <div
-            class="tw-p-3 tw-overflow-y-auto tw-flex-1 tw-max-h-[calc(100vh-12rem)] tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
+            class="tw-p-3 tw-overfBaixa-y-auto tw-flex-1 tw-max-h-[calc(100vh-12rem)] tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
             <div v-for="comment in ticket.comments" :key="comment._id"
               class="tw-mt-4 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-5)]">
               <div v-if="comment.description" class="tw-space-y-2 tw-p-4">
@@ -125,8 +125,8 @@ onMounted(fetchTicket)
             <aeria-picture object-fit="contain" class="tw-h-8" :url="image.link" />
           </div>
           <aeria-context-menu :actions="[
-            { label: 'Repairing', icon: 'eye', click: () => updateStatus('Repairing') },
-            { label: 'Completed', icon: 'eye-closed', click: () => updateStatus('Completed') }
+            { label: 'Reparando', icon: 'eye', click: () => updateStatus('Reparando') },
+            { label: 'Resolvido', icon: 'eye-closed', click: () => updateStatus('Resolvido') }
           ]">
             <div
               class="tw-flex tw-items-center tw-p-1 tw-cursor-pointer tw-bg-[color:var(--theme-background-color-shade-5)] tw-rounded-sm">

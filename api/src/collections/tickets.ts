@@ -15,7 +15,7 @@ import { MessageCreateOptions } from "discord.js";
 export const ticket = extendTicketCollection({
   description: {
     freshItem: {
-      status: "Open",
+      status: "Ativo",
     },
     properties: {
       comments: {

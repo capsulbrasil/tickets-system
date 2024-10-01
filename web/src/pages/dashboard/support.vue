@@ -38,17 +38,17 @@ import { statusColor, priorityColor, capitalizeText } from '../../utils.js'
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="tw-py-2 tw-px-4 tw-text-[#539F2B]"><strong>Low</strong></td>
-                        <td class="tw-py-2 tw-px-4">Use essa opção para demandas não urgentes que podem esperar para
+                        <td class="tw-py-2 tw-px-4 tw-text-[#539F2B]"><strong>Baixa</strong></td>
+                        <td class="tw-py-2 tw-px-4">Use essa opção para demandas não Urgentees que podem esperar para
                             serem resolvidas. São questões que não comprometem a operação.</td>
                     </tr>
                     <tr>
-                        <td class="tw-py-2 tw-px-4 tw-text-[#B38705]"><strong>Moderate</strong></td>
+                        <td class="tw-py-2 tw-px-4 tw-text-[#B38705]"><strong>Moderada</strong></td>
                         <td class="tw-py-2 tw-px-4">Escolha esta prioridade para questões que têm um impacto moderado,
                             mas que não precisam de resolução imediata.</td>
                     </tr>
                     <tr>
-                        <td class="tw-py-2 tw-px-4 tw-text-[#F44336]"><strong>Urgent</strong></td>
+                        <td class="tw-py-2 tw-px-4 tw-text-[#F44336]"><strong>Urgente</strong></td>
                         <td class="tw-py-2 tw-px-4">Esta opção deve ser usada para demandas que precisam de atenção
                             imediata, pois podem afetar severamente a operação ou serviços.</td>
                     </tr>
@@ -65,16 +65,16 @@ import { statusColor, priorityColor, capitalizeText } from '../../utils.js'
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="tw-py-2 tw-px-4 tw-text-[#4CAF50]"><strong>Open</strong></td>
+                        <td class="tw-py-2 tw-px-4 tw-text-[#4CAF50]"><strong>Ativo</strong></td>
                         <td class="tw-py-2 tw-px-4">O ticket foi criado e ainda não foi atendido.</td>
                     </tr>
                     <tr>
-                        <td class="tw-py-2 tw-px-4 tw-text-[#FF9800]"><strong>Repairing</strong></td>
+                        <td class="tw-py-2 tw-px-4 tw-text-[#FF9800]"><strong>Reparando</strong></td>
                         <td class="tw-py-2 tw-px-4">O ticket está em processo de resolução. Um responsável está
                             trabalhando na demanda.</td>
                     </tr>
                     <tr>
-                        <td class="tw-py-2 tw-px-4 tw-text-[#2196F3]"><strong>Completed</strong></td>
+                        <td class="tw-py-2 tw-px-4 tw-text-[#2196F3]"><strong>Resolvido</strong></td>
                         <td class="tw-py-2 tw-px-4">O ticket foi concluído e a demanda foi resolvida.</td>
                     </tr>
                 </tbody>

@@ -44,8 +44,15 @@ collection Topic {
   icon "text-align-left"
   owned "on-write"
   table {
-   title
    images
+   title
+   description
+  }
+  search {
+    placeholder "Insira o sistema aqui"
+    indexes {
+      title
+    }
   }
   required {
     title
@@ -75,9 +82,12 @@ collection Ticket {
     topic
     status
     priority
-  }
-  indexes {
-    title
+  } 
+  search {
+    placeholder "Pesquise aqui"
+    indexes {
+      title
+    }
   }
   required {
     title
@@ -98,14 +108,14 @@ collection Ticket {
     title str
     topic Topic @populate([images])
     status enum @values([
-      "Open",
-      "Repairing",
-      "Completed"
+      "Ativo",
+      "Reparando",
+      "Resolvido"
     ] ) 
     priority enum @values([
-      "Low",
-      "Moderate",
-      "Urgent"
+      "Baixa",
+      "Moderada",
+      "Urgente"
     ])
     description str @element("textarea")
     attached File @accept(["image/*"])
@@ -123,5 +133,32 @@ collection Ticket {
   }
   presets {
     crud
+  }
+}
+
+collection Broadcast {
+  table {
+    title
+    system
+  }
+  search {
+    placeholder "Insira o nome da transmissão aqui"
+    indexes {
+      title
+    }
+  }
+  properties {
+    title str 
+    system topic
+  }
+  functions {
+    get @expose
+    getAll @expose
+    insert @expose
+    remove @expose
+    upload @expose
+  }
+  presets {
+   crud
   }
 }

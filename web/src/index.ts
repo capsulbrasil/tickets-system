@@ -7,7 +7,7 @@ import "@aeria-ui/ui/style.css";
 import "aeria-app-layout/style.css";
 import "./style/main.less";
 
-import aeriaPtbr from '@aeria-ui/i18n-pt'
+import aeriaPtbr from "@aeria-ui/i18n-pt";
 
 import NoResults from "./components/no-results.vue";
 
@@ -18,15 +18,17 @@ const options = defineOptions({
   component: AeriaMain,
   routes,
   i18n: {
-    current: 'pt_BR',
+    current: "pt_BR",
     locales: {
-      pt_BR: [
-        aeriaPtbr,
-        ptbr,
-      ],
-    }
+      pt_BR: [aeriaPtbr, ptbr],
+    },
   },
-  menuSchema: ["/dashboard/", "/dashboard/topic", "/dashboard/user"],
+  menuSchema: [
+    "/dashboard/",
+    "/dashboard/topic",
+    "/dashboard/broadcast",
+    "/dashboard/user",
+  ],
 });
 
 useApp(options).then(({ app, mount }) => {

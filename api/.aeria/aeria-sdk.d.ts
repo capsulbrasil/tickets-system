@@ -9,6 +9,79 @@ import type {
 } from '@aeriajs/types'
 
 declare type MirrorDescriptions = {
+  "broadcast": {
+    "$id": "broadcast",
+    "properties": {
+      "title": {
+        "type": "string"
+      },
+      "system": {
+        "$ref": "topic",
+        "indexes": [
+          "title"
+        ]
+      },
+      "created_at": {
+        "type": "string",
+        "format": "date-time",
+        "noForm": true,
+        "readOnly": true,
+        "isTimestamp": true
+      },
+      "updated_at": {
+        "type": "string",
+        "format": "date-time",
+        "noForm": true,
+        "readOnly": true,
+        "isTimestamp": true
+      }
+    },
+    "table": [
+      "title",
+      "system"
+    ],
+    "presets": [
+      "crud"
+    ],
+    "search": {
+      "indexes": [
+        "title"
+      ],
+      "placeholder": "Insira o nome da transmissão aqui"
+    },
+    "actions": {
+      "spawnAdd": {
+        "label": "action.add",
+        "event": "spawnAdd",
+        "icon": "plus",
+        "button": true,
+        "translate": true
+      }
+    },
+    "individualActions": {
+      "spawnEdit": {
+        "label": "action.edit",
+        "event": "spawnEdit",
+        "icon": "pencil-simple",
+        "translate": true
+      },
+      "viewItem": {
+        "label": "action.view",
+        "icon": "eye",
+        "translate": true,
+        "route": {
+          "name": "/dashboard/:collection/:id",
+          "setItem": true
+        }
+      },
+      "remove": {
+        "label": "action.remove",
+        "icon": "trash",
+        "ask": true,
+        "translate": true
+      }
+    }
+  },
   "comment": {
     "$id": "comment",
     "properties": {
@@ -234,16 +307,16 @@ declare type MirrorDescriptions = {
       },
       "status": {
         "enum": [
-          "Open",
-          "Repairing",
-          "Completed"
+          "Ativo",
+          "Reparando",
+          "Resolvido"
         ]
       },
       "priority": {
         "enum": [
-          "Low",
-          "Moderate",
-          "Urgent"
+          "Baixa",
+          "Moderada",
+          "Urgente"
         ]
       },
       "description": {
@@ -317,11 +390,14 @@ declare type MirrorDescriptions = {
     "presets": [
       "crud"
     ],
-    "indexes": [
-      "title"
-    ],
+    "search": {
+      "indexes": [
+        "title"
+      ],
+      "placeholder": "Pesquise aqui"
+    },
     "freshItem": {
-      "status": "Open"
+      "status": "Ativo"
     },
     "individualActions": {
       "viewContent": {
@@ -417,8 +493,9 @@ declare type MirrorDescriptions = {
     "icon": "text-align-left",
     "owned": "on-write",
     "table": [
+      "images",
       "title",
-      "images"
+      "description"
     ],
     "required": [
       "title"
@@ -426,6 +503,12 @@ declare type MirrorDescriptions = {
     "presets": [
       "crud"
     ],
+    "search": {
+      "indexes": [
+        "title"
+      ],
+      "placeholder": "Insira o sistema aqui"
+    },
     "actions": {
       "spawnAdd": {
         "label": "action.add",
@@ -656,6 +739,46 @@ declare type MirrorDescriptions = {
 
 
 declare type MirrorRouter = {
+  "/broadcast/get": {
+    "POST": {
+      "roles": [
+        "root"
+      ],
+      "builtin": true
+    }
+  },
+  "/broadcast/getAll": {
+    "POST": {
+      "roles": [
+        "root"
+      ],
+      "builtin": true
+    }
+  },
+  "/broadcast/insert": {
+    "POST": {
+      "roles": [
+        "root"
+      ],
+      "builtin": true
+    }
+  },
+  "/broadcast/remove": {
+    "POST": {
+      "roles": [
+        "root"
+      ],
+      "builtin": true
+    }
+  },
+  "/broadcast/upload": {
+    "POST": {
+      "roles": [
+        "root"
+      ],
+      "builtin": true
+    }
+  },
   "/comment/get": {
     "POST": {
       "roles": [
@@ -917,7 +1040,83 @@ declare type MirrorRouter = {
     }
   },
   "/countAll": {
-    "GET": null
+    "GET": {
+      "roles": true,
+      "response": [
+        {
+          "type": "object",
+          "properties": {
+            "_tag": {
+              "const": "Error"
+            },
+            "result": {},
+            "error": {
+              "type": "object",
+              "required": [
+                "httpStatus",
+                "code"
+              ],
+              "properties": {
+                "httpStatus": {
+                  "enum": [
+                    500
+                  ]
+                },
+                "code": {
+                  "enum": [
+                    "TICKET_COUNT_AGGREGATION_FAILED"
+                  ]
+                },
+                "message": {
+                  "type": "string"
+                },
+                "details": {
+                  "type": "object",
+                  "variable": true
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "_tag": {
+              "const": "Result"
+            },
+            "error": {},
+            "result": {
+              "type": "object",
+              "properties": {
+                "totalByStatus": {
+                  "type": "object",
+                  "properties": {
+                    "Ativo": {
+                      "type": "number"
+                    },
+                    "Reparando": {
+                      "type": "number"
+                    },
+                    "Resolvido": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "totalByTopic": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "topic"
+                  }
+                },
+                "UrgentCount": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
   }
 }
 
