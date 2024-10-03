@@ -17,21 +17,6 @@ export const ticket = extendTicketCollection({
     freshItem: {
       status: "Ativo",
     },
-    properties: {
-      comments: {
-        noForm: true,
-        getter: async (document: any, context: any): Promise<unknown> => {
-          return throwIfError(
-            await context.collections.comment.functions.getAll({
-              filters: {
-                ticket: document._id,
-              },
-              populate: ["owner", "images"],
-            })
-          );
-        },
-      },
-    },
     individualActions: {
       viewContent: {
         label: "Ver ticket",

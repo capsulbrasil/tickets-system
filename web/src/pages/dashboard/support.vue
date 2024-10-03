@@ -1,17 +1,13 @@
 <script setup lang="ts">
-import { statusColor, priorityColor, capitalizeText } from '../../utils.js'
 </script>
 <template>
     <div
-        class="tw-bg-[color:var(--theme-background-color-shade-4)] tw-rounded tw-p-3 tw-flex tw-justify-between tw-items-center ">
+        class="tw-bg-[color:var(--theme-background-color-shade-4)] tw-rounded tw-p-3 tw-flex tw-justify-between tw-items-center">
         <h2>Manual Sistema Capsul</h2>
         <a href="https://wa.me/+553798050282" target="_blank" class="tw-flex tw-items-center">
-            Fale conosco
-            <aeria-icon icon="phone" style="--icon-size: 1.5rem" class="tw-pl-2"></aeria-icon>
+            <aeria-icon icon="phone" style="--icon-size: 1.5rem"></aeria-icon>
         </a>
-
     </div>
-
     <aeria-accordion enumerate :headers="{
         'question-criacao-ticket': 'Como criar um ticket?',
         'question-prioridades': 'Como definir prioridades?',

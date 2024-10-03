@@ -1,6 +1,6 @@
 import type {
   InferProperty,
-  InferResponse,
+  InferProperties,
   SchemaWithId,
   MakeEndpoint,
   RequestMethod,
@@ -358,10 +358,6 @@ declare type MirrorDescriptions = {
         "indexes": [
           "name"
         ]
-      },
-      "comments": {
-        "noForm": true,
-        "readOnly": true
       }
     },
     "icon": "ticket",
@@ -587,7 +583,8 @@ declare type MirrorDescriptions = {
             "callcenter"
           ]
         },
-        "uniqueItems": true
+        "uniqueItems": true,
+        "minItems": 1
       },
       "email": {
         "type": "string",
@@ -1132,7 +1129,7 @@ declare global {
 declare module 'aeria-sdk' {
   import { TopLevelObject } from 'aeria-sdk'
 
-  type UnionToIntersection<T> = (T extends any ? ((x: T) => 0) : never) extends ((x: infer R) => 0)
+  type UnionToIntersection<T> = (T extends unknown ? ((x: T) => 0) : never) extends ((x: infer R) => 0)
     ? R
     : never
 
@@ -1146,7 +1143,7 @@ declare module 'aeria-sdk' {
           ? MakeEndpoint<
             Route,
             Method,
-            InferResponse<RouteResponse>,
+            InferProperties<RouteResponse>,
             RoutePayload extends {}
               ? InferProperty<RoutePayload>
               : undefined
@@ -1161,7 +1158,7 @@ declare module 'aeria-sdk' {
   type Endpoints = {
     [Route in keyof MirrorRouter]: Route extends `/${infer Coll}/${infer Fn}`
       ? Coll extends keyof Collections
-        ? Fn extends keyof CollectionFunctionsSDK<any>
+        ? Fn extends keyof CollectionFunctionsSDK
           ? Record<Coll, Record<
               Fn, {
               POST: CollectionFunctionsSDK<SchemaWithId<MirrorDescriptions[Coll]>>[Fn]

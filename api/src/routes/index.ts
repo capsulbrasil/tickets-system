@@ -31,7 +31,7 @@ router.GET(
           totalByTopic: [
             {
               $lookup: {
-                from: "topics",
+                from: "topic",
                 localField: "topic",
                 foreignField: "_id",
                 as: "lookUpTopic",
