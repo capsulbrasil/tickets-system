@@ -18,7 +18,6 @@ collection User extends aeria.user {
 collection Ticket {}
 
 collection Comment {
-  icon "chat-text"
   owned "on-write"
   required {
     description
@@ -41,7 +40,6 @@ collection Comment {
 }
 
 collection Topic {
-  icon "text-align-left"
   owned "on-write"
   table {
    images
@@ -75,7 +73,6 @@ collection Topic {
 }
 
 collection Ticket {
-  icon "ticket"
   owned "on-write"
   filters{
     title

@@ -19,8 +19,6 @@
         tw-text-gray-500
       ">
       {{ t('no_results', { capitalize: true }) }}
-
-      <slot />
     </div>
   </div>
 </template>

@@ -1,11 +1,15 @@
-import { defineLocale } from 'aeria-ui'
+import { defineLocale } from "aeria-ui";
 
 export const ptbr = defineLocale({
-    topic: ["tópico", "tópicos"],
-    priority: ["prioridade", "prioridades"],
-    title: ["título", "títulos"],
-    created_at: "criado em",
-    updated_at: "atualizado em",
-    description: ["descrição", "descrições"],
-    attached: "anexado"
-})
+  attached: "Anexado",
+  created_at: "Data de Registro",
+  description: ["Descrição", "Descrições"],
+  priority: ["Prioridade", "Prioridades"],
+  images: "Emblema",
+  status: "Situação",
+  system: "Sistema",
+  topic: "Sistema",
+  title: ["Assunto", "Assuntos"],
+  Topic: ["Sistema", "Sistemas"],
+  updated_at: "Atualizado em",
+});

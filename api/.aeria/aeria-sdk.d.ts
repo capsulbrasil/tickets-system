@@ -131,7 +131,6 @@ declare type MirrorDescriptions = {
         "isTimestamp": true
       }
     },
-    "icon": "chat-text",
     "owned": "on-write",
     "required": [
       "description"
@@ -360,7 +359,6 @@ declare type MirrorDescriptions = {
         ]
       }
     },
-    "icon": "ticket",
     "owned": "on-write",
     "table": [
       "title",
@@ -486,7 +484,6 @@ declare type MirrorDescriptions = {
         "isTimestamp": true
       }
     },
-    "icon": "text-align-left",
     "owned": "on-write",
     "table": [
       "images",

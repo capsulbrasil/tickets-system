@@ -90,8 +90,8 @@ onMounted(fetchTicket);
               <p class="tw-text-center">Demandas por Sistema</p>
             </div>
             <div v-for="(count, topic) in topTopics" :key="topic"
-              class="tw-flex tw-justify-between tw-items-center tw-m-1 tw-pl-2 tw-pr-2 tw-bg-[color:var(--theme-background-color-shade-5)]">
-              <p>{{ topic }}</p>
+              class="tw-flex tw-justify-between tw-items-center tw-m-1.5 tw-pl-2 tw-pr-2 tw-bg-[color:var(--theme-background-color-shade-5)]">
+              <p><b>{{ topic }}</b></p>
               <aeria-icon icon="ticket">{{ count }}</aeria-icon>
             </div>
           </div>
@@ -101,7 +101,7 @@ onMounted(fetchTicket);
             </div>
             <div v-if="expiredTickets.length > 0" class="tw-max-h-58 tw-overflow-y-auto">
               <div v-for="ticket in expiredTickets" :key="ticket._id"
-                class="tw-flex tw-justify-between tw-items-center tw-m-1 tw-pl-2 tw-pr-2 tw-bg-[color:var(--theme-background-color-shade-5)]">
+                class="tw-flex tw-justify-between tw-items-center tw-m-1.5 tw-pl-2 tw-pr-2 tw-bg-[color:var(--theme-background-color-shade-5)]">
                 <p>{{ ticket.title }}</p>
                 <aeria-icon icon="warning"></aeria-icon>
               </div>
