@@ -66,19 +66,24 @@ const updateStatus = async (newStatus: 'Reparando' | 'Resolvido') => {
 
 watch(reachedEnd, async (value) => {
   if (value) {
-    offsetReactive.offset += 10
-    isLoading.value = true
+    offsetReactive.offset += 10;
+    isLoading.value = true;
 
-    const { error, result } = await aeria.comment.getAll.POST({
-      filters: { ticket: ticket.value?._id },
-      limit: 10,
-      offset: offsetReactive.offset
-    });
+    try {
+      const { error, result } = await aeria.comment.getAll.POST({
+        filters: { ticket: ticket.value?._id },
+        limit: 10,
+        offset: offsetReactive.offset
+      });
 
-    if (!error) {
-      comments.value = [...comments.value, ...(result.data || [])]
+      if (!error) {
+        comments.value = [...comments.value, ...(result.data || [])];
+      }
+    } catch (err) {
+      console.error("Erro ao carregar os comentários:", err);
+    } finally {
+      isLoading.value = false;
     }
-    isLoading.value = false
   }
 });
 
