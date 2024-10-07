@@ -46,7 +46,6 @@
 
   const fetchTicket = async () => {
     const { error, result } = await aeria.countAll.GET();
-    console.log(result);
     if (error) {
       return error;
     }
@@ -117,7 +116,7 @@
                 </div>
               </div>
               <div v-else class="tw-flex tw-flex-col tw-items-center tw-justify-center">
-                <aeria-picture width="10rem" height="10rem" url="/static/empty.svg" alt="Gaiola"></aeria-picture>
+                <aeria-picture width="10rem" height="10rem" url="/empty.svg" alt="Gaiola"></aeria-picture>
               </div>
             </div>
 
