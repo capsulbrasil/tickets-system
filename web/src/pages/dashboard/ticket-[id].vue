@@ -42,6 +42,7 @@ const fetchTicket = async () => {
 
     if (!commentError) {
       comments.value = commentResult?.data || []
+      orderComments()
     }
   }
 }
@@ -64,6 +65,15 @@ const updateStatus = async (newStatus: 'Reparando' | 'Resolvido') => {
   }
 }
 
+const orderComments = () => {
+  comments.value.sort((a, b) => {
+    const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
+    const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+
+    return dateA - dateB;
+  });
+}
+
 watch(reachedEnd, async (value) => {
   if (value) {
     offsetReactive.offset += 10;
@@ -78,6 +88,7 @@ watch(reachedEnd, async (value) => {
 
       if (!error) {
         comments.value = [...comments.value, ...(result.data || [])];
+        orderComments()
       }
     } catch (err) {
       console.error("Erro ao carregar os comentários:", err);

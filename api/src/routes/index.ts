@@ -63,7 +63,10 @@ router.GET(
               },
             },
             {
-              $count: "UrgentCount",
+              $project: {
+                _id: 1,
+                title: 1,
+              },
             },
           ],
         },
@@ -94,7 +97,7 @@ router.GET(
               },
             },
           },
-          UrgentCount: { $arrayElemAt: ["$UrgentTickets.UrgentCount", 0] },
+          UrgentTickets: 1,
         },
       },
     ];
