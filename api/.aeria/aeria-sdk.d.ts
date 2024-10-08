@@ -298,7 +298,8 @@ declare type MirrorDescriptions = {
       "topic": {
         "$ref": "topic",
         "populate": [
-          "images"
+          "images",
+          "id"
         ],
         "indexes": [
           "title"
@@ -444,6 +445,9 @@ declare type MirrorDescriptions = {
       "title": {
         "type": "string"
       },
+      "id": {
+        "type": "string"
+      },
       "description": {
         "type": "string",
         "element": "textarea"
@@ -491,7 +495,8 @@ declare type MirrorDescriptions = {
       "description"
     ],
     "required": [
-      "title"
+      "title",
+      "id"
     ],
     "presets": [
       "crud"

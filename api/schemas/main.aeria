@@ -54,9 +54,11 @@ collection Topic {
   }
   required {
     title
+    id
   }
   properties {
     title str
+    id str
     description str @element("textarea")
     images []File @accept(["image/*"])
   }
@@ -88,7 +90,7 @@ collection Ticket {
   }
   required {
     title
-    topic
+    topic 
     priority
     status
     description
@@ -103,7 +105,7 @@ collection Ticket {
   }
   properties {
     title str
-    topic Topic @populate([images])
+    topic Topic @populate([images, id])
     status enum @values([
       "Ativo",
       "Reparando",

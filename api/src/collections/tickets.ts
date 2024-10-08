@@ -51,10 +51,15 @@ export const ticket = extendTicketCollection({
             `Unable to get ticket topic inserted by ${owner?.email}`
           );
         }
+        const { result: topic } = await context.collections.topic.functions.get(
+          {
+            filters: { _id: payload.what.topic },
+          }
+        );
         const { error } = await discordAPI.sendMessage({
-          channelId: process.env.DISCORD_ANNOUNCEMENTS_CHANNEL_ID,
+          channelId: topic?.id as string,
           message: {
-            content: `__**Ticket criado por ${owner?.email}**__\nTítulo: ${title}\nDescrição: ${description}\nStatus: ${status}\nPrioridade: ${priority}`,
+            content: `__**Ticket criado por ${owner?.name}**__\nTítulo: ${title}\nDescrição: ${description}\nStatus: ${status}\nPrioridade: ${priority}`,
             files,
           },
         });

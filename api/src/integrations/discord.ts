@@ -79,5 +79,3 @@ const sendMessage = async (
 export const discordAPI = {
   sendMessage,
 };
-
-sendMessage({1, 2, 3,})
