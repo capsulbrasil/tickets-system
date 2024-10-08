@@ -60,9 +60,14 @@ const updateStatus = async (newStatus: 'Reparando' | 'Resolvido') => {
     what: { _id: ticket.value._id, status: newStatus },
   })
 
-  if (!error) {
-    ticket.value.status = result.status
+  if (!error && result) {
+    ticket.value = { ...ticket.value, status: result.status }
   }
+}
+
+const handleNewComment = (newComment: any) => {
+  comments.value = [...comments.value, newComment]
+  orderComments()
 }
 
 const orderComments = () => {
@@ -186,5 +191,5 @@ onMounted(fetchTicket)
     title: 'Adicionar comentário',
     collection: 'comment',
     form: ['description', 'images'],
-  }" @insert="ticket?.comments" @cancel="addCommentPanel = false" />
+  }" @insert="handleNewComment" @cancel="addCommentPanel = false" />
 </template>
