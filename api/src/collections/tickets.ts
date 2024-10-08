@@ -36,7 +36,7 @@ export const ticket = extendTicketCollection({
     insert: async (payload: InsertPayload<Ticket>, context) => {
       const insertEither = await originalInsert(payload, context);
       if (insertEither.result && context.token.authenticated === true) {
-        const { title, status, description, priority, attached, owner } =
+        const { title, status, description, priority, attached, owner, _id } =
           insertEither.result;
         const files: NonNullable<MessageCreateOptions["files"]>[number][] = [];
         if (attached) {
@@ -59,10 +59,13 @@ export const ticket = extendTicketCollection({
         const { error } = await discordAPI.sendMessage({
           channelId: topic?.id as string,
           message: {
-            content: `__**Ticket criado por ${owner?.name}**__\nTítulo: ${title}\nDescrição: ${description}\nStatus: ${status}\nPrioridade: ${priority}`,
+            content: `**Ticket criado por ${owner?.name}**\n${
+              "https://suporte.capsulbrasil.com.br/dashboard/ticket-" + _id
+            }\n**Título:** ${title}\n**Descrição:** ${description}\n**Status:** ${status}\n**Prioridade:** ${priority}`,
             files,
           },
         });
+        console.log(ticket.item);
         if (error) {
           console.error("Error sending ticket notification:" + error);
         }
