@@ -11,6 +11,8 @@ import {
 } from "../../.aeria/out/collections/ticket.mjs";
 import { discordAPI } from "../integrations/index.js";
 import { MessageCreateOptions } from "discord.js";
+import { topic } from "../../.aeria/out/collections/topic.mjs";
+import { comment } from "../../.aeria/out/collections/comment.mjs";
 
 export const ticket = extendTicketCollection({
   description: {
@@ -59,13 +61,31 @@ export const ticket = extendTicketCollection({
         const { error } = await discordAPI.sendMessage({
           channelId: topic?.id as string,
           message: {
-            content: `**Ticket criado por ${owner?.name}**\n${
+            content: `## **Novo Ticket:** [${title}](${
               "https://suporte.capsulbrasil.com.br/dashboard/ticket-" + _id
-            }\n**Título:** ${title}\n**Descrição:** ${description}\n**Status:** ${status}\n**Prioridade:** ${priority}`,
+            })\n> ### **Criado por:** ${
+              owner?.name
+            }\n> ### **Prioridade:** ${priority}\n> **Descrição:** ${description}`,
             files,
           },
         });
-        console.log(ticket.item);
+
+        if (comment) {
+          const { error: commentError } = await discordAPI.sendMessage({
+            channelId: topic?.id as string,
+            message: {
+              content: `**${comment}**\n>"${comment}"`,
+            },
+          });
+
+          if (commentError) {
+            console.error(
+              "Erro ao enviar a mensagem de comentário:",
+              commentError
+            );
+          }
+        }
+
         if (error) {
           console.error("Error sending ticket notification:" + error);
         }

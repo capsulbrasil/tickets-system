@@ -58,10 +58,12 @@
 
     topicCount.value = result.totalByTopic || {};
     expiredTickets.value = result.UrgentTickets || [];
+
   };
 
-
-  onMounted(fetchTicket);
+  onMounted(() => {
+    fetchTicket();
+  })
 </script>
 
   <template>
@@ -119,7 +121,6 @@
                 <aeria-picture width="10rem" height="10rem" url="/empty.svg" alt="Gaiola"></aeria-picture>
               </div>
             </div>
-
           </div>
         </article>
       </div>

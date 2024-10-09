@@ -358,6 +358,12 @@ declare type MirrorDescriptions = {
         "indexes": [
           "name"
         ]
+      },
+      "comment": {
+        "$ref": "comment",
+        "indexes": [
+          "ticket"
+        ]
       }
     },
     "owned": "on-write",
@@ -381,6 +387,14 @@ declare type MirrorDescriptions = {
       "topic",
       "status",
       "priority"
+    ],
+    "form": [
+      "title",
+      "topic",
+      "status",
+      "priority",
+      "description",
+      "attached"
     ],
     "presets": [
       "crud"
@@ -1116,6 +1130,9 @@ declare type MirrorRouter = {
         }
       ]
     }
+  },
+  "/addComment": {
+    "GET": null
   }
 }
 
