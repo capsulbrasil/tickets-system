@@ -36,23 +36,19 @@ export const ticket = extendTicketCollection({
     insert: async (payload: InsertPayload<Ticket>, context) => {
       const insertEither = await originalInsert(payload, context);
       if (insertEither.result && context.token.authenticated === true) {
-        const {
-          title,
-          description,
-          priority,
-          attached,
-          owner,
-          _id,
-          comment,
-        } = insertEither.result;
+        const { title, description, priority, attached, owner, _id, comment } =
+          insertEither.result;
 
-        
         if (payload.what._id && comment) {
           const { error: commentError } = await discordAPI.sendMessage({
             channelId: "1293907311479226418",
             message: {
-              content: `${comment.description}`,
-            }
+              content: `@everyone\n> **${
+                ticket.item.comment?.owner?.name
+              }** comentou no ticket [${title}](${
+                "https://suporte.capsulbrasil.com.br/dashboard/ticket-" + _id
+              })`,
+            },
           });
 
           if (commentError) {
@@ -64,7 +60,8 @@ export const ticket = extendTicketCollection({
         }
 
         if (!payload.what._id) {
-          const files: NonNullable<MessageCreateOptions["files"]>[number][] = [];
+          const files: NonNullable<MessageCreateOptions["files"]>[number][] =
+            [];
 
           if (attached) {
             files.push({
@@ -78,11 +75,10 @@ export const ticket = extendTicketCollection({
               `Unable to get ticket topic inserted by ${owner?.email}`
             );
           }
-          const { result: topic } = await context.collections.topic.functions.get(
-            {
+          const { result: topic } =
+            await context.collections.topic.functions.get({
               filters: { _id: payload.what.topic },
-            }
-          );
+            });
           const { error } = await discordAPI.sendMessage({
             channelId: topic?.id as string,
             message: {
@@ -94,7 +90,7 @@ export const ticket = extendTicketCollection({
               files,
             },
           });
-  
+
           if (error) {
             console.error("Error sending ticket notification:" + error);
           }

@@ -3,7 +3,6 @@ import { ref, onMounted, watch, reactive } from 'vue'
 import { type CollectionItemWithId } from '@aeriajs/types'
 import { statusColor, priorityColor, capitalizeText } from '../../utils.js'
 import { useScrollObserver } from 'aeria-ui'
-import { discordAPI } from '../../../../api/src/integrations/discord.js'
 
 definePage({
   props: true,
@@ -23,7 +22,7 @@ const isLoading = ref(false)
 const addCommentPanel = ref(false)
 const commentStore = useStore('comment')
 const commentsContainer = ref<HTMLElement | null>(null)
-const comments = ref<CollectionItemWithId<'comment'>[]>([])
+const comments = ref<{ [k in keyof CollectionItemWithId<'comment'>]?: any }[]>([])
 const { reachedEnd, detach: detachScrollListener } = useScrollObserver(commentsContainer, {
   antecipate: 200,
 })
@@ -74,12 +73,24 @@ const handleNewComment = async (newComment: CollectionItemWithId<"comment">) => 
     }
   });
 
+  const { error: use, result: user } = await aeria.user.get.POST({
+    filters: {
+      _id: result?.comment?.owner
+    }
+
+  })
+
+  if (use) {
+    console.error(use)
+  }
+
   if (error) {
     console.log(error)
   }
+  console.log(result);
 
   if (result) {
-    comments.value = [...comments.value, result];
+    comments.value.push({ ...result.comment, owner: user, created_at: result.comment?.created_at });
     orderComments();
   }
 };
