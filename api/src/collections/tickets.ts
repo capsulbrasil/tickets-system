@@ -35,6 +35,7 @@ export const ticket = extendTicketCollection({
   functions: {
     insert: async (payload: InsertPayload<Ticket>, context) => {
       const insertEither = await originalInsert(payload, context);
+
       if (insertEither.result && context.token.authenticated === true) {
         const { title, description, priority, attached, owner, _id, comment } =
           insertEither.result;
@@ -43,12 +44,13 @@ export const ticket = extendTicketCollection({
           const { error: commentError } = await discordAPI.sendMessage({
             channelId: "1293907311479226418",
             message: {
-              content: `@everyone\n> **${
-                ticket.item.comment?.owner?.name
+              content: `\n> **${
+                comment?.owner?.name
               }** comentou no ticket [${title}](${
                 "https://suporte.capsulbrasil.com.br/dashboard/ticket-" + _id
               })`,
             },
+            notFromMainServer: true
           });
 
           if (commentError) {

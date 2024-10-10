@@ -22,7 +22,7 @@ const isLoading = ref(false)
 const addCommentPanel = ref(false)
 const commentStore = useStore('comment')
 const commentsContainer = ref<HTMLElement | null>(null)
-const comments = ref<{ [k in keyof CollectionItemWithId<'comment'>]?: any }[]>([])
+const comments = ref<CollectionItemWithId<'comment'>[]>([])
 const { reachedEnd, detach: detachScrollListener } = useScrollObserver(commentsContainer, {
   antecipate: 200,
 })
@@ -66,31 +66,29 @@ const updateStatus = async (newStatus: 'Reparando' | 'Resolvido') => {
 }
 
 const handleNewComment = async (newComment: CollectionItemWithId<"comment">) => {
-  const { error, result } = await aeria.ticket.insert.POST({
+  const { error, result: updatedTicket } = await aeria.ticket.insert.POST({
     what: {
       _id: ticket.value?._id,
       comment: newComment._id
     }
   });
 
-  const { error: use, result: user } = await aeria.user.get.POST({
-    filters: {
-      _id: result?.comment?.owner
-    }
+  if (error) {
+    console.error(error)
+  }
 
+  const { error: commentError, result: comment } = await aeria.comment.get.POST({
+    filters: {
+      _id: updatedTicket?.comment?._id
+    }
   })
 
-  if (use) {
-    console.error(use)
+  if (commentError) {
+    console.error(commentError)
   }
-
-  if (error) {
-    console.log(error)
-  }
-  console.log(result);
-
-  if (result) {
-    comments.value.push({ ...result.comment, owner: user, created_at: result.comment?.created_at });
+  
+  if (comment) {
+    comments.value.push(comment);
     orderComments();
   }
 };
@@ -100,7 +98,7 @@ const orderComments = () => {
     const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
     const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
 
-    return dateA - dateB;
+    return dateB - dateA;
   });
 }
 
