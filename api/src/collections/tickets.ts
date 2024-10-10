@@ -38,7 +38,6 @@ export const ticket = extendTicketCollection({
       if (insertEither.result && context.token.authenticated === true) {
         const {
           title,
-          status,
           description,
           priority,
           attached,
@@ -46,14 +45,14 @@ export const ticket = extendTicketCollection({
           _id,
           comment,
         } = insertEither.result;
-        const files: NonNullable<MessageCreateOptions["files"]>[number][] = [];
 
-        if (comment) {
+        
+        if (payload.what._id && comment) {
           const { error: commentError } = await discordAPI.sendMessage({
             channelId: "1293907311479226418",
             message: {
               content: `${comment.description}`,
-            },
+            }
           });
 
           if (commentError) {
@@ -64,39 +63,41 @@ export const ticket = extendTicketCollection({
           }
         }
 
-        if (attached) {
-          files.push({
-            attachment: Buffer.from(
-              await (await fetch(attached.download_link)).arrayBuffer()
-            ),
-            name: `attachment.jpeg`,
-          });
-        } else {
-          console.warn(
-            `Unable to get ticket topic inserted by ${owner?.email}`
-          );
-        }
-        const { result: topic } = await context.collections.topic.functions.get(
-          {
-            filters: { _id: payload.what.topic },
+        if (!payload.what._id) {
+          const files: NonNullable<MessageCreateOptions["files"]>[number][] = [];
+
+          if (attached) {
+            files.push({
+              attachment: Buffer.from(
+                await (await fetch(attached.download_link)).arrayBuffer()
+              ),
+              name: `attachment.jpeg`,
+            });
+          } else {
+            console.warn(
+              `Unable to get ticket topic inserted by ${owner?.email}`
+            );
           }
-        );
-        const { error } = await discordAPI.sendMessage({
-          channelId: topic?.id as string,
-          message: {
-            content: `### **Novo Ticket:** [${title}](${
-              "https://suporte.capsulbrasil.com.br/dashboard/ticket-" + _id
-            })\n> **Criado por:** ${
-              owner?.name
-            }\n> **Prioridade:** ${priority}\n> **Descrição:** ${description}`,
-            files,
-          },
-        });
-
-        console.log(comment);
-
-        if (error) {
-          console.error("Error sending ticket notification:" + error);
+          const { result: topic } = await context.collections.topic.functions.get(
+            {
+              filters: { _id: payload.what.topic },
+            }
+          );
+          const { error } = await discordAPI.sendMessage({
+            channelId: topic?.id as string,
+            message: {
+              content: `### **Novo Ticket:** [${title}](${
+                "https://suporte.capsulbrasil.com.br/dashboard/ticket-" + _id
+              })\n> **Criado por:** ${
+                owner?.name
+              }\n> **Prioridade:** ${priority}\n> **Descrição:** ${description}`,
+              files,
+            },
+          });
+  
+          if (error) {
+            console.error("Error sending ticket notification:" + error);
+          }
         }
       }
       return insertEither;

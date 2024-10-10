@@ -129,7 +129,7 @@ collection Ticket {
     created_at str @format("date-time")
     updated_at str @format("date-time")
     owner User @populate([roles, email])
-    comment Comment
+    comment Comment @populate([description])
   }
   functions {
     count @expose

@@ -67,12 +67,10 @@ const updateStatus = async (newStatus: 'Reparando' | 'Resolvido') => {
 }
 
 const handleNewComment = async (newComment: CollectionItemWithId<"comment">) => {
-  console.log(newComment);
-
   const { error, result } = await aeria.ticket.insert.POST({
     what: {
       _id: ticket.value?._id,
-      comment: newComment
+      comment: newComment._id
     }
   });
 
