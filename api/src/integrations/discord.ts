@@ -7,7 +7,7 @@ import {
   type TextChannel,
   type Channel,
 } from "discord.js";
-import { Result } from "aeria";
+import { log, Result } from "aeria";
 
 const discord = {
   client: new Client({
@@ -59,6 +59,8 @@ const sendMessage = async (
     } else {
       channel = await discord.mainServerManager.fetch(params.channelId);
     }
+
+    console.log(channel);
 
     if (channel?.isTextBased() && channel.isSendable()) {
       const message = await channel.send(params.message);

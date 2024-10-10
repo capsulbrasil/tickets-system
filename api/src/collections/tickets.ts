@@ -11,8 +11,6 @@ import {
 } from "../../.aeria/out/collections/ticket.mjs";
 import { discordAPI } from "../integrations/index.js";
 import { MessageCreateOptions } from "discord.js";
-import { topic } from "../../.aeria/out/collections/topic.mjs";
-import { comment } from "../../.aeria/out/collections/comment.mjs";
 
 export const ticket = extendTicketCollection({
   description: {
@@ -38,9 +36,34 @@ export const ticket = extendTicketCollection({
     insert: async (payload: InsertPayload<Ticket>, context) => {
       const insertEither = await originalInsert(payload, context);
       if (insertEither.result && context.token.authenticated === true) {
-        const { title, status, description, priority, attached, owner, _id } =
-          insertEither.result;
+        const {
+          title,
+          status,
+          description,
+          priority,
+          attached,
+          owner,
+          _id,
+          comment,
+        } = insertEither.result;
         const files: NonNullable<MessageCreateOptions["files"]>[number][] = [];
+
+        if (comment) {
+          const { error: commentError } = await discordAPI.sendMessage({
+            channelId: "1293907311479226418",
+            message: {
+              content: `${comment.description}`,
+            },
+          });
+
+          if (commentError) {
+            console.error(
+              "Erro ao enviar a mensagem de comentário:",
+              commentError
+            );
+          }
+        }
+
         if (attached) {
           files.push({
             attachment: Buffer.from(
@@ -61,30 +84,16 @@ export const ticket = extendTicketCollection({
         const { error } = await discordAPI.sendMessage({
           channelId: topic?.id as string,
           message: {
-            content: `## **Novo Ticket:** [${title}](${
+            content: `### **Novo Ticket:** [${title}](${
               "https://suporte.capsulbrasil.com.br/dashboard/ticket-" + _id
-            })\n> ### **Criado por:** ${
+            })\n> **Criado por:** ${
               owner?.name
-            }\n> ### **Prioridade:** ${priority}\n> **Descrição:** ${description}`,
+            }\n> **Prioridade:** ${priority}\n> **Descrição:** ${description}`,
             files,
           },
         });
 
-        if (comment) {
-          const { error: commentError } = await discordAPI.sendMessage({
-            channelId: topic?.id as string,
-            message: {
-              content: `**${comment}**\n>"${comment}"`,
-            },
-          });
-
-          if (commentError) {
-            console.error(
-              "Erro ao enviar a mensagem de comentário:",
-              commentError
-            );
-          }
-        }
+        console.log(comment);
 
         if (error) {
           console.error("Error sending ticket notification:" + error);

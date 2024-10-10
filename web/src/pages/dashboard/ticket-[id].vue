@@ -3,6 +3,7 @@ import { ref, onMounted, watch, reactive } from 'vue'
 import { type CollectionItemWithId } from '@aeriajs/types'
 import { statusColor, priorityColor, capitalizeText } from '../../utils.js'
 import { useScrollObserver } from 'aeria-ui'
+import { discordAPI } from '../../../../api/src/integrations/discord.js'
 
 definePage({
   props: true,
@@ -65,10 +66,25 @@ const updateStatus = async (newStatus: 'Reparando' | 'Resolvido') => {
   }
 }
 
-const handleNewComment = (newComment: any) => {
-  comments.value = [...comments.value, newComment]
-  orderComments()
-}
+const handleNewComment = async (newComment: CollectionItemWithId<"comment">) => {
+  console.log(newComment);
+
+  const { error, result } = await aeria.ticket.insert.POST({
+    what: {
+      _id: ticket.value?._id,
+      comment: newComment
+    }
+  });
+
+  if (error) {
+    console.log(error)
+  }
+
+  if (result) {
+    comments.value = [...comments.value, result];
+    orderComments();
+  }
+};
 
 const orderComments = () => {
   comments.value.sort((a, b) => {

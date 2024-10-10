@@ -117,7 +117,7 @@ router.GET(
   },
   countAllContracts
 );
-// finalizar rota
+
 router.GET("/addComment", async (context) => {
   const { id, what } = context.request.payload;
 
