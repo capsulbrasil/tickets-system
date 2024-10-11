@@ -55,8 +55,9 @@
       [Status.Reparando]: result.totalByStatus.Reparando || 0,
       [Status.Resolvido]: result.totalByStatus.Resolvido || 0,
     };
-
+    //@ts-ignore
     topicCount.value = result.totalByTopic || {};
+    //@ts-ignore
     expiredTickets.value = result.UrgentTickets || [];
   };
 
