@@ -120,15 +120,3 @@ router.GET(
   },
   countAllContracts
 );
-// finalizar rota
-router.GET("/addComment", async (context) => {
-  const { id, what } = context.request.payload;
-
-  const { result } = await context.collections.comment.functions.insert({
-    what: what as any,
-  });
-
-  return context.collections.ticket.functions.insert({
-    what: { _id: id as any, comment: result?._id },
-  });
-});

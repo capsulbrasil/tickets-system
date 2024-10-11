@@ -1,14 +1,12 @@
 <script setup lang="ts">
+import { useScrollObserver } from 'aeria-ui'
 import { ref, onMounted, watch, reactive } from 'vue'
 import { type CollectionItemWithId } from '@aeriajs/types'
 import { statusColor, priorityColor, capitalizeText } from '../../utils.js'
-import { useScrollObserver } from 'aeria-ui'
 
 definePage({
   props: true,
-  meta: {
-    title: 'Relatório do Ticket',
-  },
+  meta: { title: 'Relatório do Ticket' }
 })
 
 type Props = { id: string }
@@ -16,98 +14,98 @@ type Ticket = Omit<CollectionItemWithId<'ticket'>, 'comments'> & {
   comments?: CollectionItemWithId<'comment'>[]
 }
 
-const props = defineProps<Props>()
-const ticket = ref<Ticket | null>(null)
-const isLoading = ref(false)
-const addCommentPanel = ref(false)
-const commentStore = useStore('comment')
+const ticketProps = defineProps<Props>()
+const ticketData = ref<Ticket | null>(null)
+const ticketLoading = ref(false)
+
+const commentPanel = ref(false)
+const commentData = useStore('comment')
+const commentOffset = reactive({ offset: 0 })
 const commentsContainer = ref<HTMLElement | null>(null)
 const comments = ref<CollectionItemWithId<'comment'>[]>([])
+
 const { reachedEnd, detach: detachScrollListener } = useScrollObserver(commentsContainer, {
-  antecipate: 200,
+  antecipate: 200
 })
 
-const offsetReactive = reactive({ offset: 0 })
-
 const fetchTicket = async () => {
-  const { error, result } = await aeria.ticket.get.POST({
-    filters: { _id: props.id },
-  })
+  const { error, result } = await aeria.ticket.get.POST({ filters: { _id: ticketProps.id } });
 
-  if (!error) {
-    ticket.value = result
-    const { error: commentError, result: commentResult } = await aeria.comment.getAll.POST({
-      filters: { ticket: props.id }
-    })
+  if (error) return;
 
-    if (!commentError) {
-      comments.value = commentResult?.data || []
-      orderComments()
-    }
+  ticketData.value = result;
+
+  const { error: commentError, result: commentResult } = await aeria.comment.getAll.POST({
+    filters: { ticket: ticketProps.id },
+  });
+
+  if (!commentError) {
+    comments.value = commentResult?.data || [];
   }
 }
 
 const addComment = () => {
-  commentStore.$actions.clearItem()
-  Object.assign(commentStore.item, { ticket: props.id })
-  addCommentPanel.value = true
+  commentData.$actions.clearItem()
+  Object.assign(commentData.item, { ticket: ticketProps.id })
+  commentPanel.value = true
 }
 
 const updateStatus = async (newStatus: 'Reparando' | 'Resolvido') => {
-  if (!ticket.value) return
+
+  if (!ticketData.value) return
 
   const { error, result } = await aeria.ticket.insert.POST({
-    what: { _id: ticket.value._id, status: newStatus },
+    what: { _id: ticketData.value._id, status: newStatus }
   })
 
   if (!error && result) {
-    ticket.value = { ...ticket.value, status: result.status }
+    ticketData.value = { ...ticketData.value, status: result.status }
   }
 }
 
-const handleNewComment = (newComment: any) => {
-  comments.value = [...comments.value, newComment]
-  orderComments()
-}
+const handleNewComment = async (newComment: CollectionItemWithId<"comment">) => {
+  const { error, result: updatedTicket } = await aeria.ticket.insert.POST({
+    what: { _id: ticketData.value?._id, comment: newComment._id }
+  })
 
-const orderComments = () => {
-  comments.value.sort((a, b) => {
-    const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
-    const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+  if (!updateStatus) return console.error(error)
 
-    return dateA - dateB;
-  });
+  const { error: commentError, result: comment } = await aeria.comment.get.POST({
+    filters: { _id: updatedTicket?.comment?._id }
+  })
+
+  if (!commentError && comment) {
+    comments.value.unshift(comment)
+  }
 }
 
 watch(reachedEnd, async (value) => {
   if (value) {
-    offsetReactive.offset += 10;
-    isLoading.value = true;
+    commentOffset.offset += 10
+    ticketLoading.value = true
 
     try {
       const { error, result } = await aeria.comment.getAll.POST({
-        filters: { ticket: ticket.value?._id },
+        filters: { ticket: ticketData.value?._id },
         limit: 10,
-        offset: offsetReactive.offset
-      });
-
+        offset: commentOffset.offset
+      })
       if (!error) {
-        comments.value = [...comments.value, ...(result.data || [])];
-        orderComments()
+        comments.value = [...comments.value, ...(result.data || [])]
       }
     } catch (err) {
-      console.error("Erro ao carregar os comentários:", err);
+      console.error('Error loading comments:', err)
     } finally {
-      isLoading.value = false;
+      ticketLoading.value = false
     }
   }
-});
+})
 
 onMounted(fetchTicket)
 </script>
 
 <template>
-  <div v-if="ticket && comments"
+  <div v-if="ticketData && comments"
     class="tw-flex tw-flex-col tw-p-5 tw-gap-4 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-2)]">
     <div class="tw-flex tw-gap-4 tw-h-full">
       <!--Chat-->
@@ -119,19 +117,20 @@ onMounted(fetchTicket)
             <aeria-icon icon="chat">Chat</aeria-icon>
             <aeria-button icon="plus" variant="alt" @click="addComment">Comentar</aeria-button>
           </div>
-          <div ref="commentsContainer" v-loading="isLoading"
+          <div ref="commentsContainer" v-loading="ticketLoading"
             class="tw-p-3 tw-overflow-y-auto tw-flex-1 tw-max-h-[calc(80vh-5rem)] tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
             <div v-for="comment in comments" :key="comment._id"
               class="tw-mt-4 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-5)]">
               <div v-if="comment.description" class="tw-space-y-2 tw-p-4">
                 <div class="tw-flex tw-justify-between">
-                  <b>{{ comment.owner?.name }}</b>
-                  <aeria-icon icon="calendar" class="tw-text-sm">{{ formatDateTime(comment.created_at, { hours: true })
-                    }}</aeria-icon>
+                  <b style="font-size: 0.8rem;">{{ comment.owner?.name }}</b>
+                  <aeria-icon icon="calendar" class="tw-text-sm" style="font-size: 0.8rem;">{{
+                    formatDateTime(comment.created_at, { hours: true })
+                  }}</aeria-icon>
                 </div>
                 <hr class="tw-border" />
                 <div class="tw-flex tw-gap-1">
-                  <p class="tw-flex-1">{{ comment.description }}</p>
+                  <p class="tw-flex-1" style="font-size: 0.8rem;">{{ comment.description }}</p>
                   <aeria-picture v-if="comment.images" class="tw-w-12 tw-h-12 tw-object-cover tw-border"
                     v-for="image in comment.images" :url="image.link" expandable />
                 </div>
@@ -140,34 +139,34 @@ onMounted(fetchTicket)
           </div>
         </section>
       </div>
-      <!--Description-->
+      <!--Ticket-->
       <div
         class="tw-w-1/2 tw-p-4 tw-flex tw-flex-col tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-3)]">
         <div class="tw-p-3 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
           <div class="tw-flex tw-justify-between tw-items-center">
             <div class="tw-flex tw-items-center">
               <div class="tw-w-2 tw-h-2 tw-rounded-full tw-mr-2"
-                :style="{ backgroundColor: priorityColor(ticket?.priority) }"></div>
-              <h3>{{ capitalizeText(ticket.title) }}</h3>
+                :style="{ backgroundColor: priorityColor(ticketData?.priority) }"></div>
+              <h3>{{ capitalizeText(ticketData.title) }}</h3>
             </div>
           </div>
           <div class="tw-flex tw-justify-between tw-items-center">
             <div class="tw-flex">
-              <p class="tw-pr-2">{{ ticket.owner?.name }}</p>
-              <p v-for="(role, index) in ticket.owner?.roles" :key="index" class="tw-pr-2 tw-font-bold">{{ role }}</p>
+              <p class="tw-pr-2">{{ ticketData.owner?.name }}</p>
+              <p v-for="(role, index) in ticketData.owner?.roles" :key="index" class="tw-pr-2 tw-font-bold">{{ role }}
+              </p>
             </div>
-            <p>{{ formatDateTime(ticket.created_at) }}</p>
+            <p>{{ formatDateTime(ticketData.created_at) }}</p>
           </div>
         </div>
-
-        <div v-if="ticket" class="tw-p-2 tw-mt-2 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
-          <p>{{ ticket.description }}</p>
-          <aeria-picture v-if="ticket.attached?.link" expandable object-fit="contain" :url="ticket.attached.link" />
+        <div v-if="ticketData" class="tw-p-2 tw-mt-2 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
+          <p>{{ ticketData.description }}</p>
+          <aeria-picture v-if="ticketData.attached?.link" expandable object-fit="contain"
+            :url="ticketData.attached.link" />
         </div>
-
         <div
           class="tw-flex tw-justify-between tw-p-2 tw-mt-2 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
-          <div v-for="image in ticket.topic?.images" class="tw-flex tw-justify-center tw-items-center">
+          <div v-for="image in ticketData.topic?.images" class="tw-flex tw-justify-center tw-items-center">
             <aeria-picture object-fit="contain" class="tw-h-8" :url="image.link" />
           </div>
           <aeria-context-menu :actions="[
@@ -177,8 +176,8 @@ onMounted(fetchTicket)
             <div
               class="tw-flex tw-items-center tw-p-1 tw-cursor-pointer tw-bg-[color:var(--theme-background-color-shade-5)] tw-rounded-sm">
               <div class="tw-w-2 tw-h-2 tw-rounded-full tw-ml-3"
-                :style="{ backgroundColor: statusColor(ticket.status) }"></div>
-              <span class="tw-uppercase tw-font-bold tw-ml-2">{{ ticket.status }}</span>
+                :style="{ backgroundColor: statusColor(ticketData.status) }"></div>
+              <span class="tw-uppercase tw-font-bold tw-ml-2">{{ ticketData.status }}</span>
               <aeria-icon icon="plus" class="tw-p-2" />
             </div>
           </aeria-context-menu>
@@ -186,10 +185,10 @@ onMounted(fetchTicket)
       </div>
     </div>
   </div>
-
-  <aeria-insert-panel v-model:visible="addCommentPanel" fixed-right close-hint v-bind="{
+  <!--Panel-->
+  <aeria-insert-panel v-model:visible="commentPanel" fixed-right close-hint v-bind="{
     title: 'Adicionar comentário',
     collection: 'comment',
-    form: ['description', 'images'],
-  }" @insert="handleNewComment" @cancel="addCommentPanel = false" />
+    form: ['description', 'images']
+  }" @insert="handleNewComment" @cancel="commentPanel = false" />
 </template>

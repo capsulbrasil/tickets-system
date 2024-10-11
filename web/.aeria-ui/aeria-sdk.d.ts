@@ -126,6 +126,11 @@ declare type MirrorDescriptions = {
       },
       "owner": {
         "$ref": "user",
+        "populate": [
+          "name",
+          "email",
+          "roles"
+        ],
         "noForm": true,
         "indexes": [
           "name"
@@ -376,6 +381,10 @@ declare type MirrorDescriptions = {
       },
       "comment": {
         "$ref": "comment",
+        "populate": [
+          "description",
+          "owner"
+        ],
         "indexes": [
           "ticket"
         ]
@@ -1269,9 +1278,6 @@ declare type MirrorRouter = {
         }
       ]
     }
-  },
-  "/addComment": {
-    "GET": null
   }
 }
 
