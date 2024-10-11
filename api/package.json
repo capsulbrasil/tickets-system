@@ -31,8 +31,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aeria": "^0.0.183",
-    "aeria-sdk": "^0.0.136",
+    "aeria": "^0.0.189",
+    "aeria-sdk": "^0.0.139",
     "discord.js": "^14.16.2"
   }
 }

@@ -9,9 +9,12 @@ import {
 import { countAllContracts } from "../contracts/countAllContracts.js";
 import { ticket } from "../collections/tickets.js";
 import { comment } from "../collections/index.js";
+import { topicRouter } from "./topic.js";
+import { broadcastRouter } from "./broadcast.js";
 
 export const router = createRouter();
-
+router.group('/broadcast', broadcastRouter)
+router.group('/topic', topicRouter)
 router.GET(
   "/countAll",
   async (context) => {

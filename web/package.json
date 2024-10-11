@@ -31,7 +31,7 @@
     "@aeria-ui/i18n-en": "^0.0.3",
     "@aeria-ui/i18n-pt": "^0.0.3",
     "aeria-app-layout": "^0.0.42",
-    "aeria-ui": "^0.0.115"
+    "aeria-ui": "^0.0.119"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",

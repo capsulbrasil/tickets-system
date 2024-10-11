@@ -15,6 +15,21 @@ declare type MirrorDescriptions = {
       "title": {
         "type": "string"
       },
+      "message": {
+        "type": "string",
+        "element": "textarea"
+      },
+      "picture": {
+        "$ref": "file",
+        "accept": [
+          "image/*"
+        ],
+        "indexes": [
+          "name",
+          "link",
+          "type"
+        ]
+      },
       "system": {
         "$ref": "topic",
         "indexes": [
@@ -299,7 +314,7 @@ declare type MirrorDescriptions = {
         "$ref": "topic",
         "populate": [
           "images",
-          "id"
+          "discord_channel_id"
         ],
         "indexes": [
           "title"
@@ -459,7 +474,10 @@ declare type MirrorDescriptions = {
       "title": {
         "type": "string"
       },
-      "id": {
+      "discord_channel_id": {
+        "type": "string"
+      },
+      "secret_key": {
         "type": "string"
       },
       "description": {
@@ -510,7 +528,7 @@ declare type MirrorDescriptions = {
     ],
     "required": [
       "title",
-      "id"
+      "discord_channel_id"
     ],
     "presets": [
       "crud"
@@ -521,16 +539,11 @@ declare type MirrorDescriptions = {
       ],
       "placeholder": "Insira o sistema aqui"
     },
-    "actions": {
-      "spawnAdd": {
-        "label": "action.add",
-        "event": "spawnAdd",
-        "icon": "plus",
-        "button": true,
-        "translate": true
-      }
-    },
     "individualActions": {
+      "createSecret": {
+        "label": "Criar Token",
+        "icon": "barcode"
+      },
       "spawnEdit": {
         "label": "action.edit",
         "event": "spawnEdit",
@@ -550,6 +563,15 @@ declare type MirrorDescriptions = {
         "label": "action.remove",
         "icon": "trash",
         "ask": true,
+        "translate": true
+      }
+    },
+    "actions": {
+      "spawnAdd": {
+        "label": "action.add",
+        "event": "spawnAdd",
+        "icon": "plus",
+        "button": true,
         "translate": true
       }
     }
@@ -1050,6 +1072,123 @@ declare type MirrorRouter = {
       "roles": [
         "root"
       ]
+    }
+  },
+  "/broadcast/broadcastGateway": {
+    "GET": {
+      "roles": "unauthenticated",
+      "query": {
+        "type": "object",
+        "properties": {
+          "offset": {
+            "type": "number"
+          }
+        }
+      },
+      "response": [
+        {
+          "type": "object",
+          "properties": {
+            "_tag": {
+              "const": "Error"
+            },
+            "result": {},
+            "error": {
+              "type": "object",
+              "required": [
+                "httpStatus",
+                "code"
+              ],
+              "properties": {
+                "httpStatus": {
+                  "type": "number"
+                },
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "details": {
+                  "type": "object",
+                  "variable": true
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "_tag": {
+              "const": "Error"
+            },
+            "result": {},
+            "error": {
+              "type": "object",
+              "required": [
+                "httpStatus",
+                "code"
+              ],
+              "properties": {
+                "httpStatus": {
+                  "enum": [
+                    400,
+                    403,
+                    404
+                  ]
+                },
+                "code": {
+                  "enum": [
+                    "MALFORMED_INPUT",
+                    "OWNERSHIP_ERROR",
+                    "RESOURCE_NOT_FOUND",
+                    "NO_BROADCASTS_FOUND"
+                  ]
+                },
+                "message": {
+                  "type": "string"
+                },
+                "details": {
+                  "type": "object",
+                  "variable": true
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "_tag": {
+              "const": "Result"
+            },
+            "error": {},
+            "result": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "$ref": "topic"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "/topic/createSecret": {
+    "POST": {
+      "roles": [
+        "root"
+      ],
+      "payload": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          }
+        }
+      }
     }
   },
   "/countAll": {

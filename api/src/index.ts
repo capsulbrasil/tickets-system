@@ -8,6 +8,7 @@ export default init({
     baseUrl: "/api",
     publicUrl: process.env.API_URL,
     secret: process.env.APPLICATION_SECRET,
+    port: 3001,
     database: {
       mongodbUrl: process.env.MONGODB_URL,
     },

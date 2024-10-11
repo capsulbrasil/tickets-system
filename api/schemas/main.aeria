@@ -54,17 +54,18 @@ collection Topic {
   }
   required {
     title
-    id
+    discord_channel_id
   }
   properties {
     title str
-    id str
+    discord_channel_id str
+    secret_key str
     description str @element("textarea")
     images []File @accept(["image/*"])
   }
   functions {
-    get @expose
-    getAll @expose
+    get @expose("unauthenticated")
+    getAll @expose(true)
     insert @expose
     remove @expose
     upload @expose
@@ -113,7 +114,7 @@ collection Ticket {
   }
   properties {
     title str
-    topic Topic @populate([images, id])
+    topic Topic @populate([images, discord_channel_id])
     status enum @values([
       "Ativo",
       "Reparando",
@@ -156,12 +157,14 @@ collection Broadcast {
     }
   }
   properties {
-    title str 
+    title str
+    message str @element("textarea")
+    picture File @accept(["image/*"])
     system topic
   }
   functions {
-    get @expose
-    getAll @expose
+    get @expose("unauthenticated")
+    getAll @expose("unauthenticated")
     insert @expose
     remove @expose
     upload @expose
