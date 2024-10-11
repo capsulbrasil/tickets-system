@@ -3,7 +3,7 @@ import { broadcastGatewayContract } from "../contracts/broadcastGatewatContract.
 
 export const broadcastRouter = createRouter()
 
-broadcastRouter.GET("/broadcastGateway", async (context) => {
+broadcastRouter.GET("/gateway", async (context) => {
     const query = context.request.query
     const headers = context.request.headers
     const xClientToken = headers['x-client-token']

@@ -1084,7 +1084,7 @@ declare type MirrorRouter = {
       ]
     }
   },
-  "/broadcast/broadcastGateway": {
+  "/broadcast/gateway": {
     "GET": {
       "roles": "unauthenticated",
       "query": {
