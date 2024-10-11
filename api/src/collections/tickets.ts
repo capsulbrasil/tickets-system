@@ -44,9 +44,10 @@ export const ticket = extendTicketCollection({
           const { error: commentError } = await discordAPI.sendMessage({
             channelId: "1294291396576149625",
             message: {
-              content: `\n> **${
-                comment?.owner?.name
-              }** comentou no ticket [${title}](${
+              content: `@everyone\n> [${comment?.owner?.name}](${
+                "https://suporte.capsulbrasil.com.br/dashboard/c/user/" +
+                comment.owner?._id
+              }) comentou no ticket [${title}](${
                 "https://suporte.capsulbrasil.com.br/dashboard/ticket-" + _id
               }): ${comment.description}`,
             },

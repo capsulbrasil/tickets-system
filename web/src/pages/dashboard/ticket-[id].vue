@@ -126,7 +126,7 @@ onMounted(fetchTicket)
                   <b style="font-size: 0.8rem;">{{ comment.owner?.name }}</b>
                   <aeria-icon icon="calendar" class="tw-text-sm" style="font-size: 0.8rem;">{{
                     formatDateTime(comment.created_at, { hours: true })
-                    }}</aeria-icon>
+                  }}</aeria-icon>
                 </div>
                 <hr class="tw-border" />
                 <div class="tw-flex tw-gap-1">
