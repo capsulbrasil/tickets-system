@@ -487,7 +487,8 @@ declare type MirrorDescriptions = {
         "type": "string"
       },
       "secret_key": {
-        "type": "string"
+        "type": "string",
+        "readOnly": true
       },
       "description": {
         "type": "string",
