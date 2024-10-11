@@ -123,13 +123,14 @@ onMounted(fetchTicket)
               class="tw-mt-4 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-5)]">
               <div v-if="comment.description" class="tw-space-y-2 tw-p-4">
                 <div class="tw-flex tw-justify-between">
-                  <b>{{ comment.owner?.name }}</b>
-                  <aeria-icon icon="calendar" class="tw-text-sm">{{ formatDateTime(comment.created_at, { hours: true })
+                  <b style="font-size: 0.8rem;">{{ comment.owner?.name }}</b>
+                  <aeria-icon icon="calendar" class="tw-text-sm" style="font-size: 0.8rem;">{{
+                    formatDateTime(comment.created_at, { hours: true })
                     }}</aeria-icon>
                 </div>
                 <hr class="tw-border" />
                 <div class="tw-flex tw-gap-1">
-                  <p class="tw-flex-1">{{ comment.description }}</p>
+                  <p class="tw-flex-1" style="font-size: 0.8rem;">{{ comment.description }}</p>
                   <aeria-picture v-if="comment.images" class="tw-w-12 tw-h-12 tw-object-cover tw-border"
                     v-for="image in comment.images" :url="image.link" expandable />
                 </div>
