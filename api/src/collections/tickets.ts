@@ -48,7 +48,7 @@ export const ticket = extendTicketCollection({
                 comment?.owner?.name
               }** comentou no ticket [${title}](${
                 "https://suporte.capsulbrasil.com.br/dashboard/ticket-" + _id
-              })`,
+              }): ${comment.description}`,
             },
             notFromMainServer: true,
           });

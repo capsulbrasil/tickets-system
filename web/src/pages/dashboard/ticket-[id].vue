@@ -75,7 +75,7 @@ const handleNewComment = async (newComment: CollectionItemWithId<"comment">) => 
   })
 
   if (!commentError && comment) {
-    comments.value.push(comment)
+    comments.value.unshift(comment)
   }
 }
 
