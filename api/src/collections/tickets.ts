@@ -42,7 +42,7 @@ export const ticket = extendTicketCollection({
 
         if (payload.what._id && comment) {
           const { error: commentError } = await discordAPI.sendMessage({
-            channelId: "1293907311479226418",
+            channelId: "1294291396576149625",
             message: {
               content: `\n> **${
                 comment?.owner?.name
@@ -50,14 +50,11 @@ export const ticket = extendTicketCollection({
                 "https://suporte.capsulbrasil.com.br/dashboard/ticket-" + _id
               })`,
             },
-            notFromMainServer: true
+            notFromMainServer: true,
           });
 
           if (commentError) {
-            console.error(
-              "Erro ao enviar a mensagem de comentário:",
-              commentError
-            );
+            console.error("Error sending comment message:", commentError);
           }
         }
 

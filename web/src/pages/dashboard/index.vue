@@ -58,7 +58,6 @@
 
     topicCount.value = result.totalByTopic || {};
     expiredTickets.value = result.UrgentTickets || [];
-
   };
 
   onMounted(() => {
