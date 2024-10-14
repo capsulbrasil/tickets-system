@@ -42,7 +42,7 @@ export const ticket = extendTicketCollection({
 
         if (payload.what._id && comment) {
           const { error: commentError } = await discordAPI.sendMessage({
-            channelId: "1294291396576149625",
+            channelId: "1295364001542438912",
             message: {
               content: `@everyone\n> [${comment?.owner?.name}](${
                 "https://suporte.capsulbrasil.com.br/dashboard/c/user/" +

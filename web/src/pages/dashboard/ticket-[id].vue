@@ -68,8 +68,6 @@ const handleNewComment = async (newComment: CollectionItemWithId<"comment">) => 
     what: { _id: ticketData.value?._id, comment: newComment._id }
   })
 
-  if (!updateStatus) return console.error(error)
-
   const { error: commentError, result: comment } = await aeria.comment.get.POST({
     filters: { _id: updatedTicket?.comment?._id }
   })
@@ -118,7 +116,7 @@ onMounted(fetchTicket)
             <aeria-button icon="plus" variant="alt" @click="addComment">Comentar</aeria-button>
           </div>
           <div ref="commentsContainer" v-loading="ticketLoading"
-            class="tw-p-3 tw-overflow-y-auto tw-flex-1 tw-max-h-[calc(80vh-5rem)] tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
+            class="tw-p-3 tw-overflow-y-auto tw-flex-1 tw-max-h-[calc(90vh-5rem)] tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
             <div v-for="comment in comments" :key="comment._id"
               class="tw-mt-4 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-5)]">
               <div v-if="comment.description" class="tw-space-y-2 tw-p-4">
@@ -126,7 +124,7 @@ onMounted(fetchTicket)
                   <b style="font-size: 0.8rem;">{{ comment.owner?.name }}</b>
                   <aeria-icon icon="calendar" class="tw-text-sm" style="font-size: 0.8rem;">{{
                     formatDateTime(comment.created_at, { hours: true })
-                  }}</aeria-icon>
+                    }}</aeria-icon>
                 </div>
                 <hr class="tw-border" />
                 <div class="tw-flex tw-gap-1">
