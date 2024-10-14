@@ -175,3 +175,46 @@ collection Broadcast {
    crud
   }
 }
+
+collection  Contacts { 
+  table {
+    images
+    organization
+    name
+    email
+    phone
+    detail
+  }
+   filters{
+    organization
+    name
+    email
+    phone
+  } 
+  search {
+    placeholder "Insira o nome, organização, do contato aqui"
+    indexes {
+      title
+      organization
+    }
+  }
+  properties {
+    name str
+    organization enum @values([ "yampi", "monetizze",
+    "braip", "perfectpay", "keedpay", "correios", "sedex"])
+    phone str @mask(["(##) #####-####"])
+    email str
+    detail str
+    images []File @accept(["image/*"])
+  }
+  functions {
+    get @expose("unauthenticated")
+    getAll @expose("unauthenticated")
+    insert @expose
+    remove @expose
+    upload @expose
+  }
+  presets {
+   crud
+  }
+}

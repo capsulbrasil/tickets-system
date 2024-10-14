@@ -191,6 +191,121 @@ declare type MirrorDescriptions = {
       }
     }
   },
+  "contacts": {
+    "$id": "contacts",
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "organization": {
+        "enum": [
+          "yampi",
+          "monetizze",
+          "braip",
+          "perfectpay",
+          "keedpay",
+          "correios",
+          "sedex"
+        ]
+      },
+      "phone": {
+        "type": "string",
+        "mask": [
+          "(##) #####-####"
+        ]
+      },
+      "email": {
+        "type": "string"
+      },
+      "detail": {
+        "type": "string"
+      },
+      "images": {
+        "type": "array",
+        "items": {
+          "$ref": "file",
+          "accept": [
+            "image/*"
+          ],
+          "indexes": [
+            "name",
+            "link",
+            "type"
+          ]
+        }
+      },
+      "created_at": {
+        "type": "string",
+        "format": "date-time",
+        "noForm": true,
+        "readOnly": true,
+        "isTimestamp": true
+      },
+      "updated_at": {
+        "type": "string",
+        "format": "date-time",
+        "noForm": true,
+        "readOnly": true,
+        "isTimestamp": true
+      }
+    },
+    "table": [
+      "images",
+      "organization",
+      "name",
+      "email",
+      "phone",
+      "detail"
+    ],
+    "filters": [
+      "organization",
+      "name",
+      "email",
+      "phone"
+    ],
+    "presets": [
+      "crud"
+    ],
+    "search": {
+      "indexes": [
+        "title",
+        "organization"
+      ],
+      "placeholder": "Insira o nome, organização, do contato aqui"
+    },
+    "actions": {
+      "spawnAdd": {
+        "label": "action.add",
+        "event": "spawnAdd",
+        "icon": "plus",
+        "button": true,
+        "translate": true
+      }
+    },
+    "individualActions": {
+      "spawnEdit": {
+        "label": "action.edit",
+        "event": "spawnEdit",
+        "icon": "pencil-simple",
+        "translate": true
+      },
+      "viewItem": {
+        "label": "action.view",
+        "icon": "eye",
+        "translate": true,
+        "route": {
+          "name": "/dashboard/:collection/:id",
+          "setItem": true
+        }
+      },
+      "remove": {
+        "label": "action.remove",
+        "icon": "trash",
+        "ask": true,
+        "translate": true
+      }
+    }
+  },
   "file": {
     "$id": "file",
     "icon": "paperclip",
@@ -856,6 +971,46 @@ declare type MirrorRouter = {
     }
   },
   "/comment/upload": {
+    "POST": {
+      "roles": [
+        "root"
+      ],
+      "builtin": true
+    }
+  },
+  "/contacts/get": {
+    "POST": {
+      "roles": [
+        "root"
+      ],
+      "builtin": true
+    }
+  },
+  "/contacts/getAll": {
+    "POST": {
+      "roles": [
+        "root"
+      ],
+      "builtin": true
+    }
+  },
+  "/contacts/insert": {
+    "POST": {
+      "roles": [
+        "root"
+      ],
+      "builtin": true
+    }
+  },
+  "/contacts/remove": {
+    "POST": {
+      "roles": [
+        "root"
+      ],
+      "builtin": true
+    }
+  },
+  "/contacts/upload": {
     "POST": {
       "roles": [
         "root"
