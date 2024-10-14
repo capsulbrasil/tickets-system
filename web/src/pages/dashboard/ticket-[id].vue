@@ -122,7 +122,7 @@ onMounted(fetchTicket)
               <div v-if="comment.description" class="tw-space-y-2 tw-p-4">
                 <div class="tw-flex tw-justify-between">
                   <b style="font-size: 0.8rem;">{{ comment.owner?.name }}</b>
-                  <aeria-icon icon="calendar" class="tw-text-sm" style="font-size: 0.8rem;">{{
+                  <aeria-icon icon="calendar-blank" class="tw-text-sm" style="font-size: 0.8rem;">{{
                     formatDateTime(comment.created_at, { hours: true })
                     }}</aeria-icon>
                 </div>
@@ -139,27 +139,34 @@ onMounted(fetchTicket)
       </div>
       <!--Ticket-->
       <div
-        class="tw-w-1/2 tw-p-4 tw-flex tw-flex-col tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-3)]">
-        <div class="tw-p-3 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
-          <div class="tw-flex tw-justify-between tw-items-center">
+        class="tw-w-1/2 tw-p-3 tw-flex tw-flex-col tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-3)]">
+        <div class="tw-p-2 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
+          <div class="tw-flex tw-justify-between tw-items-center tw-pb-1 tw-pt-1">
             <div class="tw-flex tw-items-center">
-              <div class="tw-w-2 tw-h-2 tw-rounded-full tw-mr-2"
+              <div class="tw-w-2 tw-h-2  tw-pt-4 tw-rounded-full tw-mr-2"
                 :style="{ backgroundColor: priorityColor(ticketData?.priority) }"></div>
-              <h3>{{ capitalizeText(ticketData.title) }}</h3>
+              <div class="tw-font-[600] tw-text-lg ">{{ capitalizeText(ticketData.title) }}</div>
             </div>
           </div>
-          <div class="tw-flex tw-justify-between tw-items-center">
-            <div class="tw-flex">
-              <p class="tw-pr-2">{{ ticketData.owner?.name }}</p>
-              <p v-for="(role, index) in ticketData.owner?.roles" :key="index" class="tw-pr-2 tw-font-bold">{{ role }}
-              </p>
+          <hr class="tw-border">
+          <div class="tw-flex tw-justify-between tw-items-center tw-pb-1 tw-pt-1">
+            <div class="tw-flex tw-items-center">
+              <div class="tw-pr-2">{{ ticketData.owner?.name }}</div>
+              <aeria-badge>
+                <div v-for="(role, index) in ticketData.owner?.roles" :key="index">
+                  {{ role }}
+                </div>
+              </aeria-badge>
             </div>
-            <p>{{ formatDateTime(ticketData.created_at) }}</p>
+            <aeria-icon icon="calendar-blank">
+              <div>{{ formatDateTime(ticketData.created_at) }}</div>
+            </aeria-icon>
           </div>
         </div>
-        <div v-if="ticketData" class="tw-p-2 tw-mt-2 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
+        <div v-if="ticketData"
+          class="tw-pr-2 tw-pl-2 tw-mt-2 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
           <p>{{ ticketData.description }}</p>
-          <aeria-picture v-if="ticketData.attached?.link" expandable object-fit="contain"
+          <aeria-picture class="tw-pb-3" v-if="ticketData.attached?.link" expandable object-fit="contain"
             :url="ticketData.attached.link" />
         </div>
         <div
@@ -174,8 +181,9 @@ onMounted(fetchTicket)
             <div
               class="tw-flex tw-items-center tw-p-1 tw-cursor-pointer tw-bg-[color:var(--theme-background-color-shade-5)] tw-rounded-sm">
               <div class="tw-w-2 tw-h-2 tw-rounded-full tw-ml-3"
-                :style="{ backgroundColor: statusColor(ticketData.status) }"></div>
-              <span class="tw-uppercase tw-font-bold tw-ml-2">{{ ticketData.status }}</span>
+                :style="{ backgroundColor: statusColor(ticketData.status) }">
+              </div>
+              <div class="tw-uppercase tw-font-bold tw-ml-2">{{ ticketData.status }}</div>
               <aeria-icon icon="plus" class="tw-p-2" />
             </div>
           </aeria-context-menu>
