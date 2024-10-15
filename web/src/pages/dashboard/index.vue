@@ -131,8 +131,8 @@
         <div class="tw-font-semibold">{{ capitalizeText(row[column]) }}</div>
       </template>
       <template #row-topic="{ row, column }">
-        <div v-for="image in row[column]?.images" :key="image.id" class="tw-flex tw-items-center">
-          <aeria-picture object-fit="contain" class="tw-h-4" :url="image.link" />
+        <div class="tw-flex">
+          <aeria-picture object-fit="contain" class="tw-h-4" :url="row[column].images.link" />
         </div>
       </template>
       <template #row-priority="{ row, column }">

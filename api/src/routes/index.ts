@@ -1,20 +1,11 @@
-import {
-  createRouter,
-  endpointErrorSchema,
-  HTTPStatus,
-  log,
-  Result,
-  resultSchema,
-} from "aeria";
+import { createRouter, HTTPStatus, Result } from "aeria";
 import { countAllContracts } from "../contracts/countAllContracts.js";
-import { ticket } from "../collections/tickets.js";
-import { comment } from "../collections/index.js";
 import { topicRouter } from "./topic.js";
 import { broadcastRouter } from "./broadcast.js";
 
 export const router = createRouter();
-router.group('/broadcast', broadcastRouter)
-router.group('/topic', topicRouter)
+router.group("/broadcast", broadcastRouter);
+router.group("/topic", topicRouter);
 router.GET(
   "/countAll",
   async (context) => {
@@ -50,7 +41,7 @@ router.GET(
             },
             {
               $group: {
-                _id: "$lookUpTopic.title",
+                _id: "$lookUpTopic.system",
                 count: { $sum: 1 },
               },
             },
@@ -70,7 +61,7 @@ router.GET(
             {
               $project: {
                 _id: 1,
-                title: 1,
+                system: 1,
               },
             },
           ],

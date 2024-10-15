@@ -7,5 +7,6 @@ definePage({
 });
 </script>
 <template>
-    <aeria-crud collection="broadcast"></aeria-crud>
+    <aeria-crud collection="broadcast">
+    </aeria-crud>
 </template>

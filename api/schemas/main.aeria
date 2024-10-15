@@ -45,25 +45,29 @@ collection Topic {
   owned "on-write"
   table {
    images
-   title
-   description
+   system
+   secret_key
+   discord_channel_id
+   link_url
   }
   search {
-    placeholder "Insira o sistema aqui"
+    placeholder "Insira o nome do sistema aqui"
     indexes {
-      title
+      system
     }
   }
   required {
-    title
+    system
+    images
     discord_channel_id
+    link_url
   }
   properties {
-    title str
+    system str
     discord_channel_id str
     secret_key str
-    description str @element("textarea")
-    images []File @accept(["image/*"])
+    link_url str
+    images File @accept(["image/*"])
   }
   functions {
     get @expose("unauthenticated")
@@ -160,9 +164,9 @@ collection Broadcast {
   }
   properties {
     title str
+    system topic
     message str @element("textarea")
     picture File @accept(["image/*"])
-    system topic
   }
   functions {
     get @expose("unauthenticated")
@@ -178,34 +182,33 @@ collection Broadcast {
 
 collection  Contacts { 
   table {
-    images
-    organization
     name
+    organization
     email
     phone
     detail
   }
    filters{
-    organization
     name
     email
     phone
+    organization
   } 
   search {
-    placeholder "Insira o nome, organização, do contato aqui"
+    placeholder "Insira o nome, organização, telefone, do contato aqui"
     indexes {
-      title
+      name
+      phone
       organization
     }
   }
   properties {
     name str
-    organization enum @values([ "yampi", "monetizze",
-    "braip", "perfectpay", "keedpay", "correios", "sedex"])
+    organization enum @values([ "Yampi", "Monetizze",
+    "Braip", "Perfectpay", "Keedpay", "Correios", "Sedex"])
     phone str @mask(["(##) #####-####"])
     email str
-    detail str
-    images []File @accept(["image/*"])
+    detail str @element("textarea")
   }
   functions {
     get @expose("unauthenticated")

@@ -15,6 +15,12 @@ declare type MirrorDescriptions = {
       "title": {
         "type": "string"
       },
+      "system": {
+        "$ref": "topic",
+        "indexes": [
+          "system"
+        ]
+      },
       "message": {
         "type": "string",
         "element": "textarea"
@@ -28,12 +34,6 @@ declare type MirrorDescriptions = {
           "name",
           "link",
           "type"
-        ]
-      },
-      "system": {
-        "$ref": "topic",
-        "indexes": [
-          "title"
         ]
       },
       "created_at": {
@@ -199,13 +199,13 @@ declare type MirrorDescriptions = {
       },
       "organization": {
         "enum": [
-          "yampi",
-          "monetizze",
-          "braip",
-          "perfectpay",
-          "keedpay",
-          "correios",
-          "sedex"
+          "Yampi",
+          "Monetizze",
+          "Braip",
+          "Perfectpay",
+          "Keedpay",
+          "Correios",
+          "Sedex"
         ]
       },
       "phone": {
@@ -218,21 +218,8 @@ declare type MirrorDescriptions = {
         "type": "string"
       },
       "detail": {
-        "type": "string"
-      },
-      "images": {
-        "type": "array",
-        "items": {
-          "$ref": "file",
-          "accept": [
-            "image/*"
-          ],
-          "indexes": [
-            "name",
-            "link",
-            "type"
-          ]
-        }
+        "type": "string",
+        "element": "textarea"
       },
       "created_at": {
         "type": "string",
@@ -250,28 +237,28 @@ declare type MirrorDescriptions = {
       }
     },
     "table": [
-      "images",
-      "organization",
       "name",
+      "organization",
       "email",
       "phone",
       "detail"
     ],
     "filters": [
-      "organization",
       "name",
       "email",
-      "phone"
+      "phone",
+      "organization"
     ],
     "presets": [
       "crud"
     ],
     "search": {
       "indexes": [
-        "title",
+        "name",
+        "phone",
         "organization"
       ],
-      "placeholder": "Insira o nome, organização, do contato aqui"
+      "placeholder": "Insira o nome, organização, telefone, do contato aqui"
     },
     "actions": {
       "spawnAdd": {
@@ -437,7 +424,7 @@ declare type MirrorDescriptions = {
           "discord_channel_id"
         ],
         "indexes": [
-          "title"
+          "system"
         ]
       },
       "status": {
@@ -595,7 +582,7 @@ declare type MirrorDescriptions = {
   "topic": {
     "$id": "topic",
     "properties": {
-      "title": {
+      "system": {
         "type": "string"
       },
       "discord_channel_id": {
@@ -604,23 +591,19 @@ declare type MirrorDescriptions = {
       "secret_key": {
         "type": "string"
       },
-      "description": {
-        "type": "string",
-        "element": "textarea"
+      "link_url": {
+        "type": "string"
       },
       "images": {
-        "type": "array",
-        "items": {
-          "$ref": "file",
-          "accept": [
-            "image/*"
-          ],
-          "indexes": [
-            "name",
-            "link",
-            "type"
-          ]
-        }
+        "$ref": "file",
+        "accept": [
+          "image/*"
+        ],
+        "indexes": [
+          "name",
+          "link",
+          "type"
+        ]
       },
       "owner": {
         "$ref": "user",
@@ -647,26 +630,31 @@ declare type MirrorDescriptions = {
     "owned": "on-write",
     "table": [
       "images",
-      "title",
-      "description"
+      "system",
+      "secret_key",
+      "discord_channel_id",
+      "link_url"
     ],
     "required": [
-      "title",
-      "discord_channel_id"
+      "system",
+      "images",
+      "discord_channel_id",
+      "link_url"
     ],
     "presets": [
       "crud"
     ],
     "search": {
       "indexes": [
-        "title"
+        "system"
       ],
-      "placeholder": "Insira o sistema aqui"
+      "placeholder": "Insira o nome do sistema aqui"
     },
     "individualActions": {
       "createSecret": {
         "label": "Criar Token",
-        "icon": "barcode"
+        "icon": "barcode",
+        "button": true
       },
       "spawnEdit": {
         "label": "action.edit",
@@ -688,6 +676,13 @@ declare type MirrorDescriptions = {
         "icon": "trash",
         "ask": true,
         "translate": true
+      }
+    },
+    "tableLayout": {
+      "actions": {
+        "viewContent": {
+          "button": true
+        }
       }
     },
     "actions": {
