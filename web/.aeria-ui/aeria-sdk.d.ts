@@ -33,7 +33,8 @@ declare type MirrorDescriptions = {
         "indexes": [
           "name",
           "link",
-          "type"
+          "type",
+          "size"
         ]
       },
       "created_at": {
@@ -120,7 +121,8 @@ declare type MirrorDescriptions = {
           "indexes": [
             "name",
             "link",
-            "type"
+            "type",
+            "size"
           ]
         }
       },
@@ -229,7 +231,8 @@ declare type MirrorDescriptions = {
         "indexes": [
           "name",
           "link",
-          "type"
+          "type",
+          "size"
         ]
       },
       "created_at": {
@@ -315,7 +318,8 @@ declare type MirrorDescriptions = {
     "indexes": [
       "name",
       "link",
-      "type"
+      "type",
+      "size"
     ],
     "properties": {
       "type": {
@@ -465,7 +469,8 @@ declare type MirrorDescriptions = {
         "indexes": [
           "name",
           "link",
-          "type"
+          "type",
+          "size"
         ]
       },
       "created_at": {
@@ -611,7 +616,8 @@ declare type MirrorDescriptions = {
         "indexes": [
           "name",
           "link",
-          "type"
+          "type",
+          "size"
         ]
       },
       "owner": {
@@ -772,7 +778,8 @@ declare type MirrorDescriptions = {
         "indexes": [
           "name",
           "link",
-          "type"
+          "type",
+          "size"
         ]
       },
       "picture": {
