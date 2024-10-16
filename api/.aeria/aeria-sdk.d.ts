@@ -221,6 +221,17 @@ declare type MirrorDescriptions = {
         "type": "string",
         "element": "textarea"
       },
+      "images": {
+        "$ref": "file",
+        "accept": [
+          "image/*"
+        ],
+        "indexes": [
+          "name",
+          "link",
+          "type"
+        ]
+      },
       "created_at": {
         "type": "string",
         "format": "date-time",
@@ -237,8 +248,8 @@ declare type MirrorDescriptions = {
       }
     },
     "table": [
+      "images",
       "name",
-      "organization",
       "email",
       "phone",
       "detail"
@@ -256,6 +267,7 @@ declare type MirrorDescriptions = {
       "indexes": [
         "name",
         "phone",
+        "email",
         "organization"
       ],
       "placeholder": "Insira o nome, organização, telefone, do contato aqui"

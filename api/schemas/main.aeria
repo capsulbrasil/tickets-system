@@ -182,8 +182,8 @@ collection Broadcast {
 
 collection  Contacts { 
   table {
+    images
     name
-    organization
     email
     phone
     detail
@@ -199,6 +199,7 @@ collection  Contacts {
     indexes {
       name
       phone
+      email
       organization
     }
   }
@@ -209,6 +210,7 @@ collection  Contacts {
     phone str @mask(["(##) #####-####"])
     email str
     detail str @element("textarea")
+    images File @accept(["image/*"])
   }
   functions {
     get @expose("unauthenticated")

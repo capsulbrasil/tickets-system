@@ -2,6 +2,7 @@ import { createRouter, HTTPStatus, Result } from "aeria";
 import { countAllContracts } from "../contracts/countAllContracts.js";
 import { topicRouter } from "./topic.js";
 import { broadcastRouter } from "./broadcast.js";
+import { ticket } from "../collections/tickets.js";
 
 export const router = createRouter();
 router.group("/broadcast", broadcastRouter);
@@ -61,7 +62,7 @@ router.GET(
             {
               $project: {
                 _id: 1,
-                system: 1,
+                title: 1,
               },
             },
           ],
