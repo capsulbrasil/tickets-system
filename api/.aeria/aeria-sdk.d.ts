@@ -603,9 +603,6 @@ declare type MirrorDescriptions = {
       "secret_key": {
         "type": "string"
       },
-      "link_url": {
-        "type": "string"
-      },
       "images": {
         "$ref": "file",
         "accept": [
@@ -644,14 +641,12 @@ declare type MirrorDescriptions = {
       "images",
       "system",
       "secret_key",
-      "discord_channel_id",
-      "link_url"
+      "discord_channel_id"
     ],
     "required": [
       "system",
       "images",
-      "discord_channel_id",
-      "link_url"
+      "discord_channel_id"
     ],
     "presets": [
       "crud"
