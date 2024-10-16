@@ -655,7 +655,6 @@ declare type MirrorDescriptions = {
     ],
     "required": [
       "system",
-      "images",
       "discord_channel_id"
     ],
     "presets": [

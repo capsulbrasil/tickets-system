@@ -18,7 +18,12 @@ const navigateToURL = (url: string) => {
     <aeria-crud collection="topic">
         <template #row-images="{ row, column }">
             <div class="tw-flex">
-                <aeria-picture object-fit="contain" class="tw-h-4" :url="row[column].link" />
+                <div v-if="!row[column]?.link">
+                    <p>Sem imagem</p>
+                </div>
+                <div v-else>
+                    <aeria-picture object-fit="contain" class="tw-h-4" :url="row[column].link" />
+                </div>
             </div>
         </template>
         <template #row-system="{ row, column }">

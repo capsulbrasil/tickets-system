@@ -25,8 +25,8 @@ collection Comment {
   }
   properties {
     ticket Ticket
-    description str @element("textarea")
-    images []File @accept(["image/*"])
+    description str @element("textarea") 
+    images []File @accept(["image/*"]) @maxItems(3)
     owner User @populate([name, email, roles])
   }
   functions {
@@ -58,7 +58,6 @@ collection Topic {
   }
   required {
     system
-    images
     discord_channel_id
   }
   properties {
