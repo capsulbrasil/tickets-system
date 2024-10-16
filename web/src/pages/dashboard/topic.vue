@@ -5,6 +5,14 @@ definePage({
         icon: 'cpu'
     },
 });
+
+const navigateToURL = (url: string) => {
+    if (url) {
+        window.open(url, '_blank');
+    } else {
+        console.warn('URL is null or undefined.');
+    }
+}
 </script>
 <template>
     <aeria-crud collection="topic">
@@ -21,6 +29,12 @@ definePage({
         </template>
         <template #row-discord_channel_id="{ row, column }">
             <aeria-icon icon="discord-logo" style="--icon-size: 1.3rem">{{ row[column] }}</aeria-icon>
+        </template>
+        <template #row-link_url="{ row, column }">
+            <div class="tw-flex">
+                <aeria-icon @click="navigateToURL(row[column])" icon="globe"
+                    style="--icon-size: 1.3rem; cursor: pointer;" reactive></aeria-icon>
+            </div>
         </template>
     </aeria-crud>
 </template>

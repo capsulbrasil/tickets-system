@@ -33,12 +33,6 @@ const options = defineOptions({
 });
 
 useApp(options).then(({ app, mount }) => {
-  console.log("app:", app);
-  console.log("mount:", mount);
-  if (app) {
-    app.provide("noResultsComponent", NoResults);
-  }
-  if (mount) {
-    mount();
-  }
+  app.provide("noResultsComponent", NoResults);
+  mount();
 });
