@@ -48,7 +48,6 @@ collection Topic {
    system
    secret_key
    discord_channel_id
-   link_url
   }
   search {
     placeholder "Insira o nome do sistema aqui"
@@ -60,13 +59,11 @@ collection Topic {
     system
     images
     discord_channel_id
-    link_url
   }
   properties {
     system str
     discord_channel_id str
     secret_key str
-    link_url str
     images File @accept(["image/*"])
   }
   functions {
