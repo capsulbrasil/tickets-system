@@ -186,7 +186,12 @@ collection  Contacts {
     phone
     detail
   }
-   filters{
+  required {
+    name
+    organization
+    phone
+  }
+  filters{
     name
     email
     phone
@@ -203,12 +208,10 @@ collection  Contacts {
   }
   properties {
     name str
-    organization enum @values([ "Yampi", "Monetizze",
-    "Braip", "Perfectpay", "Keedpay", "Correios", "Sedex"])
+    organization str
     phone str @mask(["(##) #####-####"])
     email str
     detail str @element("textarea")
-    images File @accept(["image/*"])
   }
   functions {
     get @expose("unauthenticated")
