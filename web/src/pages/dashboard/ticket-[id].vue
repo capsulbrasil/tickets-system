@@ -99,6 +99,10 @@ watch(reachedEnd, async (value) => {
   }
 })
 
+const copyID = (id: string) => {
+  return navigator.clipboard.writeText(id)
+}
+
 onMounted(fetchTicket)
 </script>
 
@@ -124,7 +128,7 @@ onMounted(fetchTicket)
                   <b style="font-size: 0.8rem;">{{ comment.owner?.name }}</b>
                   <aeria-icon icon="calendar-blank" class="tw-text-sm" style="font-size: 0.8rem;">{{
                     formatDateTime(comment.created_at, { hours: true })
-                  }}</aeria-icon>
+                    }}</aeria-icon>
                 </div>
                 <hr class="tw-border" />
                 <div class="tw-flex tw-gap-1">
@@ -143,40 +147,73 @@ onMounted(fetchTicket)
         <div class="tw-p-2 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
           <div class="tw-flex tw-justify-between tw-items-center tw-pb-1 tw-pt-1">
             <div class="tw-flex tw-items-center">
-              <div class="tw-w-2 tw-h-2  tw-pt-4 tw-rounded-full tw-mr-2"
+              <div class="tw-w-1 tw-h-2 tw-pt-7 tw-rounded-full tw-mr-2"
                 :style="{ backgroundColor: priorityColor(ticketData?.priority) }"></div>
-              <div class="tw-font-[600] tw-text-lg ">{{ capitalizeText(ticketData.title) }}</div>
+              <div class="tw-font-[600] tw-text-lg">{{ capitalizeText(ticketData.title) }}</div>
             </div>
-            <aeria-context-menu :actions="[
-              { label: 'Reparando', icon: 'eye', click: () => updateStatus('Reparando') },
-              { label: 'Resolvido', icon: 'eye-closed', click: () => updateStatus('Resolvido') }
-            ]">
-              <div class="tw-flex tw-items-center tw-p-1 tw-cursor-pointer tw-rounded-sm">
-                <div class="tw-w-2 tw-h-2 tw-rounded-full tw-ml-3"
-                  :style="{ backgroundColor: statusColor(ticketData.status) }">
-                </div>
-                <div class="tw-uppercase tw-font-bold tw-ml-2">{{ ticketData.status }}</div>
-                <aeria-icon icon="plus" class="tw-p-2 tw-ml-4" reactive />
-              </div>
-            </aeria-context-menu>
+            <div class="tw-flex tw-items-center">
+              <div class="tw-mr-1"><b>ID:</b></div>
+              <aeria-icon icon="clipboard" style="cursor: pointer;" reactive @click="copyID(ticketData._id)">
+                {{ ticketData._id
+                }}</aeria-icon>
+            </div>
+
           </div>
           <hr class="tw-border">
           <div class="tw-flex tw-justify-between tw-items-center tw-pb-1 tw-pt-1">
             <div class="tw-flex tw-items-center">
-              <div class="tw-pr-2">{{ ticketData.owner?.name }}</div>
+              <div class="tw-pr-2 tw-flex">
+                <div><b>Proprietário:</b>&nbsp;</div>{{ ticketData.owner?.name }}
+              </div>
               <aeria-badge>
                 <div v-for="(role, index) in ticketData.owner?.roles" :key="index">
                   {{ role }}
                 </div>
               </aeria-badge>
             </div>
-            <aeria-icon icon="calendar-blank">
-              <div>{{ formatDateTime(ticketData.created_at) }}</div>
-            </aeria-icon>
+            <div class="tw-flex">
+              <b>Data de Criação:&nbsp;</b>
+              <aeria-icon icon="calendar-blank">
+                <div>{{ formatDateTime(ticketData.created_at) }}</div>
+              </aeria-icon>
+            </div>
+          </div>
+          <div class="tw-flex tw-justify-between tw-items-center tw-pb-1 tw-pt-1">
+            <div class="tw-flex">
+              <div><b>E-mail:&nbsp;</b></div>{{ ticketData.owner?.email }}
+            </div>
+            <div class="tw-flex">
+              <b>Data de atualização:&nbsp;</b>
+              <aeria-icon icon="arrows-clockwise">
+                <div>{{ formatDateTime(ticketData.updated_at) }}</div>
+              </aeria-icon>
+            </div>
+          </div>
+          <div class="tw-flex tw-justify-between tw-items-center tw-pb-1 tw-pt-1 tw-pt-2">
+            <div class="tw-flex">
+              <aeria-context-menu :actions="[
+                { label: 'Reparando', icon: 'gear-six', click: () => updateStatus('Reparando') },
+                { label: 'Resolvido', icon: 'check-fat', click: () => updateStatus('Resolvido') }
+              ]">
+                <div
+                  class="tw-flex tw-items-center tw-cursor-pointer tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-5)] tw-pr-2">
+                  <div class=" tw-w-1 tw-h-2 tw-pt-8 tw-rounded-full tw-mr-2"
+                    :style="{ backgroundColor: statusColor(ticketData.status) }">
+                  </div>
+                  <div>{{ ticketData.status }}</div>
+                  <aeria-icon icon="plus" class="tw-pl-2"></aeria-icon>
+                </div>
+              </aeria-context-menu>
+            </div>
+            <div>
+              <aeria-picture object-fit="contain" class="tw-h-5 " :url="ticketData.topic.image?.link" />
+            </div>
           </div>
         </div>
+
         <div v-if="ticketData"
           class="tw-pr-2 tw-pl-2 tw-mt-2 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
+          <p><b>Descrição do Ticket</b></p>
           <p>{{ ticketData.description }}</p>
           <aeria-picture class="tw-pb-3" v-if="ticketData.attached?.link" expandable object-fit="contain"
             :url="ticketData.attached.link" />

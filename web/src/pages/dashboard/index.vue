@@ -132,7 +132,7 @@
       </template>
       <template #row-topic="{ row, column }">
         <div class="tw-flex">
-          <aeria-picture object-fit="contain" class="tw-h-4" :url="row[column].images.link" />
+          <aeria-picture object-fit="contain" class="tw-h-4" :url="row[column].image.link" />
         </div>
       </template>
       <template #row-priority="{ row, column }">

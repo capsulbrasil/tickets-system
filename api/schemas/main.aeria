@@ -44,7 +44,7 @@ collection Comment {
 collection Topic {
   owned "on-write"
   table {
-   images
+   image
    system
    secret_key
    discord_channel_id
@@ -65,7 +65,7 @@ collection Topic {
     discord_channel_id str
     secret_key str
     link_url str
-    images File @accept(["image/*"])
+    image File @accept(["image/*"])
   }
   functions {
     get @expose("unauthenticated")
@@ -118,7 +118,7 @@ collection Ticket {
   }
   properties {
     title str
-    topic Topic @populate([images, discord_channel_id])
+    topic Topic @populate([image, discord_channel_id])
     status enum @values([
       "Ativo",
       "Reparando",

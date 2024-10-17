@@ -7,7 +7,7 @@ export const ptbr = defineLocale({
   detail: "Detalhes",
   discord_channel_id: "API Discord",
   email: "E-mail",
-  images: "Emblema",
+  images: "Imagem",
   link_url: "URL",
   name: "Nome",
   organization: ["Organização", "Organizações"],

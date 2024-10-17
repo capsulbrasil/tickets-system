@@ -124,7 +124,8 @@ declare type MirrorDescriptions = {
             "type",
             "size"
           ]
-        }
+        },
+        "maxItems": 3
       },
       "owner": {
         "$ref": "user",
@@ -200,15 +201,7 @@ declare type MirrorDescriptions = {
         "type": "string"
       },
       "organization": {
-        "enum": [
-          "Yampi",
-          "Monetizze",
-          "Braip",
-          "Perfectpay",
-          "Keedpay",
-          "Correios",
-          "Sedex"
-        ]
+        "type": "string"
       },
       "phone": {
         "type": "string",
@@ -222,18 +215,6 @@ declare type MirrorDescriptions = {
       "detail": {
         "type": "string",
         "element": "textarea"
-      },
-      "images": {
-        "$ref": "file",
-        "accept": [
-          "image/*"
-        ],
-        "indexes": [
-          "name",
-          "link",
-          "type",
-          "size"
-        ]
       },
       "created_at": {
         "type": "string",
@@ -256,6 +237,11 @@ declare type MirrorDescriptions = {
       "email",
       "phone",
       "detail"
+    ],
+    "required": [
+      "name",
+      "organization",
+      "phone"
     ],
     "filters": [
       "name",
@@ -436,7 +422,7 @@ declare type MirrorDescriptions = {
       "topic": {
         "$ref": "topic",
         "populate": [
-          "images",
+          "image",
           "discord_channel_id"
         ],
         "indexes": [
@@ -611,7 +597,7 @@ declare type MirrorDescriptions = {
       "link_url": {
         "type": "string"
       },
-      "images": {
+      "image": {
         "$ref": "file",
         "accept": [
           "image/*"
@@ -647,7 +633,7 @@ declare type MirrorDescriptions = {
     },
     "owned": "on-write",
     "table": [
-      "images",
+      "image",
       "system",
       "secret_key",
       "discord_channel_id",

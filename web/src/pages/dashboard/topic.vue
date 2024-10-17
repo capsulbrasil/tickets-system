@@ -16,7 +16,7 @@ const navigateToURL = (url: string) => {
 </script>
 <template>
     <aeria-crud collection="topic">
-        <template #row-images="{ row, column }">
+        <template #row-image="{ row, column }">
             <div class="tw-flex">
                 <div v-if="!row[column]?.link">
                     <p>Sem imagem</p>
