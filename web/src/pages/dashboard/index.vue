@@ -119,6 +119,7 @@
               </div>
               <div v-else class="tw-flex tw-flex-col tw-items-center tw-justify-center">
                 <aeria-picture width="10rem" height="10rem" url="/empty.svg" alt="Gaiola"></aeria-picture>
+                <div class="tw-opacity-75 tw-pb-3">Não há demandas pendentes no momento.</div>
               </div>
             </div>
           </div>
@@ -132,7 +133,12 @@
       </template>
       <template #row-topic="{ row, column }">
         <div class="tw-flex">
-          <aeria-picture object-fit="contain" class="tw-h-4" :url="row[column].image.link" />
+          <div v-if="!row[column]?.image.link">
+            <p>Sem imagem</p>
+          </div>
+          <div v-else>
+            <aeria-picture object-fit="contain" class="tw-h-4" :url="row[column].image.link" />
+          </div>
         </div>
       </template>
       <template #row-priority="{ row, column }">

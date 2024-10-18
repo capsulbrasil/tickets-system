@@ -447,6 +447,10 @@ declare type MirrorDescriptions = {
         "type": "string",
         "element": "textarea"
       },
+      "observation": {
+        "type": "string",
+        "element": "textarea"
+      },
       "attached": {
         "$ref": "file",
         "accept": [
@@ -523,7 +527,8 @@ declare type MirrorDescriptions = {
       "status",
       "priority",
       "description",
-      "attached"
+      "attached",
+      "observation"
     ],
     "presets": [
       "crud"

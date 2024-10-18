@@ -115,6 +115,7 @@ collection Ticket {
     priority
     description
     attached
+    observation
   }
   properties {
     title str
@@ -130,6 +131,7 @@ collection Ticket {
       "Urgente"
     ])
     description str @element("textarea")
+    observation str @element("textarea")
     attached File @accept(["image/*"])
     created_at str @format("date-time")
     updated_at str @format("date-time")
