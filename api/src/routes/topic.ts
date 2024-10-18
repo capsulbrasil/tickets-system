@@ -1,26 +1,20 @@
-import { createRouter, HTTPStatus } from "aeria";
+import { ACError, createRouter, HTTPStatus } from "aeria";
 import { generateSecretKey } from "../integrations/keyGenerator.js";
 
 export const topicRouter = createRouter();
 
-topicRouter.POST(
-  "/createSecret",
-  async (context) => {
-    const payload = context.request.payload as any;
-    const { error, result: topic } =
-      await context.collections.topic.functions.get({
-        filters: {
-          _id: payload._id,
-          secret_key: {
-            $exists: false,
-          },
-        },
-      });
-
-    if (error) {
+topicRouter.POST('/createSecret', async (context) => {
+  const payload = context.request.payload as any
+    const { error, result: topic } = await context.collections.topic.functions.get({
+      filters: {
+        _id: payload._id,
+      },
+    })
+  
+    if(error){
       return context.error(HTTPStatus.BadRequest, {
-        code: "KEY_ALREADY_CREATED",
-      });
+        code: ACError.ResourceNotFound,
+      })
     }
 
     const newKey = await generateSecretKey(topic._id.toString());
