@@ -14,7 +14,7 @@ type Ticket = Omit<CollectionItemWithId<'ticket'>, 'comments'> & {
   comments?: CollectionItemWithId<'comment'>[]
 }
 
-const { id } = defineProps<Props>()
+const ticketProps = defineProps<Props>()
 const ticketData = ref<Ticket | null>(null)
 const ticketLoading = ref(false)
 
@@ -24,23 +24,29 @@ const commentOffset = reactive({ offset: 0 })
 const commentsContainer = ref<HTMLElement | null>(null)
 const comments = ref<CollectionItemWithId<'comment'>[]>([])
 
-const { reachedEnd } = useScrollObserver(commentsContainer, { antecipate: 200 })
+const { reachedEnd, detach: detachScrollListener } = useScrollObserver(commentsContainer, {
+  antecipate: 200
+})
 
 const fetchTicket = async () => {
-  const { error, result } = await aeria.ticket.get.POST({ filters: { _id: id } })
-  if (error) return
+  const { error, result } = await aeria.ticket.get.POST({ filters: { _id: ticketProps.id } });
 
-  ticketData.value = result
+  if (error) return;
+
+  ticketData.value = result;
 
   const { error: commentError, result: commentResult } = await aeria.comment.getAll.POST({
-    filters: { ticket: id },
-  })
-  if (!commentError) comments.value = commentResult?.data || []
+    filters: { ticket: ticketProps.id },
+  });
+
+  if (!commentError) {
+    comments.value = commentResult?.data || [];
+  }
 }
 
 const addComment = () => {
   commentData.$actions.clearItem()
-  commentData.item.ticket = id as any
+  Object.assign(commentData.item, { ticket: ticketProps.id })
   commentPanel.value = true
 }
 
@@ -50,37 +56,45 @@ const updateStatus = async (newStatus: 'Reparando' | 'Resolvido') => {
   const { error, result } = await aeria.ticket.insert.POST({
     what: { _id: ticketData.value._id, status: newStatus }
   })
-  if (!error) ticketData.value.status = result.status
+
+  if (!error && result) {
+    ticketData.value = { ...ticketData.value, status: result.status }
+  }
 }
 
-const handleNewComment = async (newComment: CollectionItemWithId<'comment'>) => {
-  const { result: updatedTicket } = await aeria.ticket.insert.POST({
+const handleNewComment = async (newComment: CollectionItemWithId<"comment">) => {
+  const { error, result: updatedTicket } = await aeria.ticket.insert.POST({
     what: { _id: ticketData.value?._id, comment: newComment._id }
   })
 
-  const { error, result: comment } = await aeria.comment.get.POST({
+  const { error: commentError, result: comment } = await aeria.comment.get.POST({
     filters: { _id: updatedTicket?.comment?._id }
   })
-  if (!error && comment) comments.value.unshift(comment)
+
+  if (!commentError && comment) {
+    comments.value.unshift(comment)
+  }
 }
 
 watch(reachedEnd, async (value) => {
-  if (!value) return
+  if (value) {
+    commentOffset.offset += 10
+    ticketLoading.value = true
 
-  commentOffset.offset += 10
-  ticketLoading.value = true
-
-  try {
-    const { error, result } = await aeria.comment.getAll.POST({
-      filters: { ticket: ticketData.value?._id },
-      limit: 10,
-      offset: commentOffset.offset
-    })
-    if (!error) comments.value.push(...(result.data || []))
-  } catch (err) {
-    console.error('Error loading comments:', err)
-  } finally {
-    ticketLoading.value = false
+    try {
+      const { error, result } = await aeria.comment.getAll.POST({
+        filters: { ticket: ticketData.value?._id },
+        limit: 10,
+        offset: commentOffset.offset
+      })
+      if (!error) {
+        comments.value = [...comments.value, ...(result.data || [])]
+      }
+    } catch (err) {
+      console.error('Error loading comments:', err)
+    } finally {
+      ticketLoading.value = false
+    }
   }
 })
 
@@ -189,5 +203,5 @@ onMounted(fetchTicket)
     </div>
   </div>
   <aeria-insert-panel v-model:visible="commentPanel" fixed-right close-hint title="Adicionar comentário"
-    collection="comment" form="['description', 'images']" @insert="handleNewComment" @cancel="commentPanel = false" />
+    collection="comment" :form="['description', 'images']" @insert="handleNewComment" @cancel="commentPanel = false" />
 </template>
