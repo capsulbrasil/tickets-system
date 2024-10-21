@@ -597,8 +597,7 @@ declare type MirrorDescriptions = {
         "type": "string"
       },
       "secret_key": {
-        "type": "string",
-        "readOnly": true
+        "type": "string"
       },
       "link_url": {
         "type": "string"
@@ -1242,7 +1241,7 @@ declare type MirrorRouter = {
       ]
     }
   },
-  "/broadcast/gateway": {
+  "/broadcast/broadcastGateway": {
     "GET": {
       "roles": "unauthenticated",
       "query": {
