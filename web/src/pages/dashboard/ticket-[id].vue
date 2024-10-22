@@ -128,8 +128,8 @@ onMounted(() => {
                     </div>
                   </aeria-icon>
                   <aeria-context-menu :actions="[
-                    { label: 'Editar', icon: 'pencil', click: () => updateStatus('Reparando') },
-                    { label: 'Deletar', icon: 'trash', click: () => updateStatus('Resolvido') }
+                    { label: 'Editar', icon: 'pencil', click: () => null },
+                    { label: 'Deletar', icon: 'trash', click: () => null }
                   ]">
                     <aeria-icon icon="pencil-line" class="tw-pl-3 tw-cursor-pointer"></aeria-icon>
                   </aeria-context-menu>
@@ -164,8 +164,8 @@ onMounted(() => {
               <div class="tw-font-[600] tw-text-lg ">{{ capitalizeText(ticketData.title) }}</div>
             </div>
             <aeria-context-menu :actions="[
-              { label: 'Reparando', icon: 'gear-six', click: () => null },
-              { label: 'Resolvido', icon: 'check', click: () => null }
+              { label: 'Reparando', icon: 'gear-six', click: () => updateStatus('Reparando') },
+              { label: 'Finalizado', icon: 'check', click: () => updateStatus('Resolvido') }
             ]">
               <div
                 class="tw-flex tw-items-center tw-cursor-pointer tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-5)] tw-pl-2">
