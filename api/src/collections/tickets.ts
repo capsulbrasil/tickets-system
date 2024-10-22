@@ -49,8 +49,13 @@ export const ticket = extendTicketCollection({
         } = insertEither.result;
 
         if (payload.what._id && comment) {
+          const { result: topic } =
+            await context.collections.topic.functions.get({
+              filters: { _id: payload.what.topic },
+            });
+
           const { error: commentError } = await discordAPI.sendMessage({
-            channelId: "1295364001542438912",
+            channelId: topic?.discord_channel_id as string,
             message: {
               content: `@everyone\n> [${comment?.owner?.name}](${
                 "https://suporte.capsulbrasil.com.br/dashboard/c/user/" +
