@@ -497,6 +497,9 @@ declare type MirrorDescriptions = {
         "indexes": [
           "ticket"
         ]
+      },
+      "count": {
+        "type": "string"
       }
     },
     "owned": "on-write",

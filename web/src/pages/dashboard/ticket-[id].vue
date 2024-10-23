@@ -128,10 +128,10 @@ onMounted(() => {
                     </div>
                   </aeria-icon>
                   <aeria-context-menu :actions="[
-                    { label: 'Editar', icon: 'pencil', click: () => null },
+                    { label: 'Editar', icon: 'pencil-simple-line', click: () => null },
                     { label: 'Deletar', icon: 'trash', click: () => null }
                   ]">
-                    <aeria-icon icon="pencil-line" class="tw-pl-3 tw-cursor-pointer"></aeria-icon>
+                    <aeria-icon icon="pencil-simple" class="tw-pl-3 tw-cursor-pointer"></aeria-icon>
                   </aeria-context-menu>
                 </div>
               </div>

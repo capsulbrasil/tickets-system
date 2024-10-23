@@ -34,6 +34,7 @@ export const ticket = extendTicketCollection({
   },
   functions: {
     insert: async (payload: InsertPayload<Ticket>, context) => {
+      const isStatusUpdate = payload.what.comment == null;
       const insertEither = await originalInsert(payload, context);
 
       if (insertEither.result && context.token.authenticated === true) {
@@ -48,7 +49,7 @@ export const ticket = extendTicketCollection({
           observation,
         } = insertEither.result;
 
-        if (payload.what._id && comment) {
+        if (!isStatusUpdate && comment) {
           const { result: topic } =
             await context.collections.topic.functions.get({
               filters: { _id: payload.what.topic },

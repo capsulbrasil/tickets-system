@@ -55,6 +55,7 @@
       [Status.Reparando]: result.totalByStatus.Reparando || 0,
       [Status.Resolvido]: result.totalByStatus.Resolvido || 0,
     };
+
     //@ts-ignore
     topicCount.value = result.totalByTopic || {};
     //@ts-ignore
@@ -155,6 +156,9 @@
       </template>
       <template #row-created_at="{ row, column }">
         {{ new Date(row[column]).toLocaleDateString('pt-BR') }}
+      </template>
+      <template>
+        teste
       </template>
     </aeria-crud>
   </template>
