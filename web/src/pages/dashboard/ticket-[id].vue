@@ -62,6 +62,20 @@ const updateStatus = async (newStatus: 'Reparando' | 'Resolvido') => {
   }
 }
 
+const handleRemoveComment = async (commentId: string) => {
+  const { error, result: removeComment } = await aeria.comment.remove.POST({
+    filters: { _id: commentId }
+  })
+
+  if (error) {
+    return error
+  }
+
+  if (removeComment) {
+    comments.value = comments.value.filter(comment => comment._id !== commentId)
+  }
+}
+
 const handleNewComment = async (newComment: CollectionItemWithId<"comment">) => {
   const { error, result: updatedTicket } = await aeria.ticket.insert.POST({
     what: { _id: ticketData.value?._id, comment: newComment._id }
@@ -119,20 +133,16 @@ onMounted(() => {
               'tw-w-1/2 tw-bg-[color:var(--theme-background-color-shade-5)] tw-p-3 tw-rounded-sm tw-m-3 tw-mt-1',
               comment.owner?._id === ticketData.owner?._id ? 'tw-text-right' : 'tw-text-left'
             ]">
-              <div class="tw-flex tw-justify-between">
+              <div class="tw-flex tw-justify-between tw-items-center">
                 <div class="tw-text-xs">{{ comment.owner?.name }}</div>
-                <div class="tw-flex tw-justify-between tw-items-center">
+                <div class="tw-flex tw-justify-between">
                   <aeria-icon icon="calendar-blank" class="">
                     <div class="tw-text-xs">
                       {{ formatDateTime(comment.created_at, { hours: true }) }}
                     </div>
                   </aeria-icon>
-                  <aeria-context-menu :actions="[
-                    { label: 'Editar', icon: 'pencil-simple-line', click: () => null },
-                    { label: 'Deletar', icon: 'trash', click: () => null }
-                  ]">
-                    <aeria-icon icon="pencil-simple" class="tw-pl-3 tw-cursor-pointer"></aeria-icon>
-                  </aeria-context-menu>
+                  <aeria-icon icon="trash-simple" @click="handleRemoveComment(comment._id)"
+                    class="tw-pl-3 tw-cursor-pointer" style="--icon-size: 1rem"></aeria-icon>
                 </div>
               </div>
               <hr class="tw-border" />

@@ -137,7 +137,6 @@ collection Ticket {
     updated_at str @format("date-time")
     owner User @populate([roles, email])
     comment Comment @populate([description, owner])
-    count str
   }
   functions {
     count @expose
@@ -182,9 +181,9 @@ collection Broadcast {
 }
 
 collection  Contacts { 
-  table {
-    images
+   table {
     name
+    organization
     email
     phone
     detail
@@ -212,7 +211,7 @@ collection  Contacts {
   properties {
     name str
     organization str
-    phone str @mask(["(##) #####-####"])
+    phone str @mask(["(##) ####-####"])
     email str
     detail str @element("textarea")
   }

@@ -7,6 +7,7 @@ export const customer = registerStore((context) =>
       state: {},
       actions: () => ({
         viewContent(ticket: { _id: string }) {
+          //@ts-ignore
           ROUTER.push({
             path: "/dashboard/ticket-" + ticket._id,
           });

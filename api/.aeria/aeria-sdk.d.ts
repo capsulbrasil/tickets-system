@@ -206,7 +206,7 @@ declare type MirrorDescriptions = {
       "phone": {
         "type": "string",
         "mask": [
-          "(##) #####-####"
+          "(##) ####-####"
         ]
       },
       "email": {
@@ -232,8 +232,8 @@ declare type MirrorDescriptions = {
       }
     },
     "table": [
-      "images",
       "name",
+      "organization",
       "email",
       "phone",
       "detail"
@@ -497,9 +497,6 @@ declare type MirrorDescriptions = {
         "indexes": [
           "ticket"
         ]
-      },
-      "count": {
-        "type": "string"
       }
     },
     "owned": "on-write",
