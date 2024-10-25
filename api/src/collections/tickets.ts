@@ -48,7 +48,7 @@ export const ticket = extendTicketCollection({
           observation,
         } = insertEither.result;
 
-        if (payload.what._id && comment) {
+        /* if (payload.what._id && comment) {
           const { error: commentError } = await discordAPI.sendMessage({
             channelId: "1295364001542438912",
             message: {
@@ -65,7 +65,7 @@ export const ticket = extendTicketCollection({
           if (commentError) {
             console.error("Error sending comment message:", commentError);
           }
-        }
+        } */
 
         if (!payload.what._id) {
           const files: NonNullable<MessageCreateOptions["files"]>[number][] =
@@ -87,7 +87,7 @@ export const ticket = extendTicketCollection({
             await context.collections.topic.functions.get({
               filters: { _id: payload.what.topic },
             });
-          const { error } = await discordAPI.sendMessage({
+         /*  const { error } = await discordAPI.sendMessage({
             channelId: topic?.discord_channel_id as string,
             message: {
               content: `### **Novo Ticket:** [${title}](${
@@ -101,7 +101,7 @@ export const ticket = extendTicketCollection({
 
           if (error) {
             console.error("Error sending ticket notification:" + error);
-          }
+          } */
         }
       }
       return insertEither;
