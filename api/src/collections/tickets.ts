@@ -47,7 +47,29 @@ export const ticket = extendTicketCollection({
           _id,
           comment,
           observation,
+          status,
         } = insertEither.result;
+
+        if (isStatusUpdate) {
+          const { result: topic } =
+            await context.collections.topic.functions.get({
+              filters: { _id: payload.what.topic },
+            });
+
+          const { error: statusError } = await discordAPI.sendMessage({
+            channelId: topic?.discord_channel_id as string,
+            message: {
+              content: `@everyone\n> Status atualizado: [${title}](${
+                "https://suporte.capsulbrasil.com.br/dashboard/ticket-" + _id
+              }) foi alterado para **${status}**.`,
+            },
+            notFromMainServer: true,
+          });
+
+          if (statusError) {
+            console.error("Error sending status update message:", statusError);
+          }
+        }
 
         if (!isStatusUpdate && comment) {
           const { result: topic } =
@@ -100,7 +122,7 @@ export const ticket = extendTicketCollection({
                 "https://suporte.capsulbrasil.com.br/dashboard/ticket-" + _id
               })\n> **Criado por:** ${
                 owner?.name
-              }\n> **Prioridade:** ${priority}\n> **Descrição:** ${description}\n> **Observação:** ${observation}`,
+              }\n> **Prioridade:** ${priority}\n> **Descrição:** ${description}\n>>> **Observação:** ${observation}`,
               files,
             },
           });

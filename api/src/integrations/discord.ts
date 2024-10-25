@@ -11,9 +11,10 @@ import { Result } from "aeria";
 
 const discord = {
   client: new Client({
-    intents: [GatewayIntentBits.Guilds],
+    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
   }),
   mainServerManager: {} as GuildChannelManager,
+  channelCache: new Map<string, Channel>(),
 };
 
 const checkClient = async () => {
@@ -52,12 +53,18 @@ const sendMessage = async (
   await checkClient();
 
   try {
-    let channel: Channel | null;
+    let channel = discord.channelCache.get(params.channelId) || null;
 
-    if (params.notFromMainServer) {
-      channel = await discord.client.channels.fetch(params.channelId);
-    } else {
-      channel = await discord.mainServerManager.fetch(params.channelId);
+    if (!channel) {
+      if (params.notFromMainServer) {
+        channel = await discord.client.channels.fetch(params.channelId);
+      } else {
+        channel = await discord.mainServerManager.fetch(params.channelId);
+      }
+
+      if (channel) {
+        discord.channelCache.set(params.channelId, channel);
+      }
     }
 
     if (channel?.isTextBased() && channel.isSendable()) {
@@ -66,7 +73,7 @@ const sendMessage = async (
     }
 
     return Result.result({
-      message: "Not an text based channel, ignoring.",
+      message: "Not a text-based or sendable channel, ignoring.",
     });
   } catch (error) {
     if (error instanceof DiscordAPIError) {

@@ -24,14 +24,16 @@ const commentOffset = reactive({ offset: 0 })
 const commentsContainer = ref<HTMLElement | null>(null)
 const comments = ref<CollectionItemWithId<'comment'>[]>([])
 
-const { reachedEnd, detach: detachScrollListener } = useScrollObserver(commentsContainer, {
-  antecipate: 200
+const { reachedEnd } = useScrollObserver(commentsContainer, {
+  antecipate: 100
 })
 
 const fetchTicket = async () => {
   const { error, result } = await aeria.ticket.get.POST({ filters: { _id: ticketProps.id } });
 
-  if (error) return;
+  if (error) {
+    return error;
+  }
 
   ticketData.value = result;
 
@@ -123,38 +125,46 @@ onMounted(() => {
     <div class="tw-flex tw-gap-3">
       <div
         class="tw-w-1/2 tw-p-3 tw-flex tw-flex-col tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-3)]">
-        <section
+
+        <section ref="commentsContainer"
           class="tw-flex-1 tw-flex tw-flex-col tw-bg-[color:var(--theme-background-color-shade-4)] tw-overflow-y-auto tw-max-h-[43rem]">
-          <div v-for="comment in comments" :key="comment._id" :class="[
-            'tw-flex',
-            comment.owner?._id === ticketData.owner?._id ? 'tw-justify-end' : 'tw-justify-start'
-          ]">
-            <div :class="[
-              'tw-w-1/2 tw-bg-[color:var(--theme-background-color-shade-5)] tw-p-3 tw-rounded-sm tw-m-3 tw-mt-1',
-              comment.owner?._id === ticketData.owner?._id ? 'tw-text-right' : 'tw-text-left'
+          <div v-if="comments.length > 0">
+            <div v-for="comment in comments" :key="comment._id" :class="[
+              'tw-flex',
+              comment.owner?._id === ticketData.owner?._id ? 'tw-justify-end' : 'tw-justify-start'
             ]">
-              <div class="tw-flex tw-justify-between tw-items-center">
-                <div class="tw-text-xs">{{ comment.owner?.name }}</div>
-                <div class="tw-flex tw-justify-between">
-                  <aeria-icon icon="calendar-blank" class="">
-                    <div class="tw-text-xs">
-                      {{ formatDateTime(comment.created_at, { hours: true }) }}
-                    </div>
-                  </aeria-icon>
-                  <aeria-icon icon="trash-simple" @click="handleRemoveComment(comment._id)"
-                    class="tw-pl-3 tw-cursor-pointer" style="--icon-size: 1rem"></aeria-icon>
+              <div :class="[
+                'tw-w-1/2 tw-bg-[color:var(--theme-background-color-shade-5)] tw-p-3 tw-rounded-sm tw-m-3 tw-mt-1',
+                comment.owner?._id === ticketData.owner?._id ? 'tw-text-right' : 'tw-text-left'
+              ]">
+                <div class="tw-flex tw-justify-between tw-items-center">
+                  <div class="tw-text-xs">{{ comment.owner?.name }}</div>
+                  <div class="tw-flex tw-justify-between">
+                    <aeria-icon icon="calendar-blank" class="">
+                      <div class="tw-text-xs">
+                        {{ formatDateTime(comment.created_at, { hours: true }) }}
+                      </div>
+                    </aeria-icon>
+                    <aeria-icon icon="trash-simple" @click="handleRemoveComment(comment._id)"
+                      class="tw-pl-3 tw-cursor-pointer" style="--icon-size: 1rem"></aeria-icon>
+                  </div>
                 </div>
-              </div>
-              <hr class="tw-border" />
-              <div v-if="comment.description">
-                <div class="tw-text-xs tw-whitespace-pre-line tw-overflow-hidden tw-text-ellipsis tw-break-words">
-                  {{ comment.description }}</div>
-                <div class="tw-flex tw-pt-2">
-                  <aeria-picture v-if="comment.images" class="tw-w-10 tw-h-10 tw-object-cover tw-border"
-                    v-for="image in comment.images" :url="image.link" expandable />
+                <hr class="tw-border" />
+                <div v-if="comment.description">
+                  <div class="tw-text-xs tw-whitespace-pre-line tw-overflow-hidden tw-text-ellipsis tw-break-words">
+                    {{ comment.description }}
+                  </div>
+                  <div class="tw-flex tw-pt-2">
+                    <aeria-picture v-if="comment.images" class="tw-w-10 tw-h-10 tw-object-cover tw-border"
+                      v-for="image in comment.images" :url="image.link" expandable />
+                  </div>
                 </div>
               </div>
             </div>
+          </div>
+          <div v-else class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-h-full">
+            <aeria-picture width="14rem" height="11rem" url="/chat.png" alt="Gaiola"></aeria-picture>
+            <div class="tw-opacity-75 tw-pb-3">Sem Comentários</div>
           </div>
         </section>
         <div
@@ -164,6 +174,7 @@ onMounted(() => {
             style="--icon-size: 1.5rem; cursor: pointer;">Comentar</aeria-icon>
         </div>
       </div>
+
       <div
         class="tw-w-1/2 tw-overflow-y-auto tw-max-h-[50rem] tw-p-3 tw-flex tw-h-full tw-flex-col tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-3)]">
         <div class="tw-p-2 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
@@ -223,7 +234,7 @@ onMounted(() => {
           <aeria-icon icon="paperclip" class=" tw-pb-1">Observação</aeria-icon>
           <hr class="tw-border">
           <div class="tw-flex tw-flex-col tw-items-center tw-justify-center">
-            <aeria-picture width="7rem" height="7rem" url="/empty.svg" alt="Gaiola"></aeria-picture>
+            <aeria-picture width="10rem" height="10rem" url="/observation.png" alt="Gaiola"></aeria-picture>
             <div class="tw-opacity-75 tw-pb-3">Sem observações registradas</div>
           </div>
         </div>

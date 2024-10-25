@@ -19,12 +19,12 @@ enum Status {
 type Ticket = CollectionItemWithId<'ticket'>;
 
 useStore("meta");
+// const ticketStore = useStore("ticket");
+const commentData = useStore('comment')
 
 const router = useRouter();
 const expiredTickets = ref<Ticket[]>([]);
 const topicCount = ref<{ [topic: string]: number }>({});
-
-const ticketStore = useStore("ticket");
 
 const statusCount = ref<{ [key in Status]: number }>({
   [Status.Ativo]: 0,
@@ -49,13 +49,15 @@ const topTopics = computed(() => {
 });
 
 // const sortTickets = (tickets: Ticket[]) => {
-//   return tickets.slice().sort((a, b) => {
+//   tickets.slice().sort((a, b) => {
 
 //     if (a.priority === 'Urgente' && b.priority !== 'Urgente') return -1;
 //     if (a.priority !== 'Urgente' && b.priority === 'Urgente') return 1;
 
 //     const statusOrder = { 'Ativo': 1, 'Reparando': 2, 'Resolvido': 3 };
-//     return statusOrder[a.status] - statusOrder[b.status];
+//     const statusOrdered = statusOrder[a.status] - statusOrder[b.status];
+
+//     return statusOrdered
 //   });
 // };
 
@@ -77,26 +79,27 @@ const fetchTicket = async () => {
   expiredTickets.value = result.UrgentTickets || [];
 };
 
+console.log(commentData);
+
 onMounted(() => {
   fetchTicket();
 });
 </script>
 
 <template>
-  <h1 class="tw-font-semibold">
+  <div class="tw-font-semibold tw-text-xl tw-pb-2">
     Bem-vindo {{ currentUser.name.split(' ')[0] }}, ao Suporte Capsul
-  </h1>
+  </div>
   <div class="tw-bg-[color:var(--theme-background-color-shade-2)] tw-rounded-sm tw-p-3">
     <div class="tw-flex tw-flex-col sm:tw-flex-row tw-space-y-4 sm:tw-space-y-0 sm:tw-space-x-2">
       <!--Broadcast-->
       <article class="tw-flex-1 tw-p-3 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-3)] ">
-        <aeria-icon icon="broadcast" style="--icon-size: 1.5rem">Broadcast</aeria-icon>
+        <aeria-icon icon="broadcast" style="--icon-size: 1.5rem">Comentarios</aeria-icon>
         <hr class="tw-border" />
-        <aeria-crud collection="broadcast" no-actions no-controls>
-          <template #row-title="{ row, column }">
-            <div class="tw-p-2 tw-rounded-sm tw-font-bold">{{ row[column] }}</div>
-          </template>
+        <!-- <aeria-crud collection="comment" no-actions no-controls>
         </aeria-crud>
+        <div v-for="comment in commentData">
+        </div> -->
       </article>
       <!--Dashboard-->
       <article class="tw-flex-1 tw-p-3 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-3)]">
@@ -113,8 +116,8 @@ onMounted(() => {
         <div class="tw-flex tw-space-x-2 tw-mt-2">
           <div
             class="tw-flex-1 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)] tw-overflow-y-auto tw-max-h-[20rem]">
+            <p class="tw-text-center">Demandas por Sistema</p>
             <div class="tw-p-1">
-              <p class="tw-text-center">Demandas por Sistema</p>
             </div>
             <div v-for="(count, topic) in topTopics" :key="topic"
               class="tw-flex tw-justify-between tw-items-center tw-m-1.5 tw-pl-2 tw-pr-2 tw-bg-[color:var(--theme-background-color-shade-5)]">
@@ -135,7 +138,7 @@ onMounted(() => {
               </div>
             </div>
             <div v-else class="tw-flex tw-flex-col tw-items-center tw-justify-center">
-              <aeria-picture width="10rem" height="10rem" url="/empty.svg" alt="Gaiola"></aeria-picture>
+              <aeria-picture width="10rem" height="8rem" url="/demands.png " alt="Gaiola"></aeria-picture>
               <div class="tw-opacity-75 tw-pb-3">Não há demandas pendentes no momento.</div>
             </div>
           </div>
