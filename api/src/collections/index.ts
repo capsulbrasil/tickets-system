@@ -12,12 +12,12 @@ export const topic = extendTopicCollection({
         button: true,
       },
     },
-    tableLayout: {
-      actions: {
-        viewContent: {
-          button: true,
-        },
-      },
-    },
+    // properties: {
+    //   CommentCount: {
+    //     getter: (doc: any) => {
+    //       return `${doc.comment}`;
+    //     },
+    //   },
+    // },
   },
 });

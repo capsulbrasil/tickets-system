@@ -685,13 +685,6 @@ declare type MirrorDescriptions = {
         "translate": true
       }
     },
-    "tableLayout": {
-      "actions": {
-        "viewContent": {
-          "button": true
-        }
-      }
-    },
     "actions": {
       "spawnAdd": {
         "label": "action.add",

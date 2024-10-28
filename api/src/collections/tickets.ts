@@ -3,6 +3,7 @@ import {
   throwIfError,
   insert as originalInsert,
   Result,
+  aeria,
 } from "aeria";
 import {
   extendTicketCollection,
@@ -61,7 +62,9 @@ export const ticket = extendTicketCollection({
             message: {
               content: `@everyone\n> Status atualizado: [${title}](${
                 "https://suporte.capsulbrasil.com.br/dashboard/ticket-" + _id
-              }) foi alterado para **${status}**.`,
+              }) foi alterado para **${status}** por **${
+                context.token.userinfo.name
+              }**.`,
             },
             notFromMainServer: true,
           });
