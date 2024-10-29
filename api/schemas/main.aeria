@@ -186,12 +186,6 @@ collection  Contacts {
     organization
     email
     phone
-    detail
-  }
-  required {
-    name
-    organization
-    phone
   }
   filters{
     name
@@ -213,7 +207,6 @@ collection  Contacts {
     organization str
     phone str @mask(["(##) ####-####"])
     email str
-    detail str @element("textarea")
   }
   functions {
     get @expose("unauthenticated")

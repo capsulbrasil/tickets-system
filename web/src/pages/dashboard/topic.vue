@@ -22,23 +22,23 @@ const navigateToURL = (url: string) => {
                     <p>Sem imagem</p>
                 </div>
                 <div v-else>
-                    <aeria-picture object-fit="contain" class="tw-h-4" :url="row[column].link" />
+                    <aeria-picture object-fit="contain" class="tw-h-7" :url="row[column].link" />
                 </div>
             </div>
         </template>
         <template #row-system="{ row, column }">
-            <div class="tw-font-bold">{{ row[column] }}</div>
+            <div class="tw-font-medium">{{ row[column] }}</div>
         </template>
         <template #row-secret_key="{ row, column }">
-            <aeria-icon icon="key" style="--icon-size: 1.1rem">{{ row[column] }}</aeria-icon>
+            <aeria-icon icon="key" style="--icon-size: 1.2rem">{{ row[column] }}</aeria-icon>
         </template>
         <template #row-discord_channel_id="{ row, column }">
-            <aeria-icon icon="discord-logo" style="--icon-size: 1.3rem">{{ row[column] }}</aeria-icon>
+            <aeria-icon icon="discord-logo" style="--icon-size: 1.2rem">{{ row[column] }}</aeria-icon>
         </template>
         <template #row-link_url="{ row, column }">
             <div class="tw-flex">
-                <aeria-icon @click="navigateToURL(row[column])" icon="globe"
-                    style="--icon-size: 1.3rem; cursor: pointer;" reactive></aeria-icon>
+                <aeria-icon @click="navigateToURL(row[column])" icon="telegram-logo"
+                    style="--icon-size: 1.2rem; cursor: pointer;" reactive>Entrar no Sistema</aeria-icon>
             </div>
         </template>
     </aeria-crud>

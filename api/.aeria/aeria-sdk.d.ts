@@ -212,10 +212,6 @@ declare type MirrorDescriptions = {
       "email": {
         "type": "string"
       },
-      "detail": {
-        "type": "string",
-        "element": "textarea"
-      },
       "created_at": {
         "type": "string",
         "format": "date-time",
@@ -235,12 +231,6 @@ declare type MirrorDescriptions = {
       "name",
       "organization",
       "email",
-      "phone",
-      "detail"
-    ],
-    "required": [
-      "name",
-      "organization",
       "phone"
     ],
     "filters": [
@@ -614,6 +604,9 @@ declare type MirrorDescriptions = {
           "size"
         ]
       },
+      "comment_count": {
+        "readOnly": true
+      },
       "owner": {
         "$ref": "user",
         "noForm": true,
@@ -685,6 +678,9 @@ declare type MirrorDescriptions = {
         "translate": true
       }
     },
+    "tableMeta": [
+      "comment_count"
+    ],
     "actions": {
       "spawnAdd": {
         "label": "action.add",

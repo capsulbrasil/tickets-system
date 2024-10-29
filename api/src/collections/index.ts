@@ -12,12 +12,13 @@ export const topic = extendTopicCollection({
         button: true,
       },
     },
-    // properties: {
-    //   CommentCount: {
-    //     getter: (doc: any) => {
-    //       return `${doc.comment}`;
-    //     },
-    //   },
-    // },
+    tableMeta: ["comment_count"],
+    properties: {
+      comment_count: {
+        getter: (doc: any) => {
+          return `${doc.comment}`;
+        },
+      },
+    },
   },
 });

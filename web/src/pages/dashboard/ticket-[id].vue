@@ -147,7 +147,7 @@ onMounted(() => {
 <template>
   <div v-if="ticketData && comments"
     class="tw-flex tw-flex-col tw-overflow-hidden tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-2)] tw-p-3">
-    <div class="tw-flex tw-gap-3">
+    <div class="tw-flex tw-gap-3 tw-text-sm">
       <div
         class="tw-flex tw-flex-col tw-w-1/2 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-3)] tw-p-3">
 
@@ -196,7 +196,7 @@ onMounted(() => {
         </section>
 
         <div
-          class="tw-flex tw-justify-between tw-items-center tw-p-3 tw-mt-3 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
+          class="tw-flex tw-justify-between tw-items-center tw-p-3 tw-mt-3 tw-rounded-sm tw-font-medium tw-bg-[color:var(--theme-background-color-shade-4)] ">
           <aeria-icon icon="chats" style="--icon-size: 1.5rem;">Chat</aeria-icon>
           <aeria-icon icon="chat-dots" variant="alt" @click="addComment" reactive
             style="--icon-size: 1.5rem; cursor: pointer;">Comentar</aeria-icon>
@@ -211,7 +211,7 @@ onMounted(() => {
             <div class="tw-flex tw-items-center">
               <div :style="{ backgroundColor: priorityColor(ticketData?.priority) }"
                 class="tw-w-1 tw-h-9 tw-rounded-full tw-mr-2"></div>
-              <div class="tw-font-[600] tw-text-lg">{{ capitalizeText(ticketData.title) }}</div>
+              <div class="tw-font-medium tw-text-lg">{{ capitalizeText(ticketData.title) }}</div>
             </div>
 
             <aeria-context-menu :actions="[
@@ -222,7 +222,7 @@ onMounted(() => {
                 class="tw-flex tw-items-center tw-cursor-pointer tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-5)] tw-pl-2">
                 <aeria-icon icon="arrow-bend-left-down" class="tw-pr-2">{{ ticketData.status }}</aeria-icon>
                 <div :style="{ backgroundColor: statusColor(ticketData.status) }"
-                  class="tw-w-1 tw-h-9 tw-rounded-full tw-ml-2"></div>
+                  class="tw-w-1 tw-h-9 tw-rounded-full tw-ml-2 tw-font-medium "></div>
               </div>
             </aeria-context-menu>
           </div>
@@ -242,7 +242,7 @@ onMounted(() => {
         </div>
 
         <div v-if="ticketData" class="tw-p-3 tw-mt-3 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
-          <div class="tw-flex tw-justify-between tw-pb-1">
+          <div class="tw-flex tw-justify-between tw-pb-1 tw-font-medium ">
             <aeria-icon icon="ticket">Detalhamento do Ticket</aeria-icon>
             <div class="tw-flex tw-items-center">
               <aeria-icon icon="code">Sistema Referente</aeria-icon>
@@ -258,7 +258,7 @@ onMounted(() => {
 
         <div v-if="ticketData.observation"
           class="tw-p-3 tw-mt-3 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
-          <aeria-icon icon="paperclip" class="tw-pb-1">Observação</aeria-icon>
+          <aeria-icon icon="paperclip" class="tw-pb-1 tw-font-medium ">Observação</aeria-icon>
           <hr class="tw-border">
           <p class="tw-text-justify tw-whitespace-pre-line">{{ ticketData.observation }}</p>
         </div>
