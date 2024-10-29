@@ -96,7 +96,7 @@ onMounted(() => {
         <hr class="tw-border" />
         <div class="tw-overflow-y-auto tw-max-h-[22.6rem] scrollbar-minimal">
           <div v-for="comment in commentStore.items" :key="comment._id" @click="navigateToTicket(comment.ticket?._id)"
-            class="tw-m-2 tw-mt-3 tw-bg-[color:var(--theme-background-color-shade-5)] tw-rounded-sm tw-cursor-alias">
+            class="tw-m-2 tw-mt-3 tw-bg-[color:var(--theme-background-color-shade-4)] tw-rounded-sm tw-cursor-alias">
             <div class="tw-flex tw-items-center tw-pl-2 tw-pt-2">
               <div class="tw-font-medium">{{ comment.owner?.name }}</div>
               &nbsp;comentou em&nbsp;

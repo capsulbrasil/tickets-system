@@ -490,6 +490,9 @@ declare type MirrorDescriptions = {
         "indexes": [
           "ticket"
         ]
+      },
+      "comment_count": {
+        "readOnly": true
       }
     },
     "owned": "on-write",
@@ -570,6 +573,9 @@ declare type MirrorDescriptions = {
         }
       }
     },
+    "tableMeta": [
+      "comment_count"
+    ],
     "actions": {
       "spawnAdd": {
         "label": "action.add",
@@ -606,9 +612,6 @@ declare type MirrorDescriptions = {
           "type",
           "size"
         ]
-      },
-      "comment_count": {
-        "readOnly": true
       },
       "owner": {
         "$ref": "user",
@@ -681,9 +684,6 @@ declare type MirrorDescriptions = {
         "translate": true
       }
     },
-    "tableMeta": [
-      "comment_count"
-    ],
     "actions": {
       "spawnAdd": {
         "label": "action.add",

@@ -32,6 +32,14 @@ export const ticket = extendTicketCollection({
         },
       },
     },
+    tableMeta: ["comment_count"],
+    properties: {
+      comment_count: {
+        getter: (doc: any) => {
+          return `${doc.comment}`;
+        },
+      },
+    },
   },
   functions: {
     insert: async (payload: InsertPayload<Ticket>, context) => {
