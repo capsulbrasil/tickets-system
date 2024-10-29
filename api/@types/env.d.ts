@@ -12,7 +12,11 @@ declare global {
       | 'DISCORD_API_SECRET'
       | 'DISCORD_BOT_TOKEN'
       | 'DISCORD_MAIN_SERVER_ID'
-      | 'DISCORD_ANNOUNCEMENTS_CHANNEL_ID',
+      | 'DISCORD_ANNOUNCEMENTS_CHANNEL_ID'
+      | "ZAPMEOW_CHECK_USER_URL"
+      | "ZAPMEOW_SEND_TEXT_URL"
+      | "ZAPMEOW_SEND_IMAGE_URL"
+      | "ZAPMEOW_INSTACE_ID",
       string
     > {}
   }

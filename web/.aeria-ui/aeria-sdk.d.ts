@@ -118,6 +118,9 @@ declare type MirrorDescriptions = {
           "accept": [
             "image/*"
           ],
+          "populate": [
+            "absolute_path"
+          ],
           "indexes": [
             "name",
             "link",
