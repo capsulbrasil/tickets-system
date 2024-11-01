@@ -3,6 +3,7 @@ import "../../style/styles.css";
 import { onMounted, ref, computed } from 'vue';
 import type { CollectionItemWithId } from '@aeriajs/types';
 import { capitalizeText, statusColor, priorityColor } from '../../utils.js';
+import TicketId from "./ticket-[id].vue";
 
 definePage({
   meta: {
@@ -48,9 +49,7 @@ const fetchComments = async () => {
     return commentsFetchError;
   }
 
-  if (fetchedComments) {
-    comments.value = fetchedComments || [];
-  }
+  comments.value = fetchedComments || [];
 };
 
 const fetchTicketsData = async () => {
@@ -82,17 +81,16 @@ onMounted(() => {
 });
 </script>
 
-
 <template>
   <div class="tw-font-medium tw-text-xl tw-pb-2">
     Bem-vindo {{ currentUser.name.split(' ')[0] }}, ao Suporte Capsul
   </div>
 
-  <div class="tw-bg-[color:var(--theme-background-color-shade-2)] tw-rounded-sm tw-p-3 tw-text-sm">
+  <div class="tw-bg-[color:var(--theme-background-color-shade-2)] tw-rounded-sm tw-p-3 tw-text-sm ">
     <div class="tw-flex tw-flex-col sm:tw-flex-row tw-space-y-4 sm:tw-space-y-0 sm:tw-space-x-2">
 
       <section class="tw-flex-1 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-3)] tw-p-3">
-        <aeria-icon icon="chat-text" style="--icon-size: 1.5rem" class="tw-font-medium">Comentários</aeria-icon>
+        <aeria-icon icon="wechat-logo" style="--icon-size: 1.5rem" class="tw-font-medium">Mensagens</aeria-icon>
         <hr class="tw-border" />
         <div class="tw-overflow-y-auto tw-max-h-[22.6rem] scrollbar-minimal">
           <div v-for="comment in commentStore.items" :key="comment._id" @click="navigateToTicket(comment.ticket?._id)"
@@ -128,7 +126,10 @@ onMounted(() => {
         </div>
         <div class="tw-flex tw-space-x-2 tw-mt-2 tw-h-[18.5rem]">
           <div class="tw-flex-1 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
-            <p class="tw-text-center tw-p-1 tw-font-medium">Demandas por Sistema</p>
+            <div class="tw-flex tw-items-center tw-justify-center tw-text-center tw-w-full">
+              <p class="tw-font-medium tw-p-1">Demandas por Sistema</p>
+              <aeria-icon icon="cpu" class="tw-m-2"></aeria-icon>
+            </div>
             <div class="tw-overflow-y-auto tw-max-h-[15rem] scrollbar-minimal">
               <div v-for="(count, topic) in topicOrdering" :key="topic"
                 class="tw-flex tw-justify-between tw-m-1.5 tw-pl-2 tw-pr-2 tw-bg-[color:var(--theme-background-color-shade-5)]">
@@ -140,7 +141,7 @@ onMounted(() => {
           <div class="tw-flex-1 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
             <div class="tw-flex tw-items-center tw-justify-center tw-text-center tw-w-full">
               <p class="tw-font-medium tw-p-1">Demandas Pendentes</p>
-              <aeria-icon icon="clock-counter-clockwise" class="tw-ml-2"></aeria-icon>
+              <aeria-icon icon="clock-counter-clockwise" class="tw-m-2"></aeria-icon>
             </div>
 
             <div class="tw-overflow-y-auto tw-max-h-[15rem] scrollbar-minimal">

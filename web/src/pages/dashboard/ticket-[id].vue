@@ -153,6 +153,7 @@ onMounted(() => {
 
         <section ref="commentsContainer"
           class="tw-flex tw-flex-col tw-max-h-[43rem] tw-overflow-y-auto scrollbar-minimal tw-bg-[color:var(--theme-background-color-shade-4)] tw-flex-1">
+
           <div v-if="comments.length > 0">
             <div v-for="comment in comments" :key="comment._id" :class="[
               'tw-flex',
@@ -160,7 +161,7 @@ onMounted(() => {
             ]">
               <div :class="[
                 'tw-w-1/2 tw-m-3 tw-mt-1 tw-p-3 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-5)]',
-                comment.owner?._id === user?._id ? 'tw-text-right' : 'tw-text-left'
+                'tw-text-left'
               ]">
 
                 <div class="tw-flex tw-justify-between tw-items-center">
@@ -175,9 +176,11 @@ onMounted(() => {
                       class="tw-pl-3 tw-cursor-pointer" style="--icon-size: 1rem"></aeria-icon>
                   </div>
                 </div>
+
                 <hr class="tw-border" />
+
                 <div v-if="comment.description"
-                  class="tw-text-xs tw-whitespace-pre-line tw-overflow-hidden tw-text-ellipsis tw-break-words">
+                  class="tw-text-xs tw-whitespace-pre-line tw-overflow-hidden tw-text-ellipsis tw-break-words tw-text-left">
                   {{ comment.description }}
                 </div>
 
