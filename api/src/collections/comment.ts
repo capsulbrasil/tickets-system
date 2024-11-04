@@ -1,4 +1,4 @@
-import { CollectionItemWithId, InsertPayload, ObjectId, insert as originalInsert, Result } from "aeria";
+import { ACError, HTTPStatus, InsertPayload, ObjectId, insert as originalInsert, Result } from "aeria";
 import { extendCommentCollection, Comment } from "../../.aeria/out/collections/comment.mjs";
 import { whatsappMessage } from "../integrations/whatsapp.js";
 
@@ -24,8 +24,10 @@ export const comment = extendCommentCollection({
     },
     functions:{
         insert: async (payload: InsertPayload<Comment>, context) => {
+            if(!context.token.authenticated){
+                return context.error(HTTPStatus.Forbidden, {code:ACError.AuthorizationError})
+            }
             const {error,result} = await originalInsert(payload, context);
-            //return insertEither
             if(error){
                 return Result.error(error)
             }
@@ -46,7 +48,7 @@ export const comment = extendCommentCollection({
                                     from:"user",
                                     localField:"owner",
                                     foreignField:"_id",
-                                    as:"owner"
+                                    as:"owner",
                                 }
                             },
                             {
@@ -98,12 +100,37 @@ export const comment = extendCommentCollection({
                             ]
                         }
                     }
+                },
+                {
+                    $project:{
+                        phones:{
+                            $filter:{
+                              input:"$phones",
+                              as:"phone",
+                              cond:{
+                                $and:[
+                                  {$ne:["$$phone", ""]},
+                                  {$ne:["$$phone", null]}
+                                ]
+                              }
+                            }
+                        }
+                    }
                 }
             ]).next()
-
+            console.log(allNumbers)
             if (allNumbers){
+                const {error:userError, result:user} = await context.collections.user.functions.get({
+                    filters:{
+                        _id: context.token.sub
+                    }
+                })
+                if(userError){
+                    return Result.error(userError)
+                }
+                const message = `Comentário feito por *${user.name}*, no ticket *${result.ticket?.title}* https://suporte.capsulbrasil.com.br/dashboard/ticket-${result.ticket?._id} :\n*Comentário:* ${result.description}`
                 for(const phone of allNumbers.phones){
-                    whatsappMessage(phone, result.description, result.images?.map(image => image.absolute_path)).catch(console.trace)
+                    whatsappMessage(phone, message, result.images?.map(image => image.absolute_path)).catch(console.trace)
                 }
             }
             

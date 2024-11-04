@@ -12,7 +12,12 @@ async function checkUserPhone(phoneNumber:string): Promise<false|string> {
         method:'POST',
         body:JSON.stringify({phones:[phoneNumber]})
     })
+    
     const phoneResponse = await checkPhone.json()
+    
+    if(phoneResponse.phones.length === 0){
+        return false
+    }
     if (!phoneResponse.phones[0].is_registered){
         return false
     }

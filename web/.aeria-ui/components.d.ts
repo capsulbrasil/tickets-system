@@ -10,10 +10,8 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AeriaBadge: typeof import('@aeria-ui/ui')['AeriaBadge']
-    AeriaButton: typeof import("@aeria-ui/ui")["AeriaButton"]
     AeriaContextMenu: typeof import('@aeria-ui/ui')['AeriaContextMenu']
     AeriaCrud: typeof import('@aeria-ui/ui')['AeriaCrud']
-    AeriaGrid: typeof import("@aeria-ui/ui")["AeriaGrid"]
     AeriaIcon: typeof import('@aeria-ui/ui')['AeriaIcon']
     AeriaInsertPanel: typeof import('@aeria-ui/ui')['AeriaInsertPanel']
     AeriaPicture: typeof import('@aeria-ui/ui')['AeriaPicture']
