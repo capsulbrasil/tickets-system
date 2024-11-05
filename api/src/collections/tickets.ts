@@ -12,6 +12,7 @@ import {
 } from "../../.aeria/out/collections/ticket.mjs";
 import { discordAPI } from "../integrations/index.js";
 import { MessageCreateOptions } from "discord.js";
+import { comment } from "./comment.js";
 
 export const ticket = extendTicketCollection({
   description: {
@@ -25,18 +26,19 @@ export const ticket = extendTicketCollection({
         button: true,
       },
     },
+    // table: ["user_muted"],
+    // properties: {
+    //   user_muted: {
+    //     getter: (doc: any) => {
+    //       console.log(doc);
+    //       return `${doc.status}`;
+    //     },
+    //   },
+    // },
     tableLayout: {
       actions: {
         viewContent: {
           button: true,
-        },
-      },
-    },
-    tableMeta: ["comment_count"],
-    properties: {
-      comment_count: {
-        getter: (doc: any) => {
-          return `${doc.comment}`;
         },
       },
     },

@@ -490,9 +490,6 @@ declare type MirrorDescriptions = {
         "indexes": [
           "ticket"
         ]
-      },
-      "comment_count": {
-        "readOnly": true
       }
     },
     "owned": "on-write",
@@ -573,9 +570,6 @@ declare type MirrorDescriptions = {
         }
       }
     },
-    "tableMeta": [
-      "comment_count"
-    ],
     "actions": {
       "spawnAdd": {
         "label": "action.add",
@@ -1475,7 +1469,7 @@ declare module 'aeria-sdk' {
         ? Fn extends keyof CollectionFunctionsSDK
           ? Record<Coll, Record<
               Fn, {
-              POST: CollectionFunctionsSDK<SchemaWithId<MirrorDescriptions[Coll]>>[Fn]
+              POST: CollectionFunctionsSDK<MirrorDescriptions[Coll]>[Fn]
             }
             >>
           : InferEndpoint<Route>
