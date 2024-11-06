@@ -107,6 +107,7 @@ collection Ticket {
     status
     priority
     created_at
+    status_changed_by
   }
    form {
     title
@@ -125,6 +126,7 @@ collection Ticket {
       "Reparando",
       "Resolvido"
     ] ) 
+    status_changed_by str
     priority enum @values([
       "Baixa",
       "Moderada",

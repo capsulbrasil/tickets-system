@@ -1,10 +1,4 @@
-import {
-  InsertPayload,
-  throwIfError,
-  insert as originalInsert,
-  Result,
-  aeria,
-} from "aeria";
+import { InsertPayload, insert as originalInsert } from "aeria";
 import {
   extendTicketCollection,
   Ticket,
@@ -12,7 +6,6 @@ import {
 } from "../../.aeria/out/collections/ticket.mjs";
 import { discordAPI } from "../integrations/index.js";
 import { MessageCreateOptions } from "discord.js";
-import { comment } from "./comment.js";
 
 export const ticket = extendTicketCollection({
   description: {
@@ -26,14 +19,6 @@ export const ticket = extendTicketCollection({
         button: true,
       },
     },
-    // table: ["user_muted"],
-    // properties: {
-    //   user_muted: {
-    //     getter: (doc: any) => {
-    //       return doc.status;
-    //     },
-    //   },
-    // },
     tableLayout: {
       actions: {
         viewContent: {

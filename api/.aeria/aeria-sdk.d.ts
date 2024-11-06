@@ -429,6 +429,9 @@ declare type MirrorDescriptions = {
           "Resolvido"
         ]
       },
+      "status_changed_by": {
+        "type": "string"
+      },
       "priority": {
         "enum": [
           "Baixa",
@@ -498,7 +501,8 @@ declare type MirrorDescriptions = {
       "topic",
       "status",
       "priority",
-      "created_at"
+      "created_at",
+      "status_changed_by"
     ],
     "required": [
       "title",

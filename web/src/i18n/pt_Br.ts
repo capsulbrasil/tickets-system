@@ -10,6 +10,7 @@ export const ptbr = defineLocale({
   images: "Imagem",
   link_url: "URL",
   name: "Nome",
+  status_changed_by: "Aberto por",
   observation: "Observação",
   organization: ["Organização", "Organizações"],
   phone: "Telefone",

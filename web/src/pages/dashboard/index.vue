@@ -104,7 +104,7 @@ onMounted(() => {
               </div>
               <div class="tw-flex">
                 <aeria-picture v-if="comment.images" class="tw-w-10 tw-h-10 tw-object-cover tw-border"
-                  v-for="image in comment.images" :key="image.link" :url="image.link" expandable />
+                  v-for="image in comment.images" :key="image.link" alt="gaiola" :url="image.link" expandable />
               </div>
             </div>
           </div>
@@ -169,7 +169,7 @@ onMounted(() => {
     <template #row-topic="{ row, column }">
       <div class="tw-flex">
         <div v-if="!row[column]?.image.link">Sem imagem</div>
-        <aeria-picture v-else object-fit="contain" class="tw-h-4" :url="row[column].image.link" />
+        <aeria-picture v-else object-fit="contain" class="tw-h-4" alt="icone" :url="row[column].image.link" />
       </div>
     </template>
     <template #row-priority="{ row, column }">
@@ -186,6 +186,15 @@ onMounted(() => {
     </template>
     <template #row-created_at="{ row, column }">
       {{ new Date(row[column]).toLocaleDateString('pt-BR') }}
+    </template>
+    <template #row-status_changed_by="{ row, column }">
+
+      <div v-if="row[column]">
+        <aeria-icon icon="eye">{{ row[column] }}</aeria-icon>
+      </div>
+      <div v-else>
+        <aeria-icon icon="eye-closed">Aguardando Abertura</aeria-icon>
+      </div>
     </template>
   </aeria-crud>
 </template>

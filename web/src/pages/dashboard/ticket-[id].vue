@@ -25,6 +25,7 @@ const paginationOffset = reactive({ offset: 0 });
 const commentsContainer = ref<HTMLElement | null>(null);
 const comments = ref<CollectionItemWithId<'comment'>[]>([]);
 const user = ref<CollectionItemWithId<"user">>()
+const userChangedStatusInTicket = ref<string | null>(null);
 
 const { reachedEnd } = useScrollObserver(commentsContainer, {
   antecipate: 100,
@@ -38,6 +39,7 @@ const fetchTicket = async () => {
   }
 
   ticketData.value = fetchedTicket;
+  userChangedStatusInTicket.value = fetchedTicket.status_changed_by || null
 
   const { error: commentFetchError, result: fetchedComments } = await aeria.comment.getAll.POST({
     filters: { ticket: ticketProps.id },
@@ -73,20 +75,19 @@ const currentUser = async () => {
 const updateStatus = async (newStatus: 'Reparando' | 'Resolvido') => {
   if (!ticketData.value) return;
 
-  const alias = newStatus === 'Reparando' ? user.value?.name : null;
-
   const { error: statusUpdateError, result: updatedStatus } = await aeria.ticket.insert.POST({
-    what: { _id: ticketData.value._id, status: newStatus },
+    what: { _id: ticketData.value._id, status: newStatus, status_changed_by: user.value?.name },
   });
 
   if (!statusUpdateError && updatedStatus) {
     ticketData.value = {
       ...ticketData.value,
       status: updatedStatus.status,
+      status_changed_by: updatedStatus.status_changed_by
     };
+    userChangedStatusInTicket.value = ticketData.value.status_changed_by || null
   };
 };
-
 
 const handleRemoveComment = async (commentId: string) => {
   const { error: commentDeletionError, result: deletedComment } = await aeria.comment.remove.POST({
@@ -107,16 +108,18 @@ const handleNewComment = async (newComment: CollectionItemWithId<'comment'>) => 
     what: { _id: ticketData.value?._id, comment: newComment._id },
   });
 
-  if (ticketUpdateError) {
-    return ticketUpdateError;
-  }
+  if (ticketWithNewComment) {
+    const { error: commentFetchError, result: newFetchedComment } = await aeria.comment.get.POST({
+      filters: { _id: ticketWithNewComment.comment?._id },
+    });
 
-  const { error: commentFetchError, result: newFetchedComment } = await aeria.comment.get.POST({
-    filters: { _id: ticketWithNewComment?.comment?._id },
-  });
+    if (ticketUpdateError || commentFetchError) {
+      return console.error(ticketUpdateError, commentFetchError)
+    }
 
-  if (!commentFetchError && newFetchedComment) {
-    comments.value.unshift(newFetchedComment);
+    if (newFetchedComment) {
+      comments.value.unshift(newFetchedComment);
+    }
   }
 };
 
@@ -191,8 +194,8 @@ onMounted(() => {
                 </div>
 
                 <div v-if="comment.images" class="tw-flex tw-pt-2">
-                  <aeria-picture v-for="image in comment.images" :key="image._id" :url="image.link" expandable
-                    class="tw-w-10 tw-h-10 tw-object-cover tw-border" />
+                  <aeria-picture v-for="image in comment.images" :key="image._id" alt="comentarios" :url="image.link"
+                    expandable class="tw-w-10 tw-h-10 tw-object-cover tw-border" />
                 </div>
               </div>
             </div>
@@ -251,23 +254,24 @@ onMounted(() => {
 
           <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-items-start sm:tw-items-center tw-pb-2">
             <aeria-icon icon="at" class="tw-pr-1">{{ ticketData.owner?.email }}</aeria-icon>
-            <aeria-icon icon="arrows-clockwise" class="tw-mt-2 sm:tw-mt-0">{{ formatDateTime(ticketData.updated_at)
-              }}</aeria-icon>
+            <aeria-icon icon="wrench" class="tw-mt-2 sm:tw-mt-0">{{
+              userChangedStatusInTicket === null ? "Aguardando Ação" : userChangedStatusInTicket }}</aeria-icon>
           </div>
         </div>
 
         <div v-if="ticketData" class="tw-p-3 tw-mt-3 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
           <div class="tw-flex tw-justify-between tw-pb-1 tw-font-medium ">
+
             <aeria-icon icon="ticket">Detalhamento do Ticket</aeria-icon>
             <div class="tw-flex tw-items-center">
               <aeria-icon icon="code">Sistema Referente</aeria-icon>
-              <aeria-picture v-if="ticketData.topic.image?.link" :url="ticketData.topic.image?.link"
+              <aeria-picture v-if="ticketData.topic.image?.link" alt="sistema" :url="ticketData.topic.image?.link"
                 class="tw-h-5 tw-pl-3" object-fit="contain" />
             </div>
           </div>
           <hr class="tw-border">
           <p class="tw-text-justify tw-whitespace-pre-line">{{ ticketData.description }}</p>
-          <aeria-picture v-if="ticketData.attached?.link" :url="ticketData.attached.link" expandable
+          <aeria-picture v-if="ticketData.attached?.link" alt="descris" :url="ticketData.attached.link" expandable
             object-fit="contain" />
         </div>
 
