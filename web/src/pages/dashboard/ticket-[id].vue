@@ -73,14 +73,20 @@ const currentUser = async () => {
 const updateStatus = async (newStatus: 'Reparando' | 'Resolvido') => {
   if (!ticketData.value) return;
 
+  const alias = newStatus === 'Reparando' ? user.value?.name : null;
+
   const { error: statusUpdateError, result: updatedStatus } = await aeria.ticket.insert.POST({
     what: { _id: ticketData.value._id, status: newStatus },
   });
 
   if (!statusUpdateError && updatedStatus) {
-    ticketData.value = { ...ticketData.value, status: updatedStatus.status };
-  }
+    ticketData.value = {
+      ...ticketData.value,
+      status: updatedStatus.status,
+    };
+  };
 };
+
 
 const handleRemoveComment = async (commentId: string) => {
   const { error: commentDeletionError, result: deletedComment } = await aeria.comment.remove.POST({

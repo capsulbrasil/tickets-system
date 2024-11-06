@@ -490,6 +490,9 @@ declare type MirrorDescriptions = {
         "indexes": [
           "ticket"
         ]
+      },
+      "user_muted": {
+        "readOnly": true
       }
     },
     "owned": "on-write",
@@ -498,7 +501,8 @@ declare type MirrorDescriptions = {
       "topic",
       "status",
       "priority",
-      "created_at"
+      "created_at",
+      "user_muted"
     ],
     "required": [
       "title",

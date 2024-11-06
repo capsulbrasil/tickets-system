@@ -30,8 +30,7 @@ export const ticket = extendTicketCollection({
     // properties: {
     //   user_muted: {
     //     getter: (doc: any) => {
-    //       console.log(doc);
-    //       return `${doc.status}`;
+    //       return doc.status;
     //     },
     //   },
     // },
@@ -61,7 +60,7 @@ export const ticket = extendTicketCollection({
           status,
         } = insertEither.result;
 
-        if (isStatusUpdate) {
+        if (isStatusUpdate && status !== "Ativo") {
           const { result: topic } =
             await context.collections.topic.functions.get({
               filters: { _id: payload.what.topic },
