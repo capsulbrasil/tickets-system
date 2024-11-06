@@ -153,9 +153,10 @@ onMounted(() => {
 <template>
   <div v-if="ticketData && comments"
     class="tw-flex tw-flex-col tw-overflow-hidden tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-2)] tw-p-3">
-    <div class="tw-flex tw-gap-3 tw-text-sm">
+
+    <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-3 tw-text-sm">
       <div
-        class="tw-flex tw-flex-col tw-w-1/2 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-3)] tw-p-3">
+        class="tw-flex tw-flex-col tw-w-full sm:tw-w-1/2 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-3)] tw-p-3">
 
         <section ref="commentsContainer"
           class="tw-flex tw-flex-col tw-max-h-[43rem] tw-overflow-y-auto scrollbar-minimal tw-bg-[color:var(--theme-background-color-shade-4)] tw-flex-1">
@@ -166,10 +167,9 @@ onMounted(() => {
               comment.owner?._id === user?._id ? 'tw-justify-end' : 'tw-justify-start'
             ]">
               <div :class="[
-                'tw-w-1/2 tw-m-3 tw-mt-1 tw-p-3 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-5)]',
+                'tw-w-full sm:tw-w-1/2 tw-m-3 tw-mt-1 tw-p-3 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-5)]',
                 'tw-text-left'
               ]">
-
                 <div class="tw-flex tw-justify-between tw-items-center">
                   <div class="tw-text-xs">{{ comment.owner?.name }}</div>
                   <div class="tw-flex tw-justify-between">
@@ -205,7 +205,7 @@ onMounted(() => {
         </section>
 
         <div
-          class="tw-flex tw-justify-between tw-items-center tw-p-3 tw-mt-3 tw-rounded-sm tw-font-medium tw-bg-[color:var(--theme-background-color-shade-4)] ">
+          class="tw-flex tw-justify-between tw-items-center tw-p-3 tw-mt-3 tw-rounded-sm tw-font-medium tw-bg-[color:var(--theme-background-color-shade-4)]">
           <aeria-icon icon="chats" style="--icon-size: 1.5rem;">Chat</aeria-icon>
           <aeria-icon icon="chat-dots" variant="alt" @click="addComment" reactive
             style="--icon-size: 1.5rem; cursor: pointer;">Comentar</aeria-icon>
@@ -213,7 +213,8 @@ onMounted(() => {
       </div>
 
       <div
-        class="tw-flex tw-flex-col tw-w-1/2 tw-h-full tw-overflow-y-auto tw-max-h-[50rem] tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-3)] tw-p-3">
+        class="tw-flex tw-flex-col tw-w-full sm:tw-w-1/2 tw-h-full tw-overflow-y-auto tw-max-h-[50rem] tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-3)] tw-p-3">
+
         <div class="tw-p-2 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
 
           <div class="tw-flex tw-justify-between tw-items-center tw-pb-1 tw-pt-1">
@@ -236,17 +237,22 @@ onMounted(() => {
             </aeria-context-menu>
           </div>
           <hr class="tw-border">
-          <div class="tw-flex tw-justify-between tw-items-center tw-pb-2">
-            <div class="tw-flex tw-items-center">
-              <aeria-icon icon="user">{{ ticketData.owner?.name }}&nbsp;</aeria-icon>
-              <aeria-badge v-for="(role, index) in ticketData.owner?.roles" :key="index">{{ role }}</aeria-badge>
+          <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-items-start sm:tw-items-center tw-pb-2">
+            <div class="tw-flex tw-items-center tw-justify-start sm:tw-justify-start tw-flex-wrap">
+              <aeria-icon icon="user" class="tw-pr-1">{{ ticketData.owner?.name }}&nbsp;</aeria-icon>
+              <div class="tw-flex tw-flex-wrap">
+                <aeria-badge v-for="(role, index) in ticketData.owner?.roles" :key="index" class="tw-mr-1">{{ role
+                  }}</aeria-badge>
+              </div>
             </div>
-            <aeria-icon icon="calendar-blank">{{ formatDateTime(ticketData.created_at) }}</aeria-icon>
+            <aeria-icon icon="calendar-blank" class="tw-mt-2 sm:tw-mt-0">{{ formatDateTime(ticketData.created_at)
+              }}</aeria-icon>
           </div>
 
-          <div class="tw-flex tw-justify-between tw-items-center tw-pb-2">
-            <aeria-icon icon="at">{{ ticketData.owner?.email }}</aeria-icon>
-            <aeria-icon icon="arrows-clockwise">{{ formatDateTime(ticketData.updated_at) }}</aeria-icon>
+          <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-items-start sm:tw-items-center tw-pb-2">
+            <aeria-icon icon="at" class="tw-pr-1">{{ ticketData.owner?.email }}</aeria-icon>
+            <aeria-icon icon="arrows-clockwise" class="tw-mt-2 sm:tw-mt-0">{{ formatDateTime(ticketData.updated_at)
+              }}</aeria-icon>
           </div>
         </div>
 
@@ -277,13 +283,12 @@ onMounted(() => {
           <hr class="tw-border">
           <div class="tw-flex tw-flex-col tw-items-center tw-justify-center">
             <aeria-picture width="10rem" height="10rem" url="/observation.png" alt="Gaiola"></aeria-picture>
-            <div class="tw-opacity-75 tw-pb-3">Sem observações registradas</div>
+            <div class="tw-opacity-75">Sem Observações</div>
           </div>
         </div>
       </div>
     </div>
   </div>
-
   <aeria-insert-panel v-model:visible="commentPanel" fixed-right close-hint title="Adicionar comentário"
     collection="comment" :form="['description', 'images']" @insert="handleNewComment" @cancel="commentPanel = false" />
 </template>
