@@ -126,7 +126,7 @@ collection Ticket {
       "Reparando",
       "Resolvido"
     ] ) 
-    status_changed_by str
+    status_changed_by user
     priority enum @values([
       "Baixa",
       "Moderada",

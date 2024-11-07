@@ -430,7 +430,10 @@ declare type MirrorDescriptions = {
         ]
       },
       "status_changed_by": {
-        "type": "string"
+        "$ref": "user",
+        "indexes": [
+          "name"
+        ]
       },
       "priority": {
         "enum": [
@@ -680,6 +683,13 @@ declare type MirrorDescriptions = {
         "icon": "trash",
         "ask": true,
         "translate": true
+      }
+    },
+    "tableLayout": {
+      "actions": {
+        "createSecret": {
+          "button": true
+        }
       }
     },
     "actions": {

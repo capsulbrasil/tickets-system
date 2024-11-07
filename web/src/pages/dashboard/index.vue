@@ -151,9 +151,9 @@ onMounted(() => {
                   <aeria-icon icon="warning-circle"></aeria-icon>
                 </div>
               </div>
-              <div v-else class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-pt-7">
-                <aeria-picture width="10rem" height="8rem" url="/demands.png" alt="Gaiola"></aeria-picture>
-                <div class="tw-opacity-75 tw-pb-3">Não há demandas pendentes no momento.</div>
+              <div v-else class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-7">
+                <aeria-picture width="8rem" height="6rem" url="/demands.png" alt="Gaiola"></aeria-picture>
+                <div class="tw-opacity-75 tw-pb-3">Sem demandas pendentes no momento.</div>
               </div>
             </div>
           </div>
@@ -190,7 +190,7 @@ onMounted(() => {
     <template #row-status_changed_by="{ row, column }">
 
       <div v-if="row[column]">
-        <aeria-icon icon="eye">{{ row[column] }}</aeria-icon>
+        <aeria-icon icon="eye">{{ row[column].name }}</aeria-icon>
       </div>
       <div v-else>
         <aeria-icon icon="eye-closed">Aguardando Abertura</aeria-icon>

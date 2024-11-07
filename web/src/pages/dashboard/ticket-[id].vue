@@ -39,7 +39,7 @@ const fetchTicket = async () => {
   }
 
   ticketData.value = fetchedTicket;
-  userChangedStatusInTicket.value = fetchedTicket.status_changed_by || null
+  userChangedStatusInTicket.value = fetchedTicket.status_changed_by?._id
 
   const { error: commentFetchError, result: fetchedComments } = await aeria.comment.getAll.POST({
     filters: { ticket: ticketProps.id },
@@ -76,7 +76,7 @@ const updateStatus = async (newStatus: 'Reparando' | 'Resolvido') => {
   if (!ticketData.value) return;
 
   const { error: statusUpdateError, result: updatedStatus } = await aeria.ticket.insert.POST({
-    what: { _id: ticketData.value._id, status: newStatus, status_changed_by: user.value?.name },
+    what: { _id: ticketData.value._id, status: newStatus, status_changed_by: user.value?._id },
   });
 
   if (!statusUpdateError && updatedStatus) {
@@ -85,7 +85,7 @@ const updateStatus = async (newStatus: 'Reparando' | 'Resolvido') => {
       status: updatedStatus.status,
       status_changed_by: updatedStatus.status_changed_by
     };
-    userChangedStatusInTicket.value = ticketData.value.status_changed_by || null
+    userChangedStatusInTicket.value = ticketData.value.status_changed_by?.name as string
   };
 };
 
@@ -255,7 +255,8 @@ onMounted(() => {
           <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-items-start sm:tw-items-center tw-pb-2">
             <aeria-icon icon="at" class="tw-pr-1">{{ ticketData.owner?.email }}</aeria-icon>
             <aeria-icon icon="wrench" class="tw-mt-2 sm:tw-mt-0">{{
-              userChangedStatusInTicket === null ? "Aguardando Ação" : userChangedStatusInTicket }}</aeria-icon>
+              userChangedStatusInTicket === undefined ? "Aguardando Ação" : ticketData.status_changed_by?.name
+              }}</aeria-icon>
           </div>
         </div>
 

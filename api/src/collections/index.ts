@@ -12,5 +12,12 @@ export const topic = extendTopicCollection({
         button: true,
       },
     },
+    tableLayout: {
+      actions: {
+        createSecret: {
+          button: true,
+        },
+      },
+    },
   },
 });
