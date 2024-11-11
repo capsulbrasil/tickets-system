@@ -22,7 +22,7 @@ const navigateToURL = (url: string) => {
                     <p>Sem imagem</p>
                 </div>
                 <div v-else>
-                    <aeria-picture object-fit="contain" class="tw-h-6" :url="row[column].link" />
+                    <aeria-picture object-fit="contain" class="tw-h-5" alt="Logo do sistema" :url="row[column].link" />
                 </div>
             </div>
         </template>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 definePage({
     meta: {
-        title: 'Suporte',
+        title: 'Contatos',
         icon: 'link-simple'
     },
 });
@@ -44,6 +44,5 @@ definePage({
                 </template>
             </div>
         </template>
-
     </aeria-crud>
 </template>

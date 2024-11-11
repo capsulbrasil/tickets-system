@@ -7,7 +7,6 @@
     ">
     <img src="/static/empty.svg" class="
         tw-h-[30vw]
-
         lg:tw-h-[14rem]
       ">
     <div class="

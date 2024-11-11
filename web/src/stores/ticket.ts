@@ -1,4 +1,4 @@
-import { registerStore, useStore, createCollectionStore } from "aeria-ui";
+import { registerStore, createCollectionStore } from "aeria-ui";
 
 export const customer = registerStore((context) =>
   createCollectionStore(

@@ -56,6 +56,11 @@ declare type MirrorDescriptions = {
       "title",
       "system"
     ],
+    "required": [
+      "title",
+      "system",
+      "message"
+    ],
     "presets": [
       "crud"
     ],
@@ -235,6 +240,10 @@ declare type MirrorDescriptions = {
       "organization",
       "email",
       "phone"
+    ],
+    "required": [
+      "name",
+      "organization"
     ],
     "filters": [
       "name",

@@ -164,6 +164,11 @@ collection Broadcast {
       title
     }
   }
+  required {
+    title
+    system
+    message 
+  }
   properties {
     title str
     system topic
@@ -203,6 +208,10 @@ collection  Contacts {
       email
       organization
     }
+  }
+  required {
+    name
+    organization
   }
   properties {
     name str

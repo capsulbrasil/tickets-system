@@ -9,7 +9,6 @@
             <aeria-icon icon="phone" style="--icon-size: 1.2rem" reactive>Suporte ao Cliente</aeria-icon>
         </a>
     </div>
-
     <aeria-accordion enumerate :headers="{
         'question-criacao-ticket': 'Como criar um ticket?',
         'question-prioridades': 'Como definir prioridades?',
@@ -26,7 +25,6 @@
                 <li>Clique em <strong>Inserir</strong> para salvar o ticket no sistema.</li>
             </ol>
         </template>
-
         <template #question-prioridades>
             <table class="tw-w-full tw-border">
                 <thead>
@@ -54,7 +52,6 @@
                 </tbody>
             </table>
         </template>
-
         <template #question-status>
             <table class="tw-w-full tw-border">
                 <thead>

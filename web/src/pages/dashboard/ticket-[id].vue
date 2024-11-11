@@ -162,7 +162,7 @@ onMounted(() => {
         class="tw-flex tw-flex-col tw-w-full sm:tw-w-1/2 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-3)] tw-p-3">
 
         <section ref="commentsContainer"
-          class="tw-flex tw-flex-col tw-max-h-[43rem] tw-overflow-y-auto scrollbar-minimal tw-bg-[color:var(--theme-background-color-shade-4)] tw-flex-1">
+          class="tw-flex tw-flex-col tw-max-h-[45rem] tw-overflow-y-auto scrollbar-minimal tw-bg-[color:var(--theme-background-color-shade-4)] tw-flex-1">
 
           <div v-if="comments.length > 0">
             <div v-for="comment in comments" :key="comment._id" :class="[
@@ -202,7 +202,7 @@ onMounted(() => {
           </div>
 
           <div v-else class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-h-full">
-            <aeria-picture width="14rem" height="11rem" url="/chat.png" alt="Gaiola"></aeria-picture>
+            <aeria-picture width="14rem" height="11rem" url="/chat.svg" alt="Gaiola"></aeria-picture>
             <div class="tw-opacity-75 tw-pb-3">Sem Comentários</div>
           </div>
         </section>
@@ -216,7 +216,7 @@ onMounted(() => {
       </div>
 
       <div
-        class="tw-flex tw-flex-col tw-w-full sm:tw-w-1/2 tw-h-full tw-overflow-y-auto tw-max-h-[50rem] tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-3)] tw-p-3">
+        class="tw-flex tw-flex-col tw-w-full sm:tw-w-1/2 tw-h-full tw-overflow-y-auto tw-max-h-[53rem] tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-3)] tw-p-3">
 
         <div class="tw-p-2 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
 
@@ -287,7 +287,7 @@ onMounted(() => {
           <aeria-icon icon="paperclip" class="tw-pb-1">Observação</aeria-icon>
           <hr class="tw-border">
           <div class="tw-flex tw-flex-col tw-items-center tw-justify-center">
-            <aeria-picture width="10rem" height="10rem" url="/observation.png" alt="Gaiola"></aeria-picture>
+            <aeria-picture width="10rem" height="10rem" url="/observation.svg" alt="Gaiola"></aeria-picture>
             <div class="tw-opacity-75">Sem Observações</div>
           </div>
         </div>
