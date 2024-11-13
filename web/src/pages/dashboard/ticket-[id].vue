@@ -216,7 +216,7 @@ onMounted(() => {
       </div>
 
       <div
-        class="tw-flex tw-flex-col tw-w-full sm:tw-w-1/2 tw-h-full tw-overflow-y-auto tw-max-h-[53rem] tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-3)] tw-p-3">
+        class="tw-flex tw-flex-col tw-w-full sm:tw-w-1/2 tw-h-full tw-overflow-y-auto tw-max-h-[50rem] tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-3)] tw-p-3">
 
         <div class="tw-p-2 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
 
@@ -256,7 +256,7 @@ onMounted(() => {
             <aeria-icon icon="at" class="tw-pr-1">{{ ticketData.owner?.email }}</aeria-icon>
             <aeria-icon icon="wrench" class="tw-mt-2 sm:tw-mt-0">{{
               userChangedStatusInTicket === undefined ? "Aguardando Ação" : ticketData.status_changed_by?.name
-              }}</aeria-icon>
+            }}</aeria-icon>
           </div>
         </div>
 

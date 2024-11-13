@@ -554,8 +554,7 @@ declare type MirrorDescriptions = {
     "individualActions": {
       "viewContent": {
         "label": "Ver ticket",
-        "icon": "magnifying-glass",
-        "button": true
+        "icon": "magnifying-glass"
       },
       "spawnEdit": {
         "label": "action.edit",
@@ -669,8 +668,7 @@ declare type MirrorDescriptions = {
     "individualActions": {
       "createSecret": {
         "label": "Criar Token",
-        "icon": "barcode",
-        "button": true
+        "icon": "barcode"
       },
       "spawnEdit": {
         "label": "action.edit",
@@ -1287,7 +1285,7 @@ declare type MirrorRouter = {
                 },
                 "details": {
                   "type": "object",
-                  "variable": true
+                  "additionalProperties": true
                 }
               }
             }
@@ -1327,7 +1325,7 @@ declare type MirrorRouter = {
                 },
                 "details": {
                   "type": "object",
-                  "variable": true
+                  "additionalProperties": true
                 }
               }
             }
@@ -1400,7 +1398,7 @@ declare type MirrorRouter = {
                 },
                 "details": {
                   "type": "object",
-                  "variable": true
+                  "additionalProperties": true
                 }
               }
             }

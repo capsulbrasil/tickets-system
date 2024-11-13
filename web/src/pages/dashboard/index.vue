@@ -95,7 +95,7 @@ onMounted(() => {
         <hr class="tw-border" />
         <div class="tw-pr-1 tw-overflow-y-auto tw-max-h-[20rem] sm:tw-max-h-[22rem] scrollbar-minimal">
           <div v-for="comment in commentStore.items" :key="comment._id" @click="navigateToTicket(comment.ticket?._id)"
-            class="tw-m-1 tw-bg-[color:var(--theme-background-color-shade-4)] tw-rounded-sm tw-cursor-pointer">
+            class="tw-m-1 tw-mb-2 tw-bg-[color:var(--theme-background-color-shade-4)] tw-rounded-sm tw-cursor-pointer">
             <div class="tw-flex tw-items-center tw-p-2 tw-pb-0">
               <div>
                 <b class="tw-font-medium">{{ comment.owner?.name }}</b>
@@ -124,15 +124,15 @@ onMounted(() => {
             <div class="tw-m-3">{{ statusCount[status] }}</div>
           </div>
         </div>
-        <div class="tw-flex tw-space-x-1 tw-mt-1 sm:tw-h-auto">
+        <div class="tw-flex tw-space-x-1 tw-mt-2 sm:tw-h-auto">
           <div class="tw-flex-1 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-4)]">
             <div class="tw-flex tw-items-center tw-justify-center tw-text-center tw-w-full">
               <p class="tw-font-medium">Demandas Sistêmicas</p>
               <aeria-icon icon="cpu" class="tw-m-2"></aeria-icon>
             </div>
-            <div class="tw-overflow-y-auto scrollbar-minimal tw-m-1 tw-mt-0">
+            <div class="tw-overflow-y-auto scrollbar-minimal tw-m-2 tw-mt-0">
               <div v-for="(count, topic) in topicOrdering" :key="topic"
-                class="tw-flex tw-justify-between tw-mb-1 tw-pl-1 tw-pr-2 tw-bg-[color:var(--theme-background-color-shade-5)]">
+                class="tw-flex tw-justify-between tw-mb-1 tw-pl-2 tw-pr-2 tw-bg-[color:var(--theme-background-color-shade-5)]">
                 <p class="tw-font-medium">{{ topic }}</p>
                 <aeria-icon icon="ticket">{{ count }}</aeria-icon>
               </div>
@@ -144,11 +144,11 @@ onMounted(() => {
               <aeria-icon icon="clock-counter-clockwise" class="tw-m-2"></aeria-icon>
             </div>
             <div
-              class="tw-overflow-y-auto tw-max-h-[15rem] sm:tw-max-h-[15.5rem] scrollbar-minimal tw-m-1 tw-mt-0 tw-pr-1">
+              class="tw-overflow-y-auto tw-max-h-[15rem] sm:tw-max-h-[15.5rem] scrollbar-minimal tw-m-2 tw-mt-0 tw-pr-1">
               <div v-if="expiredTickets.length > 0">
                 <div v-for="ticket in expiredTickets" :key="ticket._id" @click="navigateToTicket(ticket._id)"
                   class="tw-cursor-pointer 
-                    tw-flex tw-justify-between tw-items-stretch tw-mb-1 tw-mr-1 tw-pl-1 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-5)]">
+                    tw-flex tw-justify-between tw-items-stretch tw-mb-1 tw-pl-2 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-5)]">
                   <p class="tw-font-medium">{{ ticket.title }}</p>
                   <div class="tw-w-1 tw-h-auto tw-rounded-sm tw-bg-red-500">
                   </div>

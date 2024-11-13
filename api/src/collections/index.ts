@@ -9,7 +9,6 @@ export const topic = extendTopicCollection({
       createSecret: {
         label: "Criar Token",
         icon: "barcode",
-        button: true,
       },
     },
     tableLayout: {

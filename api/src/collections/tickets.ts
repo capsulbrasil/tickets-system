@@ -16,7 +16,6 @@ export const ticket = extendTicketCollection({
       viewContent: {
         label: "Ver ticket",
         icon: "magnifying-glass",
-        button: true,
       },
     },
     tableLayout: {
