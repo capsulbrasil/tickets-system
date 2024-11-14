@@ -62,6 +62,8 @@ router.GET(
               $project: {
                 _id: 1,
                 title: 1,
+                status: 1,
+                priority: 1,
               },
             },
           ],
