@@ -488,8 +488,10 @@ declare type MirrorDescriptions = {
       "owner": {
         "$ref": "user",
         "populate": [
+          "name",
+          "email",
           "roles",
-          "email"
+          "phone_number"
         ],
         "noForm": true,
         "indexes": [

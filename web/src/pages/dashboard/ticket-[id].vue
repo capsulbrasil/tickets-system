@@ -253,7 +253,9 @@ onMounted(() => {
           </div>
 
           <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-items-start sm:tw-items-center tw-pb-2">
-            <aeria-icon icon="at" class="tw-pr-1">{{ ticketData.owner?.email }}</aeria-icon>
+            <a :href="'https://wa.me/55' + ticketData.owner?.phone_number" target="_blank">
+              <aeria-icon icon="whatsapp-logo" class="tw-pr-1">{{ ticketData.owner?.phone_number }}</aeria-icon>
+            </a>
             <aeria-icon icon="wrench" class="tw-mt-2 sm:tw-mt-0">{{
               userChangedStatusInTicket === undefined ? "Aguardando Ação" : ticketData.status_changed_by?.name
             }}</aeria-icon>
