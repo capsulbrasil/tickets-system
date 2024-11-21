@@ -32,7 +32,7 @@ export const comment = extendCommentCollection({
                 return Result.error(error)
             }
             if(!payload.what.ticket){
-                return context.error(HTTPStatus.Forbidden, {code:ACError.AuthorizationError})
+                return context.error(HTTPStatus.NotFound, {code:ACError.ResourceNotFound})
             }
             const allNumbers = await context.collections.comment.model.aggregate<PhoneNumbers>([
                 {
