@@ -31,10 +31,13 @@ export const comment = extendCommentCollection({
             if(error){
                 return Result.error(error)
             }
+            if(!payload.what.ticket){
+                return context.error(HTTPStatus.Forbidden, {code:ACError.AuthorizationError})
+            }
             const allNumbers = await context.collections.comment.model.aggregate<PhoneNumbers>([
                 {
                     $match: {
-                        ticket: payload.what.ticket
+                        ticket: new ObjectId(payload.what.ticket)
                     }
                 },
                 {
