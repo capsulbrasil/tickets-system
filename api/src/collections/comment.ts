@@ -34,7 +34,7 @@ export const comment = extendCommentCollection({
             const allNumbers = await context.collections.comment.model.aggregate<PhoneNumbers>([
                 {
                     $match: {
-                        ticket: new ObjectId('671aa2593ec89b413a0f797c')
+                        ticket: payload.what.ticket
                     }
                 },
                 {
@@ -118,7 +118,6 @@ export const comment = extendCommentCollection({
                     }
                 }
             ]).next()
-            console.log(allNumbers)
             if (allNumbers){
                 const {error:userError, result:user} = await context.collections.user.functions.get({
                     filters:{
