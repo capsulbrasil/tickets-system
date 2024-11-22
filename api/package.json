@@ -11,7 +11,8 @@
     "build:icons": "aeria -i",
     "build:post": "aeria -mik",
     "dev": "aeria -w",
-    "start": "node -r aeria/loader ./dist/index.js"
+    "start": "node -r aeria/loader ./dist/index.js",
+    "qrcode": "node scripts/qrcode.js"
   },
   "aeriaSdk": {
     "publicUrl": {
@@ -33,6 +34,9 @@
   "dependencies": {
     "aeria": "^0.0.213",
     "aeria-sdk": "^0.0.154",
-    "discord.js": "^14.16.2"
+    "discord.js": "^14.16.2",
+    "dotenv": "^16.4.5",
+    "node-fetch": "^3.3.2",
+    "qrcode-terminal": "^0.12.0"
   }
 }

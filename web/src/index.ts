@@ -13,7 +13,7 @@ import NoResults from "./components/no-results.vue";
 
 const options = defineOptions({
   setup: ({ context }) => {
-    Object.values(stores).map((registerStore) => registerStore(context));
+    Object.values(stores).map((createStore) => createStore(context));
   },
   component: AeriaMain,
   routes,

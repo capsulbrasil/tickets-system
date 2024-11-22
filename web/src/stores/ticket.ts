@@ -1,6 +1,6 @@
-import { registerStore, createCollectionStore } from "aeria-ui";
+import { createStore, createCollectionStore } from "aeria-ui";
 
-export const customer = registerStore((context) =>
+export const customer = createStore((context) =>
   createCollectionStore(
     {
       $id: "ticket",
