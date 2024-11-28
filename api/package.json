@@ -32,9 +32,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aeria": "^0.0.228",
+    "aeria": "^0.0.229",
     "aeria-sdk": "^0.0.156",
-    "discord.js": "^14.16.2",
+    "discord.js": "^14.16.3",
     "dotenv": "^16.4.5",
     "node-fetch": "^3.3.2",
     "qrcode-terminal": "^0.12.0"
