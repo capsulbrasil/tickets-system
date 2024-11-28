@@ -147,15 +147,6 @@ declare type MirrorDescriptions = {
           "name"
         ]
       },
-      "liked_by": {
-        "type": "array",
-        "items": {
-          "$ref": "user",
-          "indexes": [
-            "name"
-          ]
-        }
-      },
       "created_at": {
         "type": "string",
         "format": "date-time",

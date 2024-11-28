@@ -29,7 +29,7 @@ collection Comment {
     description str @element("textarea") 
     images []File @accept(["image/*"]) @maxItems(3)
     owner User @populate([name, email, roles])
-    liked_by []User
+    // liked_by []User
   }
   functions {
     get @expose
