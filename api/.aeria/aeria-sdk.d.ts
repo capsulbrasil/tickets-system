@@ -147,6 +147,15 @@ declare type MirrorDescriptions = {
           "name"
         ]
       },
+      "liked_by": {
+        "type": "array",
+        "items": {
+          "$ref": "user",
+          "indexes": [
+            "name"
+          ]
+        }
+      },
       "created_at": {
         "type": "string",
         "format": "date-time",
@@ -1361,6 +1370,32 @@ declare type MirrorRouter = {
         "type": "object",
         "properties": {
           "_id": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "/comment/addLike": {
+    "POST": {
+      "roles": true,
+      "payload": {
+        "type": "object",
+        "properties": {
+          "comment_id": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "/comment/removeLike": {
+    "POST": {
+      "roles": true,
+      "payload": {
+        "type": "object",
+        "properties": {
+          "comment_id": {
             "type": "string"
           }
         }

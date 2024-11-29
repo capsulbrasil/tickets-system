@@ -27,6 +27,8 @@ const comments = ref<CollectionItemWithId<'comment'>[]>([]);
 const user = ref<CollectionItemWithId<"user">>()
 const userChangedStatusInTicket = ref<string | null>(null);
 
+const panelVisible = ref(false)
+
 const { reachedEnd } = useScrollObserver(commentsContainer, {
   antecipate: 100,
 });
@@ -151,6 +153,25 @@ onMounted(() => {
   fetchTicket();
   currentUser();
 });
+
+async function addLike(commentId: string){
+  const {error, result} = await aeria.comment.addLike.POST({
+  comment_id: commentId})
+  if(error){
+    return
+  }
+  console.log("addLike from ", commentId)
+}
+
+async function removeLike(commentId: string){
+  const {error, result} = await aeria.comment.removeLike.POST({
+  comment_id: commentId})
+  if(error){
+    return
+  }
+  console.log("removeLike from ", commentId)
+}
+
 </script>
 
 <template>
@@ -181,16 +202,58 @@ onMounted(() => {
                         {{ formatDateTime(comment.created_at, { hours: true }) }}
                       </div>
                     </aeria-icon>
+
                     <aeria-icon icon="trash-simple" @click="handleRemoveComment(comment._id)"
                       class="tw-pl-3 tw-cursor-pointer" style="--icon-size: 1rem"></aeria-icon>
                   </div>
                 </div>
-
                 <hr class="tw-border" />
-
                 <div v-if="comment.description"
                   class="tw-text-xs tw-whitespace-pre-line tw-overflow-hidden tw-text-ellipsis tw-break-words tw-text-left">
                   {{ comment.description }}
+
+                  <div v-if="comment.liked_by" class="tw-flex tw-items-center tw-space-x-2 tw-space-y-2">
+                    <!-- Botão de Like -->
+                    <span @click="comment.liked_by?.some(likeUser => likeUser._id === user?._id) ? removeLike(comment._id) : addLike(comment._id)"
+                    class="tw-bg-[color:var(--theme-background-color-shade-5)]
+                    tw-mt-2 tw-flex tw-h-min tw-w-min tw-space-x-1 tw-items-center tw-rounded-full tw-text-gray-400 hover:tw-text-rose-600 tw-py-1 tw-px-1 tw-text-xs tw-font-medium">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="tw-h-5 tw-w-5 tw-fill-current hover:tw-text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                      </svg>
+                    </span>
+                      <span class="tw-text-sm tw-font-medium tw-cursor-pointer" large
+                      @click="panelVisible = true">
+                          <strong>{{ comment.liked_by?.length }} likes</strong>
+                      </span>
+                      <aeria-panel
+                        v-model="panelVisible"
+                        float
+                        close-hint
+                        title="Curtido por:"
+                        @overlay-click="panelVisible = false"
+                      >
+                        <div class="panel-content">
+                          <ul class="tw-list-none">
+                            <li v-for="(user, index) in comment.liked_by" :key="index">
+                              {{ user.name }}
+                            </li>
+                          </ul>
+                        </div>
+                        <template #footer>
+                          <aeria-button
+                            large
+                            @click="panelVisible = false"
+                          >
+                            Fechar
+                          </aeria-button>
+                        </template>
+                      </aeria-panel>
+
+                    <!-- Nome do Último Usuário que Curtiu -->
+                    <span class="tw-text-sm">
+                      ( ...{{ comment.liked_by[comment.liked_by.length - 1]?.name }} )
+                    </span>
+                  </div>
                 </div>
 
                 <div v-if="comment.images" class="tw-flex tw-pt-2">
