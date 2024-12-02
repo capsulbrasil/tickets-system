@@ -151,6 +151,10 @@ declare type MirrorDescriptions = {
         "type": "array",
         "items": {
           "$ref": "user",
+          "populate": [
+            "picture_file",
+            "roles"
+          ],
           "indexes": [
             "name"
           ]
@@ -785,6 +789,7 @@ declare type MirrorDescriptions = {
       "picture_file": {
         "$ref": "file",
         "accept": [
+          "image/*",
           "image/*"
         ],
         "indexes": [

@@ -4,6 +4,7 @@ import { useScrollObserver } from 'aeria-ui';
 import { ref, onMounted, watch, reactive } from 'vue';
 import { type CollectionItemWithId } from '@aeriajs/types';
 import { statusColor, priorityColor, capitalizeText } from '../../utils.js';
+import { useRouter } from 'vue-router';
 
 definePage({
   props: true,
@@ -28,6 +29,8 @@ const user = ref<CollectionItemWithId<"user">>()
 const userChangedStatusInTicket = ref<string | null>(null);
 
 const panelVisible = ref(false)
+
+const router = useRouter();
 
 const { reachedEnd } = useScrollObserver(commentsContainer, {
   antecipate: 100,
@@ -172,6 +175,10 @@ async function removeLike(commentId: string){
   console.log("removeLike from ", commentId)
 }
 
+const navigateToProfile = (userId: string) => {
+  router.push(`/dashboard/c/user/${userId}`);
+};
+
 </script>
 
 <template>
@@ -232,10 +239,18 @@ async function removeLike(commentId: string){
                         title="Curtido por:"
                         @overlay-click="panelVisible = false"
                       >
+                      
                         <div class="panel-content">
                           <ul class="tw-list-none">
                             <li v-for="(user, index) in comment.liked_by" :key="index">
-                              {{ user.name }}
+                              <div class="tw-flex tw-items-center">
+                                <div class="tw-h-10 tw-w-10 tw-flex-shrink-0 tw-mt-3 tw-cursor-pointer" :key="user._id" @click="navigateToProfile(user._id)">
+                                  <aeria-picture class="tw-overflow-hidden tw-h-full tw-w-full tw-rounded-full"  :url="user.picture_file?.link" alt="picture" />
+                                </div>
+                                <div class="tw-ml-2 tw-mt-4">
+                                  <p class="tw-whitespace-no-wrap">{{ user.name }}</p>
+                                </div>
+                              </div>
                             </li>
                           </ul>
                         </div>
