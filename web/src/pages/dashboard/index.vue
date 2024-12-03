@@ -51,7 +51,7 @@ const fetchComments = async () => {
   if (commentsFetchError) {
     return commentsFetchError;
   }
-
+  //@ts-ignore
   comments.value = fetchedComments || [];
 };
 
