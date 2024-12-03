@@ -29,8 +29,11 @@ const user = ref<CollectionItemWithId<"user">>()
 const userChangedStatusInTicket = ref<string | null>(null);
 
 const panelVisible = ref(false)
-
 const router = useRouter();
+
+const navigateToProfile = (userId: string) => {
+  router.push(`/dashboard/c/user/${userId}`);
+};
 
 const { reachedEnd } = useScrollObserver(commentsContainer, {
   antecipate: 100,
@@ -108,6 +111,16 @@ const handleRemoveComment = async (commentId: string) => {
   }
 };
 
+const handleLikeClick = (commentId: string) => {
+  const comment = comments.value.find(c => c._id === commentId);
+
+  if (comment && comment.liked_by?.some(likeUser => likeUser._id === user.value?._id)) {
+    removeLike(commentId);
+  } else {
+    addLike(commentId);
+  }
+};
+
 const handleNewComment = async (newComment: CollectionItemWithId<'comment'>) => {
   const { error: ticketUpdateError, result: ticketWithNewComment } = await aeria.ticket.insert.POST({
     what: { _id: ticketData.value?._id, comment: newComment._id },
@@ -127,6 +140,47 @@ const handleNewComment = async (newComment: CollectionItemWithId<'comment'>) => 
     }
   }
 };
+
+async function addLike(commentId: string) {
+  const { error: errorLike } = await aeria.comment.addLike.POST({
+    comment_id: commentId,
+  });
+
+  if (errorLike) {
+    console.error(errorLike);
+    return;
+  }
+
+  const comment = comments.value.find(c => c._id === commentId);
+  if (comment) {
+    if (!Array.isArray(comment.liked_by)) {
+      comment.liked_by = [];
+    }
+
+    if (!comment.liked_by.some(like => like._id === user.value?._id)) {
+      comment.liked_by.push({
+        _id: user.value?._id!,
+        name: user.value?.name!,
+      } as CollectionItemWithId<'user'>);
+    }
+  }
+}
+
+async function removeLike(commentId: string) {
+  const { error: removeErrorLike } = await aeria.comment.removeLike.POST({
+    comment_id: commentId,
+  });
+
+  if (removeErrorLike) {
+    console.error(removeErrorLike);
+    return;
+  }
+
+  const comment = comments.value.find(c => c._id === commentId);
+  if (comment && Array.isArray(comment.liked_by)) {
+    comment.liked_by = comment.liked_by.filter(like => like._id !== user.value?._id);
+  }
+}
 
 watch(reachedEnd, async (value) => {
   if (value) {
@@ -156,29 +210,6 @@ onMounted(() => {
   fetchTicket();
   currentUser();
 });
-
-async function addLike(commentId: string){
-  const {error, result} = await aeria.comment.addLike.POST({
-  comment_id: commentId})
-  if(error){
-    return
-  }
-  console.log("addLike from ", commentId)
-}
-
-async function removeLike(commentId: string){
-  const {error, result} = await aeria.comment.removeLike.POST({
-  comment_id: commentId})
-  if(error){
-    return
-  }
-  console.log("removeLike from ", commentId)
-}
-
-const navigateToProfile = (userId: string) => {
-  router.push(`/dashboard/c/user/${userId}`);
-};
-
 </script>
 
 <template>
@@ -218,67 +249,53 @@ const navigateToProfile = (userId: string) => {
                 <div v-if="comment.description"
                   class="tw-text-xs tw-whitespace-pre-line tw-overflow-hidden tw-text-ellipsis tw-break-words tw-text-left">
                   {{ comment.description }}
-
-                  <div v-if="comment.liked_by" class="tw-flex tw-items-center tw-space-x-2 tw-space-y-2">
-                    <!-- Botão de Like -->
-                    <span @click="comment.liked_by?.some(likeUser => likeUser._id === user?._id) ? removeLike(comment._id) : addLike(comment._id)"
-                    class="tw-bg-[color:var(--theme-background-color-shade-5)]
-                    tw-mt-2 tw-flex tw-h-min tw-w-min tw-space-x-1 tw-items-center tw-rounded-full tw-text-gray-400 hover:tw-text-rose-600 tw-py-1 tw-px-1 tw-text-xs tw-font-medium">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="tw-h-5 tw-w-5 tw-fill-current hover:tw-text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                      </svg>
-                    </span>
-                      <span class="tw-text-sm tw-font-medium tw-cursor-pointer" large
-                      @click="panelVisible = true">
-                          <strong>{{ comment.liked_by?.length }} likes</strong>
-                      </span>
-                      <aeria-panel
-                        v-model="panelVisible"
-                        float
-                        close-hint
-                        title="Curtido por:"
-                        @overlay-click="panelVisible = false"
-                      >
-                      
-                        <div class="panel-content">
-                          <ul class="tw-list-none">
-                            <li v-for="(user, index) in comment.liked_by" :key="index">
-                              <div class="tw-flex tw-items-center">
-                                <div class="tw-h-10 tw-w-10 tw-flex-shrink-0 tw-mt-3 tw-cursor-pointer" :key="user._id" @click="navigateToProfile(user._id)">
-                                  <aeria-picture class="tw-overflow-hidden tw-h-full tw-w-full tw-rounded-full"  :url="user.picture_file?.link" alt="picture" />
-                                </div>
-                                <div class="tw-ml-2 tw-mt-4">
-                                  <p class="tw-whitespace-no-wrap">{{ user.name }}</p>
-                                </div>
-                              </div>
-                            </li>
-                          </ul>
-                        </div>
-                        <template #footer>
-                          <aeria-button
-                            large
-                            @click="panelVisible = false"
-                          >
-                            Fechar
-                          </aeria-button>
-                        </template>
-                      </aeria-panel>
-
-                    <!-- Nome do Último Usuário que Curtiu -->
-                    <span class="tw-text-sm">
-                      ( ...{{ comment.liked_by[comment.liked_by.length - 1]?.name }} )
-                    </span>
-                  </div>
                 </div>
 
-                <div v-if="comment.images" class="tw-flex tw-pt-2">
-                  <aeria-picture v-for="image in comment.images" :key="image._id" alt="comentarios" :url="image.link"
-                    expandable class="tw-w-10 tw-h-10 tw-object-cover tw-border" />
+                <div class="tw-flex tw-justify-between ">
+                  <div v-if="comment.images" class="tw-flex">
+                    <aeria-picture v-for="image in comment.images" :key="image._id" alt="comentarios" :url="image.link"
+                      expandable class="tw-w-10 tw-h-10 tw-object-cover tw-border" />
+                  </div>
+
+                  <div v-if="comment.liked_by" class="tw-flex tw-items-center tw-space-x-1 tw-space-y-1">
+                    <div class="tw-flex tw-items-center tw-cursor-pointer">
+                      <aeria-icon icon="thumbs-up" style="--icon-size: 1rem"
+                        @click="handleLikeClick(comment._id)"></aeria-icon>
+                      <div large @click="panelVisible = true" class="tw-m-1">
+                        {{ comment.liked_by?.length === 1 ? '1 like' : `${comment.liked_by?.length} likes` }}
+                      </div>
+                      <div v-if="comment.liked_by?.length > 0">
+                        ({{ comment.liked_by[comment.liked_by.length - 1]?.name }})
+                      </div>
+                    </div>
+                  </div>
+
+                  <aeria-panel v-model="panelVisible" float close-hint title="Curtido por:"
+                    @overlay-click="panelVisible = false">
+                    <div class="panel-content">
+                      <ul class="tw-list-none">
+                        <li v-for="(user, index) in comment.liked_by" :key="index">
+                          <div class="tw-flex tw-items-center">
+                            <div class="tw-h-10 tw-w-10 tw-flex-shrink-0 tw-m-3 tw-cursor-pointer" :key="user._id"
+                              @click="navigateToProfile(user._id)">
+                              <aeria-picture class="tw-overflow-hidden tw-h-full tw-w-full tw-rounded-full"
+                                :url="user.picture_file?.link" alt="picture" />
+                            </div>
+                            <p class="tw-whitespace-no-wrap">{{ user.name }}</p>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                    <template #footer>
+                      <aeria-button large @click="panelVisible = false">
+                        Fechar
+                      </aeria-button>
+                    </template>
+                  </aeria-panel>
                 </div>
               </div>
             </div>
           </div>
-
           <div v-else class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-h-full">
             <aeria-picture width="14rem" height="11rem" url="/chat.svg" alt="Gaiola"></aeria-picture>
             <div class="tw-opacity-75 tw-pb-3">Sem Comentários</div>
