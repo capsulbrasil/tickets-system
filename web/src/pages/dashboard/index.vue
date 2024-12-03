@@ -52,7 +52,8 @@ const fetchComments = async () => {
     return commentsFetchError;
   }
 
-  comments.value = fetchedComments || [] as any;
+  //@ts-ignore
+  comments.value = fetchedComments || [];
 };
 
 const fetchTicketsData = async () => {
