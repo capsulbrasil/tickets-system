@@ -147,6 +147,19 @@ declare type MirrorDescriptions = {
           "name"
         ]
       },
+      "liked_by": {
+        "type": "array",
+        "items": {
+          "$ref": "user",
+          "populate": [
+            "picture_file",
+            "roles"
+          ],
+          "indexes": [
+            "name"
+          ]
+        }
+      },
       "created_at": {
         "type": "string",
         "format": "date-time",
@@ -776,6 +789,7 @@ declare type MirrorDescriptions = {
       "picture_file": {
         "$ref": "file",
         "accept": [
+          "image/*",
           "image/*"
         ],
         "indexes": [
@@ -1361,6 +1375,32 @@ declare type MirrorRouter = {
         "type": "object",
         "properties": {
           "_id": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "/comment/addLike": {
+    "POST": {
+      "roles": true,
+      "payload": {
+        "type": "object",
+        "properties": {
+          "comment_id": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "/comment/removeLike": {
+    "POST": {
+      "roles": true,
+      "payload": {
+        "type": "object",
+        "properties": {
+          "comment_id": {
             "type": "string"
           }
         }

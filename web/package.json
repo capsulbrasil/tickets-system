@@ -36,10 +36,10 @@
   "devDependencies": {
     "autoprefixer": "^10.4.20",
     "eslint-config-aeriaui": "^0.0.11",
-    "eslint-plugin-readable-tailwind": "^1.8.0",
-    "postcss": "^8.4.47",
-    "tailwindcss": "^3.4.13",
+    "eslint-plugin-readable-tailwind": "^1.8.2",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.15",
     "unplugin-vue-router": "^0.10.8",
-    "vue-tsc": "^2.1.6"
+    "vue-tsc": "^2.1.10"
   }
 }

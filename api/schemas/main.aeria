@@ -6,6 +6,7 @@ collection User extends aeria.user {
     email str
     business str
     phone_number str
+    picture_file File @accept(["image/*"])
     roles []enum @values([
       "root",
       "logistic",
@@ -29,6 +30,7 @@ collection Comment {
     description str @element("textarea") 
     images []File @accept(["image/*"]) @maxItems(3)
     owner User @populate([name, email, roles])
+    liked_by []User @populate([picture_file, roles])
   }
   functions {
     get @expose

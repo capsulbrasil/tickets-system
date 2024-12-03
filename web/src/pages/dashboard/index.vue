@@ -51,6 +51,7 @@ const fetchComments = async () => {
   if (commentsFetchError) {
     return commentsFetchError;
   }
+
   //@ts-ignore
   comments.value = fetchedComments || [];
 };
@@ -78,10 +79,12 @@ onMounted(() => {
   fetchTicketsData();
   fetchComments();
 });
+
+
 </script>
 
 <template>
-  <div class="tw-font-medium tw-text-lg">
+  <div class="tw-font-medium tw-text-lg tw-mb-3">
     Bem-vindo {{ currentUser.name.split(' ')[0] }}, ao Suporte Capsul
   </div>
 
@@ -170,7 +173,7 @@ onMounted(() => {
     </template>
     <template #row-topic="{ row, column }">
       <div class="tw-flex">
-        <div v-if="!row[column]?.image.link">Sem imagem</div>
+        <div v-if="!row[column]?.image?.link">Sem imagem</div>
         <aeria-picture v-else object-fit="contain" class="tw-h-4" alt="icone" :url="row[column].image.link" />
       </div>
     </template>
