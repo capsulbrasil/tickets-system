@@ -31,8 +31,8 @@ const userChangedStatusInTicket = ref<string | null>(null);
 const panelVisible = ref<CollectionItemWithId<'comment'> | false>(false)
 const router = useRouter();
 
-const navigateToProfile = (userId: string) => {
-  router.push(`/dashboard/c/user/${userId}`);
+const navigateToProfile = (id: string) => {
+  router.push(`/dashboard/user-${id}`);
 };
 
 const { reachedEnd } = useScrollObserver(commentsContainer, {
@@ -213,15 +213,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="ticketData && comments"
-    class="tw-flex tw-flex-col tw-overflow-hidden tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-2)] tw-p-3">
+  <div v-if="ticketData && comments" class="tw-flex tw-flex-col tw-overflow-hidden tw-rounded-sm tw-p-3">
 
     <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-3 tw-text-sm">
       <div
         class="tw-flex tw-flex-col tw-w-full sm:tw-w-1/2 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-3)] tw-p-3">
 
         <section ref="commentsContainer"
-          class="tw-flex tw-flex-col tw-max-h-[45rem] tw-overflow-y-auto scrollbar-minimal tw-bg-[color:var(--theme-background-color-shade-4)] tw-flex-1">
+          class="tw-flex tw-flex-col tw-max-h-[45rem] tw-overflow-y-auto scrollbar-minimal tw-flex-1">
 
           <div v-if="comments.length > 0">
             <div v-for="comment in comments" :key="comment._id" :class="[
@@ -229,7 +228,7 @@ onMounted(() => {
               comment.owner?._id === user?._id ? 'tw-justify-end' : 'tw-justify-start'
             ]">
               <div :class="[
-                'tw-w-full sm:tw-w-1/2 tw-m-3 tw-mt-1 tw-p-3 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-5)]',
+                'tw-w-full tw-m-3 tw-mt-1 tw-p-3 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-5)]',
                 'tw-text-left'
               ]">
                 <div class="tw-flex tw-justify-between tw-items-center">
@@ -316,7 +315,8 @@ onMounted(() => {
             <div class="tw-flex tw-items-center tw-justify-start sm:tw-justify-start tw-flex-wrap">
               <aeria-icon icon="user" class="tw-pr-1">{{ ticketData.owner?.name }}&nbsp;</aeria-icon>
               <div class="tw-flex tw-flex-wrap">
-                <aeria-badge v-for="(role, index) in ticketData.owner?.roles" :key="index" class="tw-mr-1">{{ role
+                <aeria-badge v-for="(role, index) in ticketData.owner?.roles" :key="index"
+                  class="tw-mr-1 tw-mt-2 tw-place-content-center">{{ role
                   }}</aeria-badge>
               </div>
             </div>
