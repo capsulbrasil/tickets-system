@@ -213,7 +213,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="ticketData && comments" class="tw-flex tw-flex-col tw-overflow-hidden tw-rounded-sm tw-p-3">
+  <div v-if="ticketData && comments" class="tw-flex tw-flex-col tw-overflow-hidden tw-rounded-sm tw-rounded-full tw-p-3">
 
     <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-3 tw-text-sm">
       <div
