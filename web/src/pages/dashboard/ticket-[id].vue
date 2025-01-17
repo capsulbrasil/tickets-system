@@ -233,7 +233,8 @@ onMounted(() => {
                 'tw-text-left'
               ]">
                 <div class="tw-flex tw-justify-between tw-items-center">
-                  <div class="tw-text-xs">{{ comment.owner?.name }}</div>
+
+                  <div class="tw-text-xs tw-ml-1">{{ comment.owner?.name }}</div>
                   <div class="tw-flex tw-justify-between">
                     <aeria-icon icon="calendar-blank">
                       <div class="tw-text-xs">
@@ -251,23 +252,24 @@ onMounted(() => {
                   {{ comment.description }}
                 </div>
 
-                <div class="tw-flex tw-justify-between ">
+                <div class="tw-flex tw-justify-between">
+                  
+                  <div v-if="comment.liked_by" class="tw-flex tw-space-x-1 tw-space-y-1 tw-text-xs">
+                    <div class="tw-flex tw-items-center tw-mt-2 tw-cursor-pointer" >
+                      <aeria-icon icon="thumbs-up" style="--icon-size: 1.2rem"
+                        @click="handleLikeClick(comment._id)"></aeria-icon>
+                      <div class="tw-ml-1">
+                        {{ comment.liked_by?.length === 1 ? `` : `${comment.liked_by?.length}` }}
+                      </div>
+                      <div v-if="comment.liked_by?.length > 0" class="tw-ml-1" large @click="panelVisible = true" >
+                        {{ comment.liked_by[comment.liked_by.length - 1]?.name }}  curtiu por último.
+                      </div>
+                    </div>
+                  </div>
+
                   <div v-if="comment.images" class="tw-flex">
                     <aeria-picture v-for="image in comment.images" :key="image._id" alt="comentarios" :url="image.link"
                       expandable class="tw-w-10 tw-h-10 tw-object-cover tw-border" />
-                  </div>
-
-                  <div v-if="comment.liked_by" class="tw-flex tw-items-center tw-space-x-1 tw-space-y-1">
-                    <div class="tw-flex tw-items-center tw-cursor-pointer">
-                      <aeria-icon icon="thumbs-up" style="--icon-size: 1rem"
-                        @click="handleLikeClick(comment._id)"></aeria-icon>
-                      <div large @click="panelVisible = true" class="tw-m-1">
-                        {{ comment.liked_by?.length === 1 ? '1 like' : `${comment.liked_by?.length} likes` }}
-                      </div>
-                      <div v-if="comment.liked_by?.length > 0">
-                        ({{ comment.liked_by[comment.liked_by.length - 1]?.name }})
-                      </div>
-                    </div>
                   </div>
 
                   <aeria-panel v-model="panelVisible" float close-hint title="Curtido por:"
