@@ -257,11 +257,11 @@ onMounted(() => {
                   <div v-if="comment.liked_by" class="tw-flex tw-space-x-1 tw-space-y-1 tw-text-xs">
                     <div class="tw-flex tw-items-center tw-mt-2 tw-cursor-pointer" >
                       <aeria-icon icon="thumbs-up" style="--icon-size: 1.2rem"
-                        @click="handleLikeClick(comment._id)"></aeria-icon>
+                        @click="handleLikeClick(comment._id)"></aeria-icon> 
                       <div class="tw-ml-1">
-                        {{ comment.liked_by?.length === 1 ? `` : `${comment.liked_by?.length}` }}
+                        {{ comment.liked_by?.length === 0 ? '' : comment.liked_by.length}} 
                       </div>
-                      <div v-if="comment.liked_by?.length > 0" class="tw-ml-1" large @click="panelVisible = true" >
+                      <div v-if="comment.liked_by?.length > 0 " class="tw-ml-1" large @click="panelVisible = true" >
                         {{ comment.liked_by[comment.liked_by.length - 1]?.name }}  curtiu por último.
                       </div>
                     </div>
@@ -272,21 +272,21 @@ onMounted(() => {
                       expandable class="tw-w-10 tw-h-10 tw-object-cover tw-border" />
                   </div>
 
-                  <aeria-panel v-model="panelVisible" float close-hint title="Curtido por:"
+                  <aeria-panel v-model="panelVisible" float close-hint title="Curtidas"
                     @overlay-click="panelVisible = false">
                     <div class="panel-content">
-                      <ul class="tw-list-none">
-                        <li v-for="(user, index) in comment.liked_by" :key="index">
+                      <div>
+                        <div v-for="(user, index) in comment.liked_by" :key="index">
                           <div class="tw-flex tw-items-center">
-                            <div class="tw-h-10 tw-w-10 tw-flex-shrink-0 tw-m-3 tw-cursor-pointer" :key="user._id"
+                            <div class="tw-h-10 tw-w-10 tw-m-3 tw-cursor-pointer" :key="user._id"
                               @click="navigateToProfile(user._id)">
                               <aeria-picture class="tw-overflow-hidden tw-h-full tw-w-full tw-rounded-full"
                                 :url="user.picture_file?.link" alt="picture" />
                             </div>
-                            <p class="tw-whitespace-no-wrap">{{ user.name }}</p>
+                            <div class="tw-whitespace-no-wrap">{{ user.name }}</div>
                           </div>
-                        </li>
-                      </ul>
+                        </div>
+                      </div>
                     </div>
                     <template #footer>
                       <aeria-button large @click="panelVisible = false">
