@@ -146,7 +146,7 @@ onMounted(() => {
               <aeria-icon icon="clock-counter-clockwise" class="tw-m-2"></aeria-icon>
             </div>
             <div
-              class="tw-overflow-y-auto tw-max-h-[15rem] sm:tw-max-h-[15.5rem] scrollbar-minimal tw-m-1 tw-mt-0 tw-pr-1">
+              class="tw-overflow-y-auto tw-max-h-[15rem] sm:tw-max-h-[15.5rem] tw-h-[18rem] scrollbar-minimal tw-mt-0 tw-pr-1">
               <div v-if="expiredTickets.length > 0">
                 <div v-for="ticket in expiredTickets" :key="ticket._id" @click="navigateToTicket(ticket._id)"
                   class="tw-cursor-pointer 
