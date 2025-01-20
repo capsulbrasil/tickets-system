@@ -460,9 +460,9 @@ declare type MirrorDescriptions = {
       },
       "priority": {
         "enum": [
-          "Baixa",
-          "Moderada",
-          "Urgente"
+          "168h",
+          "72h",
+          "24h"
         ]
       },
       "description": {

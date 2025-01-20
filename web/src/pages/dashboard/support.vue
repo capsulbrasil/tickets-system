@@ -35,17 +35,17 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="tw-py-2 tw-px-4 tw-text-[#539F2B]"><strong>Baixa</strong></td>
-                        <td class="tw-py-2 tw-px-4">Demandas não urgentes que podem esperar para serem resolvidas. Não
+                        <td class="tw-py-2 tw-px-4 tw-text-[#539F2B]"><strong>168h</strong></td>
+                        <td class="tw-py-2 tw-px-4">Demandas não 24hs que podem esperar para serem resolvidas. Não
                             comprometem a operação.</td>
                     </tr>
                     <tr>
-                        <td class="tw-py-2 tw-px-4 tw-text-[#B38705]"><strong>Moderada</strong></td>
+                        <td class="tw-py-2 tw-px-4 tw-text-[#B38705]"><strong>72h</strong></td>
                         <td class="tw-py-2 tw-px-4">Questões com impacto moderado que não precisam de resolução
                             imediata.</td>
                     </tr>
                     <tr>
-                        <td class="tw-py-2 tw-px-4 tw-text-[#F44336]"><strong>Urgente</strong></td>
+                        <td class="tw-py-2 tw-px-4 tw-text-[#F44336]"><strong>24h</strong></td>
                         <td class="tw-py-2 tw-px-4">Demandas que precisam de atenção imediata, pois podem afetar
                             severamente a operação ou serviços.</td>
                     </tr>

@@ -17,11 +17,11 @@ export function statusColor(status: string) {
 
 export function priorityColor(priority: string) {
   switch (priority) {
-    case "Baixa":
+    case "168h":
       return "#77e33d"; // light green
-    case "Moderada":
+    case "72h":
       return "#FFC107"; // yelBaixa
-    case "Urgente":
+    case "24h":
       return "#F44336"; // red
     default:
       return "";

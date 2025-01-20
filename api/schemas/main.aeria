@@ -131,9 +131,9 @@ collection Ticket {
     ] ) 
     status_changed_by user
     priority enum @values([
-      "Baixa",
-      "Moderada",
-      "Urgente"
+      "168h",
+      "72h",
+      "24h"
     ])
     description str @element("textarea")
     observation str @element("textarea")

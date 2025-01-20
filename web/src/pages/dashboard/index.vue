@@ -136,7 +136,6 @@ onMounted(() => {
               <div v-for="(count, topic) in topicOrdering" :key="topic"
                 class="tw-flex tw-justify-between tw-mb-1 tw-pl-2 tw-pr-2 tw-bg-[color:var(--theme-background-color-shade-5)]">
                 <p class="tw-font-medium">{{ topic }}</p>
-                <aeria-icon icon="ticket">{{ count }}</aeria-icon>
               </div>
             </div>
           </div>
@@ -146,17 +145,17 @@ onMounted(() => {
               <aeria-icon icon="clock-counter-clockwise" class="tw-m-2"></aeria-icon>
             </div>
             <div
-              class="tw-overflow-y-auto tw-max-h-[15rem] sm:tw-max-h-[15.5rem] tw-h-[18rem] scrollbar-minimal tw-mt-0 tw-pr-1">
-              <div v-if="expiredTickets.length > 0">
-                <div v-for="ticket in expiredTickets" :key="ticket._id" @click="navigateToTicket(ticket._id)"
-                  class="tw-cursor-pointer 
-                    tw-flex tw-justify-between tw-items-stretch tw-mb-1 tw-pl-2 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-5)]">
-                  <p class="tw-font-medium">{{ ticket.title }}</p>
-                  <div class="tw-w-[0.2rem] tw-h-auto tw-rounded-sm"
-                    :style="{ backgroundColor: priorityColor(ticket.priority) }">
-                  </div>
-                </div>
-              </div>
+            class="tw-overflow-y-auto tw-max-h-[15rem] sm:tw-max-h-[15.5rem] tw-h-[18rem] scrollbar-minimal tw-mt-0 tw-pr-1">
+            <div v-if="expiredTickets.length > 0">
+              <div v-for="ticket in expiredTickets" :key="ticket._id" @click="navigateToTicket(ticket._id)"
+              class="tw-cursor-pointer 
+              tw-flex tw-justify-between tw-items-stretch tw-mb-1 tw-pl-2 tw-rounded-sm tw-bg-[color:var(--theme-background-color-shade-5)]">
+              <p class="tw-font-medium">{{ ticket.title }}</p>
+              <div class="tw-w-[0.2rem] tw-h-auto tw-rounded-sm"
+              :style="{ backgroundColor: priorityColor(ticket.priority) }">
+            </div>
+          </div>
+        </div>
               <div v-else class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-7">
                 <aeria-picture width="8rem" height="6rem" url="/demands.svg" alt="Gaiola"></aeria-picture>
                 <div class="tw-opacity-75 tw-pb-3">Sem demandas pendentes no momento.</div>
@@ -178,19 +177,22 @@ onMounted(() => {
       </div>
     </template>
     <template #row-priority="{ row, column }">
-      <div class="tw-flex tw-items-center tw-gap-2">
-        <div class="tw-w-2 tw-h-2 tw-rounded-full" :style="{ backgroundColor: priorityColor(row[column]) }"></div>
+      <div class="tw-flex tw-items-center tw-gap-1">
+        <div class="tw-w-1 tw-h-3 tw-rounded-full" :style="{ backgroundColor: priorityColor(row[column]) }"></div>
         <div>{{ row[column] }}</div>
       </div>
-    </template>
+    </template> 
     <template #row-status="{ row, column }">
-      <div class="tw-flex tw-items-center tw-gap-2">
-        <div class="tw-w-2 tw-h-2 tw-rounded-full" :style="{ backgroundColor: statusColor(row[column]) }"></div>
+      <div class="tw-flex tw-items-center tw-gap-1">
+        <div class="tw-w-1 tw-h-3 tw-rounded-full" :style="{ backgroundColor: statusColor(row[column]) }"></div>
         <div>{{ row[column] }}</div>
       </div>
     </template>
     <template #row-created_at="{ row, column }">
-      {{ new Date(row[column]).toLocaleDateString('pt-BR') }}
+      <div class="tw-flex tw-items-center">
+        <aeria-icon icon="calendar-blank" style="--icon-size: 1rem; "></aeria-icon>
+        {{ new Date(row[column]).toLocaleDateString('pt-BR') }}
+      </div>
     </template>
     <template #row-status_changed_by="{ row, column }">
       <div v-if="row[column]">
