@@ -190,7 +190,6 @@ onMounted(() => {
     </template>
     <template #row-created_at="{ row, column }">
       <div class="tw-flex tw-items-center">
-        <aeria-icon icon="calendar-blank" style="--icon-size: 1rem; "></aeria-icon>
         {{ new Date(row[column]).toLocaleDateString('pt-BR') }}
       </div>
     </template>

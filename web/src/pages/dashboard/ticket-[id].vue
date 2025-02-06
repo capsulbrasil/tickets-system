@@ -236,14 +236,11 @@ onMounted(() => {
 
                   <div class="tw-text-xs tw-ml-1">{{ comment.owner?.name }}</div>
                   <div class="tw-flex tw-justify-between">
-                    <aeria-icon icon="calendar-blank">
                       <div class="tw-text-xs">
                         {{ formatDateTime(comment.created_at, { hours: true }) }}
                       </div>
-                    </aeria-icon>
-
                     <aeria-icon icon="trash-simple" @click="handleRemoveComment(comment._id)"
-                      class="tw-pl-3 tw-cursor-pointer" style="--icon-size: 1rem"></aeria-icon>
+                      class="tw-pl-3 tw-cursor-pointer" style="--icon-size: 0.8rem"></aeria-icon>
                   </div>
                 </div>
                 <hr class="tw-border" />
@@ -251,12 +248,12 @@ onMounted(() => {
                   class="tw-text-xs tw-whitespace-pre-line tw-overflow-hidden tw-text-ellipsis tw-break-words tw-text-left">
                   {{ comment.description }}
                 </div>
-
+                <hr class="tw-border" />
                 <div class="tw-flex tw-justify-between">
                   
                   <div v-if="comment.liked_by" class="tw-flex tw-space-x-1 tw-space-y-1 tw-text-xs">
                     <div class="tw-flex tw-items-center tw-mt-2 tw-cursor-pointer" >
-                      <aeria-icon icon="thumbs-up" style="--icon-size: 1.2rem"
+                      <aeria-icon icon="thumbs-up" style="--icon-size: 1rem"
                         @click="handleLikeClick(comment._id)"></aeria-icon> 
                       <div class="tw-ml-1">
                         {{ comment.liked_by?.length === 0 ? '' : comment.liked_by.length}} 
