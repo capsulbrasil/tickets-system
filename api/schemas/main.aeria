@@ -28,7 +28,7 @@ collection Comment {
   properties {
     ticket Ticket
     description str @element("textarea") 
-    images []File @accept(["image/*"]) @maxItems(3)
+    images [..3]File @accept(["image/*"])
     owner User @populate([name, email, roles])
     liked_by []User @populate([picture_file, roles])
   }
@@ -129,7 +129,7 @@ collection Ticket {
       "Reparando",
       "Resolvido"
     ] ) 
-    status_changed_by user
+    status_changed_by User
     priority enum @values([
       "168h",
       "72h",
@@ -174,7 +174,7 @@ collection Broadcast {
   }
   properties {
     title str
-    system topic
+    system Topic
     message str @element("textarea")
     picture File @accept(["image/*"])
   }

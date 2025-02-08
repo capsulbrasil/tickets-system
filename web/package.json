@@ -30,16 +30,16 @@
   "dependencies": {
     "@aeria-ui/i18n-en": "^0.0.3",
     "@aeria-ui/i18n-pt": "^0.0.3",
-    "aeria-app-layout": "^0.0.46",
-    "aeria-ui": "^0.0.148"
+    "aeria-app-layout": "^0.0.47",
+    "aeria-ui": "^0.0.159"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
     "eslint-config-aeriaui": "^0.0.11",
-    "eslint-plugin-readable-tailwind": "^1.8.2",
-    "postcss": "^8.4.49",
-    "tailwindcss": "^3.4.15",
-    "unplugin-vue-router": "^0.10.8",
-    "vue-tsc": "^2.1.10"
+    "eslint-plugin-readable-tailwind": "^1.9.0",
+    "postcss": "^8.5.1",
+    "tailwindcss": "^3.4.17",
+    "unplugin-vue-router": "^0.11.2",
+    "vue-tsc": "^2.2.0"
   }
 }

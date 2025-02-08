@@ -12,22 +12,22 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@commitlint/cli": "^19.6.0",
-    "@commitlint/config-conventional": "^19.6.0",
+    "@commitlint/cli": "^19.7.1",
+    "@commitlint/config-conventional": "^19.7.1",
     "dualist": "^0.0.5",
     "eslint-config-aeria": "^0.0.31",
     "husky": "^9.1.7",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   },
   "dependencies": {
     "@aeria-ui/i18n-pt": "^0.0.3",
-    "@eslint/config-array": "^0.19.0",
-    "@eslint/object-schema": "^2.1.4",
-    "discord.js": "^14.16.3",
-    "glob": "^11.0.0",
+    "@eslint/config-array": "^0.19.2",
+    "@eslint/object-schema": "^2.1.6",
+    "discord.js": "^14.17.3",
+    "glob": "^11.0.1",
     "node-fetch": "^3.3.2",
     "qrcode": "^1.5.4",
     "rimraf": "^6.0.1",
-    "tailwind-scrollbar": "^3.1.0"
+    "tailwind-scrollbar": "^4.0.0"
   }
 }

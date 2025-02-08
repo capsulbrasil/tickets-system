@@ -2,8 +2,7 @@ import { InsertPayload, insert as originalInsert } from "aeria";
 import {
   extendTicketCollection,
   Ticket,
-  ticketCollection,
-} from "../../.aeria/out/collections/ticket.mjs";
+} from "../../.aeria/out/index.js";
 import { discordAPI } from "../integrations/index.js";
 import { MessageCreateOptions } from "discord.js";
 

@@ -1,6 +1,6 @@
 import { init } from "aeria";
 import { router } from "./routes/index.js";
-export * as collections from "./collections/index.js";
+export * as collections from "./collections/index.js"
 
 export default init({
   router,
@@ -8,7 +8,9 @@ export default init({
     baseUrl: "/api",
     publicUrl: process.env.API_URL,
     secret: process.env.APPLICATION_SECRET,
-    port: 3000,
+    server: {
+      port: 3000
+    },
     database: {
       mongodbUrl: process.env.MONGODB_URL,
     },

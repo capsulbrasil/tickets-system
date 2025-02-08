@@ -57,6 +57,12 @@ declare type MirrorDescriptions = {
       "title",
       "system"
     ],
+    "search": {
+      "placeholder": "Insira o nome da transmissão aqui",
+      "indexes": [
+        "title"
+      ]
+    },
     "required": [
       "title",
       "system",
@@ -65,12 +71,6 @@ declare type MirrorDescriptions = {
     "presets": [
       "crud"
     ],
-    "search": {
-      "indexes": [
-        "title"
-      ],
-      "placeholder": "Insira o nome da transmissão aqui"
-    },
     "actions": {
       "spawnAdd": {
         "label": "action.add",
@@ -119,6 +119,7 @@ declare type MirrorDescriptions = {
       },
       "images": {
         "type": "array",
+        "maxItems": 3,
         "items": {
           "$ref": "file",
           "accept": [
@@ -133,8 +134,7 @@ declare type MirrorDescriptions = {
             "type",
             "size"
           ]
-        },
-        "maxItems": 3
+        }
       },
       "owner": {
         "$ref": "user",
@@ -255,28 +255,28 @@ declare type MirrorDescriptions = {
       "email",
       "phone"
     ],
-    "required": [
-      "name",
-      "organization"
-    ],
     "filters": [
       "name",
       "email",
       "phone",
       "organization"
     ],
-    "presets": [
-      "crud"
-    ],
     "search": {
+      "placeholder": "Insira o nome, organização, telefone, do contato aqui",
       "indexes": [
         "name",
         "phone",
         "email",
         "organization"
-      ],
-      "placeholder": "Insira o nome, organização, telefone, do contato aqui"
+      ]
     },
+    "required": [
+      "name",
+      "organization"
+    ],
+    "presets": [
+      "crud"
+    ],
     "actions": {
       "spawnAdd": {
         "label": "action.add",
@@ -524,14 +524,18 @@ declare type MirrorDescriptions = {
       }
     },
     "owned": "on-write",
-    "table": [
+    "filters": [
       "title",
       "topic",
       "status",
-      "priority",
-      "created_at",
-      "status_changed_by"
+      "priority"
     ],
+    "search": {
+      "placeholder": "Pesquise aqui",
+      "indexes": [
+        "title"
+      ]
+    },
     "required": [
       "title",
       "topic",
@@ -540,11 +544,13 @@ declare type MirrorDescriptions = {
       "description",
       "attached"
     ],
-    "filters": [
+    "table": [
       "title",
       "topic",
       "status",
-      "priority"
+      "priority",
+      "created_at",
+      "status_changed_by"
     ],
     "form": [
       "title",
@@ -558,12 +564,6 @@ declare type MirrorDescriptions = {
     "presets": [
       "crud"
     ],
-    "search": {
-      "indexes": [
-        "title"
-      ],
-      "placeholder": "Pesquise aqui"
-    },
     "freshItem": {
       "status": "Ativo"
     },
@@ -668,6 +668,12 @@ declare type MirrorDescriptions = {
       "discord_channel_id",
       "link_url"
     ],
+    "search": {
+      "placeholder": "Insira o nome do sistema aqui",
+      "indexes": [
+        "system"
+      ]
+    },
     "required": [
       "system",
       "discord_channel_id"
@@ -675,12 +681,6 @@ declare type MirrorDescriptions = {
     "presets": [
       "crud"
     ],
-    "search": {
-      "indexes": [
-        "system"
-      ],
-      "placeholder": "Insira o nome do sistema aqui"
-    },
     "individualActions": {
       "createSecret": {
         "label": "Criar Token",
@@ -840,7 +840,8 @@ declare type MirrorDescriptions = {
         "badge": "roles",
         "picture": "picture_file",
         "information": "email",
-        "active": "active"
+        "active": "active",
+        "translateBadge": true
       }
     },
     "individualActions": {
@@ -934,8 +935,7 @@ declare type MirrorRouter = {
   "/broadcast/get": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -943,8 +943,7 @@ declare type MirrorRouter = {
   "/broadcast/getAll": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -952,8 +951,7 @@ declare type MirrorRouter = {
   "/broadcast/insert": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -961,8 +959,7 @@ declare type MirrorRouter = {
   "/broadcast/remove": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -970,8 +967,7 @@ declare type MirrorRouter = {
   "/broadcast/upload": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -979,8 +975,7 @@ declare type MirrorRouter = {
   "/comment/get": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -988,8 +983,7 @@ declare type MirrorRouter = {
   "/comment/getAll": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -997,8 +991,7 @@ declare type MirrorRouter = {
   "/comment/insert": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -1006,8 +999,7 @@ declare type MirrorRouter = {
   "/comment/remove": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -1015,8 +1007,7 @@ declare type MirrorRouter = {
   "/comment/upload": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -1024,8 +1015,7 @@ declare type MirrorRouter = {
   "/contacts/get": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -1033,8 +1023,7 @@ declare type MirrorRouter = {
   "/contacts/getAll": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -1042,8 +1031,7 @@ declare type MirrorRouter = {
   "/contacts/insert": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -1051,8 +1039,7 @@ declare type MirrorRouter = {
   "/contacts/remove": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -1060,8 +1047,7 @@ declare type MirrorRouter = {
   "/contacts/upload": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -1069,8 +1055,7 @@ declare type MirrorRouter = {
   "/file/get": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -1078,8 +1063,7 @@ declare type MirrorRouter = {
   "/file/insert": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -1087,16 +1071,14 @@ declare type MirrorRouter = {
   "/file/download": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ]
     }
   },
   "/file/remove": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -1104,8 +1086,7 @@ declare type MirrorRouter = {
   "/file/removeAll": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -1113,8 +1094,7 @@ declare type MirrorRouter = {
   "/ticket/count": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -1122,8 +1102,7 @@ declare type MirrorRouter = {
   "/ticket/get": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -1131,8 +1110,7 @@ declare type MirrorRouter = {
   "/ticket/getAll": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -1140,8 +1118,7 @@ declare type MirrorRouter = {
   "/ticket/insert": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -1149,8 +1126,7 @@ declare type MirrorRouter = {
   "/ticket/upload": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -1158,8 +1134,7 @@ declare type MirrorRouter = {
   "/ticket/remove": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -1167,8 +1142,7 @@ declare type MirrorRouter = {
   "/topic/get": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -1176,8 +1150,7 @@ declare type MirrorRouter = {
   "/topic/getAll": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -1185,8 +1158,7 @@ declare type MirrorRouter = {
   "/topic/insert": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -1194,8 +1166,7 @@ declare type MirrorRouter = {
   "/topic/remove": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -1203,8 +1174,7 @@ declare type MirrorRouter = {
   "/topic/upload": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -1212,8 +1182,7 @@ declare type MirrorRouter = {
   "/user/get": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -1237,8 +1206,7 @@ declare type MirrorRouter = {
   "/user/upload": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -1246,8 +1214,7 @@ declare type MirrorRouter = {
   "/user/removeFile": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
       "builtin": true
     }
@@ -1263,16 +1230,129 @@ declare type MirrorRouter = {
   "/user/editProfile": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
+      ],
+      "payload": {
+        "type": "object",
+        "required": [],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "given_name": {},
+          "family_name": {},
+          "active": {
+            "type": "boolean"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true,
+            "minItems": 1
+          },
+          "email": {
+            "type": "string",
+            "inputType": "email",
+            "minLength": 3
+          },
+          "password": {
+            "type": "string",
+            "inputType": "password",
+            "hidden": true
+          },
+          "phone_number": {
+            "type": "string",
+            "mask": "(##) #####-####"
+          },
+          "picture_file": {
+            "$ref": "file",
+            "accept": [
+              "image/*"
+            ]
+          },
+          "picture": {},
+          "self_registered": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "response": [
+        {
+          "type": "object",
+          "properties": {
+            "_tag": {
+              "const": "Error"
+            },
+            "result": {},
+            "error": {
+              "type": "object",
+              "required": [
+                "httpStatus",
+                "code"
+              ],
+              "properties": {
+                "httpStatus": {
+                  "enum": [
+                    403,
+                    404,
+                    422,
+                    400,
+                    500
+                  ]
+                },
+                "code": {
+                  "enum": [
+                    "INSECURE_OPERATOR",
+                    "OWNERSHIP_ERROR",
+                    "RESOURCE_NOT_FOUND",
+                    "TARGET_IMMUTABLE",
+                    "MALFORMED_INPUT",
+                    "UNIQUENESS_VIOLATED",
+                    "EMPTY_TARGET",
+                    "INVALID_PROPERTIES",
+                    "MISSING_PROPERTIES",
+                    "INVALID_DOCUMENT_ID",
+                    "INVALID_TEMPFILE"
+                  ]
+                },
+                "message": {
+                  "type": "string"
+                },
+                "details": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "_tag": {
+              "const": "Result"
+            },
+            "error": {},
+            "result": {
+              "$ref": "user"
+            }
+          }
+        }
       ]
     }
   },
   "/user/authenticate": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ]
     }
   },
@@ -1287,28 +1367,36 @@ declare type MirrorRouter = {
   "/user/createAccount": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ]
     }
   },
   "/user/getInfo": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ]
     }
   },
   "/user/getCurrentUser": {
     "POST": {
       "roles": [
-        "root",
-        "unauthenticated"
+        "root"
       ],
-      "response": {
-        "$ref": "user"
-      }
+      "response": [
+        {
+          "type": "object",
+          "properties": {
+            "_tag": {
+              "const": "Result"
+            },
+            "error": {},
+            "result": {
+              "$ref": "user"
+            }
+          }
+        }
+      ]
     }
   },
   "/user/getActivationLink": {

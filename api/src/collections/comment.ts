@@ -9,7 +9,7 @@ import {
 import {
   extendCommentCollection,
   Comment,
-} from "../../.aeria/out/collections/comment.mjs";
+} from "../../.aeria/out/index.js";
 import { whatsappMessage } from "../integrations/whatsapp.js";
 
 type PhoneNumbers = {
