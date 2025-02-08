@@ -2,7 +2,6 @@ import type {
   InferProperty,
   InferProperties,
   SchemaWithId,
-  PackReferences,
   MakeEndpoint,
   RequestMethod,
   CollectionFunctionsSDK
@@ -744,13 +743,9 @@ declare type MirrorDescriptions = {
     "indexes": [
       "name"
     ],
-    "unique": [
-      "email"
-    ],
     "properties": {
       "name": {
-        "type": "string",
-        "minLength": 1
+        "type": "string"
       },
       "given_name": {
         "readOnly": true
@@ -780,7 +775,7 @@ declare type MirrorDescriptions = {
       "email": {
         "type": "string",
         "inputType": "email",
-        "minLength": 3
+        "unique": true
       },
       "password": {
         "type": "string",
@@ -806,6 +801,9 @@ declare type MirrorDescriptions = {
       },
       "picture": {
         "readOnly": true
+      },
+      "group": {
+        "type": "string"
       },
       "self_registered": {
         "type": "boolean",
@@ -853,11 +851,6 @@ declare type MirrorDescriptions = {
           "name": "/dashboard/user/changepass",
           "fetchItem": true
         }
-      },
-      "copyRedefinePasswordLink": {
-        "label": "copy_redefine_password_link",
-        "icon": "link",
-        "translate": true
       },
       "copyActivationLink": {
         "label": "copy_activation_link",
@@ -1227,128 +1220,6 @@ declare type MirrorRouter = {
       "builtin": true
     }
   },
-  "/user/editProfile": {
-    "POST": {
-      "roles": [
-        "root"
-      ],
-      "payload": {
-        "type": "object",
-        "required": [],
-        "properties": {
-          "name": {
-            "type": "string",
-            "minLength": 1
-          },
-          "given_name": {},
-          "family_name": {},
-          "active": {
-            "type": "boolean"
-          },
-          "roles": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "uniqueItems": true,
-            "minItems": 1
-          },
-          "email": {
-            "type": "string",
-            "inputType": "email",
-            "minLength": 3
-          },
-          "password": {
-            "type": "string",
-            "inputType": "password",
-            "hidden": true
-          },
-          "phone_number": {
-            "type": "string",
-            "mask": "(##) #####-####"
-          },
-          "picture_file": {
-            "$ref": "file",
-            "accept": [
-              "image/*"
-            ]
-          },
-          "picture": {},
-          "self_registered": {
-            "type": "boolean",
-            "readOnly": true
-          },
-          "updated_at": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "response": [
-        {
-          "type": "object",
-          "properties": {
-            "_tag": {
-              "const": "Error"
-            },
-            "result": {},
-            "error": {
-              "type": "object",
-              "required": [
-                "httpStatus",
-                "code"
-              ],
-              "properties": {
-                "httpStatus": {
-                  "enum": [
-                    403,
-                    404,
-                    422,
-                    400,
-                    500
-                  ]
-                },
-                "code": {
-                  "enum": [
-                    "INSECURE_OPERATOR",
-                    "OWNERSHIP_ERROR",
-                    "RESOURCE_NOT_FOUND",
-                    "TARGET_IMMUTABLE",
-                    "MALFORMED_INPUT",
-                    "UNIQUENESS_VIOLATED",
-                    "EMPTY_TARGET",
-                    "INVALID_PROPERTIES",
-                    "MISSING_PROPERTIES",
-                    "INVALID_DOCUMENT_ID",
-                    "INVALID_TEMPFILE"
-                  ]
-                },
-                "message": {
-                  "type": "string"
-                },
-                "details": {
-                  "type": "object",
-                  "additionalProperties": true
-                }
-              }
-            }
-          }
-        },
-        {
-          "type": "object",
-          "properties": {
-            "_tag": {
-              "const": "Result"
-            },
-            "error": {},
-            "result": {
-              "$ref": "user"
-            }
-          }
-        }
-      ]
-    }
-  },
   "/user/authenticate": {
     "POST": {
       "roles": [
@@ -1359,7 +1230,6 @@ declare type MirrorRouter = {
   "/user/activate": {
     "POST": {
       "roles": [
-        "unauthenticated",
         "root"
       ]
     }
@@ -1383,40 +1253,14 @@ declare type MirrorRouter = {
       "roles": [
         "root"
       ],
-      "response": [
-        {
-          "type": "object",
-          "properties": {
-            "_tag": {
-              "const": "Result"
-            },
-            "error": {},
-            "result": {
-              "$ref": "user"
-            }
-          }
-        }
-      ]
+      "response": {
+        "$ref": "user"
+      }
     }
   },
   "/user/getActivationLink": {
     "POST": {
       "roles": [
-        "root"
-      ]
-    }
-  },
-  "/user/getRedefinePasswordLink": {
-    "POST": {
-      "roles": [
-        "root"
-      ]
-    }
-  },
-  "/user/redefinePassword": {
-    "POST": {
-      "roles": [
-        "unauthenticated",
         "root"
       ]
     }
@@ -1673,7 +1517,7 @@ declare module 'aeria-sdk' {
             Method,
             InferProperties<RouteResponse>,
             RoutePayload extends {}
-              ? PackReferences<InferProperty<RoutePayload>>
+              ? InferProperty<RoutePayload>
               : undefined
           >
           : MakeEndpoint<Route, Method>

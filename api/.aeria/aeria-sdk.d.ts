@@ -2,7 +2,6 @@ import type {
   InferProperty,
   InferProperties,
   SchemaWithId,
-  PackReferences,
   MakeEndpoint,
   RequestMethod,
   CollectionFunctionsSDK
@@ -744,13 +743,9 @@ declare type MirrorDescriptions = {
     "indexes": [
       "name"
     ],
-    "unique": [
-      "email"
-    ],
     "properties": {
       "name": {
-        "type": "string",
-        "minLength": 1
+        "type": "string"
       },
       "given_name": {
         "readOnly": true
@@ -780,7 +775,7 @@ declare type MirrorDescriptions = {
       "email": {
         "type": "string",
         "inputType": "email",
-        "minLength": 3
+        "unique": true
       },
       "password": {
         "type": "string",
@@ -806,6 +801,9 @@ declare type MirrorDescriptions = {
       },
       "picture": {
         "readOnly": true
+      },
+      "group": {
+        "type": "string"
       },
       "self_registered": {
         "type": "boolean",
@@ -853,11 +851,6 @@ declare type MirrorDescriptions = {
           "name": "/dashboard/user/changepass",
           "fetchItem": true
         }
-      },
-      "copyRedefinePasswordLink": {
-        "label": "copy_redefine_password_link",
-        "icon": "link",
-        "translate": true
       },
       "copyActivationLink": {
         "label": "copy_activation_link",
@@ -936,6 +929,7 @@ declare type MirrorRouter = {
     "POST": {
       "roles": [
         "root"
+        "root"
       ],
       "builtin": true
     }
@@ -943,6 +937,7 @@ declare type MirrorRouter = {
   "/broadcast/getAll": {
     "POST": {
       "roles": [
+        "root"
         "root"
       ],
       "builtin": true
@@ -952,6 +947,7 @@ declare type MirrorRouter = {
     "POST": {
       "roles": [
         "root"
+        "root"
       ],
       "builtin": true
     }
@@ -959,6 +955,7 @@ declare type MirrorRouter = {
   "/broadcast/remove": {
     "POST": {
       "roles": [
+        "root"
         "root"
       ],
       "builtin": true
@@ -968,6 +965,7 @@ declare type MirrorRouter = {
     "POST": {
       "roles": [
         "root"
+        "root"
       ],
       "builtin": true
     }
@@ -975,6 +973,7 @@ declare type MirrorRouter = {
   "/comment/get": {
     "POST": {
       "roles": [
+        "root"
         "root"
       ],
       "builtin": true
@@ -984,6 +983,7 @@ declare type MirrorRouter = {
     "POST": {
       "roles": [
         "root"
+        "root"
       ],
       "builtin": true
     }
@@ -991,6 +991,7 @@ declare type MirrorRouter = {
   "/comment/insert": {
     "POST": {
       "roles": [
+        "root"
         "root"
       ],
       "builtin": true
@@ -1000,6 +1001,7 @@ declare type MirrorRouter = {
     "POST": {
       "roles": [
         "root"
+        "root"
       ],
       "builtin": true
     }
@@ -1007,6 +1009,7 @@ declare type MirrorRouter = {
   "/comment/upload": {
     "POST": {
       "roles": [
+        "root"
         "root"
       ],
       "builtin": true
@@ -1016,6 +1019,7 @@ declare type MirrorRouter = {
     "POST": {
       "roles": [
         "root"
+        "root"
       ],
       "builtin": true
     }
@@ -1023,6 +1027,7 @@ declare type MirrorRouter = {
   "/contacts/getAll": {
     "POST": {
       "roles": [
+        "root"
         "root"
       ],
       "builtin": true
@@ -1032,6 +1037,7 @@ declare type MirrorRouter = {
     "POST": {
       "roles": [
         "root"
+        "root"
       ],
       "builtin": true
     }
@@ -1039,6 +1045,7 @@ declare type MirrorRouter = {
   "/contacts/remove": {
     "POST": {
       "roles": [
+        "root"
         "root"
       ],
       "builtin": true
@@ -1048,6 +1055,7 @@ declare type MirrorRouter = {
     "POST": {
       "roles": [
         "root"
+        "root"
       ],
       "builtin": true
     }
@@ -1055,6 +1063,7 @@ declare type MirrorRouter = {
   "/file/get": {
     "POST": {
       "roles": [
+        "root"
         "root"
       ],
       "builtin": true
@@ -1064,6 +1073,7 @@ declare type MirrorRouter = {
     "POST": {
       "roles": [
         "root"
+        "root"
       ],
       "builtin": true
     }
@@ -1072,12 +1082,14 @@ declare type MirrorRouter = {
     "POST": {
       "roles": [
         "root"
+        "root"
       ]
     }
   },
   "/file/remove": {
     "POST": {
       "roles": [
+        "root"
         "root"
       ],
       "builtin": true
@@ -1087,6 +1099,7 @@ declare type MirrorRouter = {
     "POST": {
       "roles": [
         "root"
+        "root"
       ],
       "builtin": true
     }
@@ -1094,6 +1107,7 @@ declare type MirrorRouter = {
   "/ticket/count": {
     "POST": {
       "roles": [
+        "root"
         "root"
       ],
       "builtin": true
@@ -1103,6 +1117,7 @@ declare type MirrorRouter = {
     "POST": {
       "roles": [
         "root"
+        "root"
       ],
       "builtin": true
     }
@@ -1110,6 +1125,7 @@ declare type MirrorRouter = {
   "/ticket/getAll": {
     "POST": {
       "roles": [
+        "root"
         "root"
       ],
       "builtin": true
@@ -1119,6 +1135,7 @@ declare type MirrorRouter = {
     "POST": {
       "roles": [
         "root"
+        "root"
       ],
       "builtin": true
     }
@@ -1126,6 +1143,7 @@ declare type MirrorRouter = {
   "/ticket/upload": {
     "POST": {
       "roles": [
+        "root"
         "root"
       ],
       "builtin": true
@@ -1135,6 +1153,7 @@ declare type MirrorRouter = {
     "POST": {
       "roles": [
         "root"
+        "root"
       ],
       "builtin": true
     }
@@ -1142,6 +1161,7 @@ declare type MirrorRouter = {
   "/topic/get": {
     "POST": {
       "roles": [
+        "root"
         "root"
       ],
       "builtin": true
@@ -1151,6 +1171,7 @@ declare type MirrorRouter = {
     "POST": {
       "roles": [
         "root"
+        "root"
       ],
       "builtin": true
     }
@@ -1158,6 +1179,7 @@ declare type MirrorRouter = {
   "/topic/insert": {
     "POST": {
       "roles": [
+        "root"
         "root"
       ],
       "builtin": true
@@ -1167,6 +1189,7 @@ declare type MirrorRouter = {
     "POST": {
       "roles": [
         "root"
+        "root"
       ],
       "builtin": true
     }
@@ -1175,6 +1198,7 @@ declare type MirrorRouter = {
     "POST": {
       "roles": [
         "root"
+        "root"
       ],
       "builtin": true
     }
@@ -1182,6 +1206,7 @@ declare type MirrorRouter = {
   "/user/get": {
     "POST": {
       "roles": [
+        "root"
         "root"
       ],
       "builtin": true
@@ -1207,6 +1232,7 @@ declare type MirrorRouter = {
     "POST": {
       "roles": [
         "root"
+        "root"
       ],
       "builtin": true
     }
@@ -1214,6 +1240,7 @@ declare type MirrorRouter = {
   "/user/removeFile": {
     "POST": {
       "roles": [
+        "root"
         "root"
       ],
       "builtin": true
@@ -1353,13 +1380,13 @@ declare type MirrorRouter = {
     "POST": {
       "roles": [
         "root"
+        "root"
       ]
     }
   },
   "/user/activate": {
     "POST": {
       "roles": [
-        "unauthenticated",
         "root"
       ]
     }
@@ -1368,6 +1395,7 @@ declare type MirrorRouter = {
     "POST": {
       "roles": [
         "root"
+        "root"
       ]
     }
   },
@@ -1375,12 +1403,14 @@ declare type MirrorRouter = {
     "POST": {
       "roles": [
         "root"
+        "root"
       ]
     }
   },
   "/user/getCurrentUser": {
     "POST": {
       "roles": [
+        "root"
         "root"
       ],
       "response": [
@@ -1673,7 +1703,7 @@ declare module 'aeria-sdk' {
             Method,
             InferProperties<RouteResponse>,
             RoutePayload extends {}
-              ? PackReferences<InferProperty<RoutePayload>>
+              ? InferProperty<RoutePayload>
               : undefined
           >
           : MakeEndpoint<Route, Method>

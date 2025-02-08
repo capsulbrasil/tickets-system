@@ -26,8 +26,8 @@ const options = defineOptions({
   menuSchema: [
     "/dashboard/",
     "/dashboard/topic",
-    "/dashboard/contacts",
-    "/dashboard/broadcast",
+    // "/dashboard/contacts",
+    // "/dashboard/broadcast",
     "/dashboard/user",
   ],
 });
